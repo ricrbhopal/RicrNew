@@ -1,11 +1,13 @@
 import React from 'react'
 import Hero from '../components/home_Components/Hero'
+import Why from '../components/home_Components/Why'
 
 const Home = () => {
   return (
     <div>
         
         <Hero/>
+        <Why/>
 
 
         <div>
