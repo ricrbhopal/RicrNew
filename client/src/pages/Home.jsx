@@ -3,6 +3,7 @@ import Hero from '../components/home_Components/Hero'
 import Why from '../components/home_Components/Why'
 import Affiliation from '../components/home_Components/Affiliation&Accreditation'
 import MeetOurMaestros from '../components/home_Components/MeetOurMaestros'
+import Celebrate from '../components/home_Components/Celebrate'
 
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
         <Why/>
         <Affiliation/>
         <MeetOurMaestros/>
+        <Celebrate/>
 
 
     <div>
