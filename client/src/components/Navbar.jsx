@@ -5,63 +5,67 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-full sticky top-0  z-99  h-20 gap-10 flex items-center justify-between px-6 md:px-18 shadow-md bg-white">
+    <header className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          <div className="flex items-center gap-6">
+            <a href="#" className="flex items-center">
+              <img src="/logo-2.png" alt="RICR logo" className="h-12 w-auto" />
+            </a>
 
-      <div className='flex lg:gap-25 md:gap-10 '>
-        <div className="flex items-center gap-2  w-[160px] ">
-          <img src="logo-2.png" alt="logo" className="h-12 w-[160px]" />
+            <ul className="hidden md:flex items-center gap-8 text-gray-900 text-lg">
+              <li className="cursor-pointer hover:text-[#125785]">Home</li>
+              <li className="cursor-pointer hover:text-[#125785]">About</li>
+              <li className="cursor-pointer hover:text-[#125785]">Courses</li>
+              <li className="cursor-pointer hover:text-[#125785]">R-Sat</li>
+              <li className="cursor-pointer hover:text-[#125785]">Contact</li>
+            </ul>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <a href="tel:+918889991736" className="hidden lg:inline-flex items-center gap-2 text-gray-900 hover:text-[#125785]">
+              <MdCall size={18} />
+              <span className="text-sm">+91 8889991736</span>
+            </a>
+
+            <button className="hidden md:inline-flex items-center px-5 py-2 bg-[#125785] hover:bg-[#0f4668] text-white rounded-lg shadow-md font-medium transition">
+              Student Login
+            </button>
+
+            <button
+              className="lg:hidden inline-flex items-center p-2 text-gray-900"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setIsOpen(prev => !prev)}
+            >
+              {isOpen ? <MdClose size={28} /> : <MdMenu size={28} />}
+            </button>
+          </div>
         </div>
-
-        <ul className="hidden md:flex text-[19px] w-[600px] items-center gap-12 text-gray-900 ">
-          <li className="cursor-pointer">Home</li>
-          <li className="cursor-pointer">About</li>
-          <li className="cursor-pointer">Courses</li>
-          <li className="cursor-pointer">R-Sat</li>
-          <li className="cursor-pointer">Contact Us</li>
-        </ul>
-      </div>
-
-
-      <div className="flex items-center gap-6">
-        <a href="tel:+918889991736" className="hidden lg:flex  items-center text-gray-900 gap-2 ">
-          <MdCall size={18} />
-          <span>+91 8889991736</span>
-        </a>
-
-        <button className=" hidden md:flex  h-12 w-36   bg-[#125785] text-white px-5 py-2 rounded-lg shadow-[6px_6px_0px_rgba(29,78,216,0.5)] hover:shadow-[1px_1px_0px_rgba(29,78,216,0.5)] transition">
-          Student Login
-        </button>
-      </div>
-      
-
-
-      <div className="lg:hidden">
-        {isOpen ? (
-          <MdClose size={28} className="cursor-pointer" onClick={() => setIsOpen(false)} />
-        ) : (
-          <MdMenu size={28} className="cursor-pointer" onClick={() => setIsOpen(true)} />
-        )}
-      </div>
+      </nav>
 
       {isOpen && (
-        <div className="absolute top-20 left-0 w-full bg-white shadow-md p-6 flex flex-col gap-6 lg:hidden z-50">
-          <ul className="flex flex-col gap-4 text-gray-900 font-medium">
-            <li className="hover:text-blue-600 cursor-pointer">Home</li>
-            <li className="hover:text-blue-600 cursor-pointer">About</li>
-            <li className="hover:text-blue-600 cursor-pointer">Courses</li>
-            <li className="hover:text-blue-600 cursor-pointer">R-Set</li>
-            <li className="hover:text-blue-600 cursor-pointer">Contact Us</li>
-          </ul>
-          <a href="tel:+918889991736" className="md:flex items-center text-gray-900 gap-2 hover:text-blue-600">
-            <MdCall size={18} />
-            <span>+91 8889991736</span>
-          </a>
-          <button className="bg-blue-800/95 h-12 md:hidden text-white px-5 py-2 rounded-lg shadow-[4px_4px_0px_rgba(29,78,216,0.5)] hover:bg-blue-900 hover:shadow-[1px_1px_0px_rgba(29,78,216,0.5)] transition">
-            Student Login
-          </button>
+        <div className="lg:hidden">
+          <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)} aria-hidden="true" />
+          <div className="fixed top-20 left-0 right-0 z-50 bg-white p-6 shadow-md border-t border-gray-100">
+            <ul className="flex flex-col gap-4 text-gray-900 text-lg">
+              <li className="py-2 border-b border-gray-100 hover:text-[#125785]">Home</li>
+              <li className="py-2 border-b border-gray-100 hover:text-[#125785]">About</li>
+              <li className="py-2 border-b border-gray-100 hover:text-[#125785]">Courses</li>
+              <li className="py-2 border-b border-gray-100 hover:text-[#125785]">R-Sat</li>
+              <li className="py-2">Contact</li>
+            </ul>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <a href="tel:+918889991736" className="inline-flex items-center gap-2 text-gray-900">
+                <MdCall size={18} />
+                <span>+91 8889991736</span>
+              </a>
+              <button className="md:hidden sm:flex w-full px-4 py-3 bg-[#125785] rounded-md text-white font-medium">Student Login</button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </header>
   );
 };
 
