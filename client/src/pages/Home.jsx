@@ -4,6 +4,7 @@ import Why from '../components/home_Components/Why'
 import Affiliation from '../components/home_Components/Affiliation&Accreditation'
 import MeetOurMaestros from '../components/home_Components/MeetOurMaestros'
 import Celebrate from '../components/home_Components/Celebrate'
+import FeaturedQuestion from '../components/home_Components/FeaturedQuestion'
 
 
 const Home = () => {
@@ -15,6 +16,7 @@ const Home = () => {
         <Affiliation/>
         <MeetOurMaestros/>
         <Celebrate/>
+        <FeaturedQuestion/>
 
 
     <div>

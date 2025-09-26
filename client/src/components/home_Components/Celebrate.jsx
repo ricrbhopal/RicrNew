@@ -6,12 +6,20 @@ import Kushik from '../../assets/Succeess/Kaushik.png'
 import Abhishek from '../../assets/Succeess/Abhishek.png'
 import media1 from "../../assets/FeatureMedia/1.jpg"
 import media2 from "../../assets/FeatureMedia/2.jpg"
+import Insta from '../../assets/Insta/1.jpg'
+import Insta2 from '../../assets/Insta/2.jpg'
+import Insta3 from '../../assets/Insta/3.jpg'
+import Insta4 from '../../assets/Insta/4.jpg'
+import Insta5 from '../../assets/Insta/5.jpg'
+import Dp from '../../assets/Insta/dp.jpg'
 
 const Celebrate = () => {
     const sliderRef = useRef(null);
     const [isPaused, setIsPaused] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const [instagramData, setInstagramData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const PlacedStudent = [
         {
@@ -19,13 +27,6 @@ const Celebrate = () => {
             position: "Associate Developer",
             company: "Raj Digital",
             image: Ashish,
-            Batch: "RICR • Batch 2025"
-        },
-        {
-            name: "Ritam Sundar Sandhaki",
-            position: "Associate Developer",
-            company: "Raj Digital",
-            image: "wdd",
             Batch: "RICR • Batch 2025"
         },
         {
@@ -50,6 +51,13 @@ const Celebrate = () => {
             Batch: "RICR • Batch 2025"
         },
         {
+            name: "Ritam Sundar Sandhaki",
+            position: "Associate Developer",
+            company: "Raj Digital",
+            image: "wdd",
+            Batch: "RICR • Batch 2025"
+        },
+        {
             name: "Nandini Patel",
             position: "Associate Developer",
             company: "Raj Digital",
@@ -58,49 +66,131 @@ const Celebrate = () => {
         },
     ]
 
-    const SuccessStories = [
+    // Fallback data in case API fails
+    const defaultStories = [
         {
             id: 1,
             profile: "ricredu",
-            Dp: "https://via.placeholder.com/50/125785/ffffff?text=R",
-            image: "https://via.placeholder.com/400x400/125785/ffffff?text=Success+Story+1",
+            Dp: Dp,
+            image: Insta,
             likes: 335,
             comments: 15,
+            instagramUrl: "https://www.instagram.com/p/your-post-id-1/"
         },
         {
             id: 2,
             profile: "ricredu",
-            Dp: "https://via.placeholder.com/50/125785/ffffff?text=R",
-            image: "https://via.placeholder.com/400x400/0ea5e9/ffffff?text=Success+Story+2",
+            Dp: Dp,
+            image: Insta2,
             likes: 210,
             comments: 8,
+            instagramUrl: "https://www.instagram.com/p/your-post-id-2/"
         },
         {
             id: 3,
             profile: "ricredu",
-            Dp: "https://via.placeholder.com/50/125785/ffffff?text=R",
-            image: "https://via.placeholder.com/400x400/10b981/ffffff?text=Success+Story+3",
+            Dp: Dp,
+            image: Insta3,
             likes: 156,
             comments: 12,
+            instagramUrl: "https://www.instagram.com/p/your-post-id-3/"
         },
         {
             id: 4,
             profile: "ricredu",
-            Dp: "https://via.placeholder.com/50/125785/ffffff?text=R",
-            image: "https://via.placeholder.com/400x400/f59e0b/ffffff?text=Success+Story+4",
+            Dp: Dp,
+            image: Insta4,
             likes: 289,
             comments: 22,
+            instagramUrl: "https://www.instagram.com/p/your-post-id-4/"
+        },
+        {
+            id: 5,
+            profile: "ricredu",
+            Dp: Dp,
+            image: Insta5,
+            likes: 402,
+            comments: 30,
+            instagramUrl: "https://www.instagram.com/p/your-post-id-5/"
         },
     ];
 
     const FeaturedMedia = [
-        {
-            image: media1,
-        },
-        {
-            image: media2,
-        },
+        { image: media1 },
+        { image: media2 },
     ]
+
+    // Fetch Instagram data
+    useEffect(() => {
+        fetchInstagramData();
+    }, []);
+
+    const fetchInstagramData = async () => {
+        try {
+            setLoading(true);
+            
+            // Option A: Using Instagram Basic Display API
+            const accessToken = process.env.REACT_APP_INSTAGRAM_ACCESS_TOKEN;
+            if (accessToken) {
+                const response = await fetch(
+                    `https://graph.instagram.com/me/media?fields=id,caption,media_url,permalink,like_count,comments_count,timestamp&access_token=${accessToken}&limit=5`
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const formattedData = data.data.map((post, index) => ({
+                        id: post.id,
+                        profile: "ricredu",
+                        Dp: Dp,
+                        image: post.media_url || defaultStories[index]?.image,
+                        likes: post.like_count || defaultStories[index]?.likes,
+                        comments: post.comments_count || defaultStories[index]?.comments,
+                        instagramUrl: post.permalink,
+                        timestamp: post.timestamp,
+                        caption: post.caption
+                    }));
+                    setInstagramData(formattedData);
+                } else {
+                    throw new Error('Instagram API failed');
+                }
+            } else {
+                // Option B: Using proxy server to avoid CORS
+                const proxyResponse = await fetch('/api/instagram-posts');
+                if (proxyResponse.ok) {
+                    const data = await proxyResponse.json();
+                    setInstagramData(data);
+                } else {
+                    throw new Error('Proxy failed');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching Instagram data:', error);
+            // Fallback to default data
+            setInstagramData(defaultStories);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchInstagramViaBackend = async () => {
+        try {
+            const response = await fetch('/api/scrape-instagram', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: 'ricredu',
+                    postCount: 5
+                })
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Backend fetch failed:', error);
+            return defaultStories;
+        }
+    };
 
     const duplicatedStudents = [...PlacedStudent, ...PlacedStudent, ...PlacedStudent];
 
@@ -148,6 +238,10 @@ const Celebrate = () => {
         );
     };
 
+    const openInstagramPost = (url) => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
     if (PlacedStudent.length <= 1) {
         return (
             <div className='text-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
@@ -193,6 +287,8 @@ const Celebrate = () => {
             </div>
         );
     }
+
+    const storiesToDisplay = instagramData.length > 0 ? instagramData : defaultStories;
 
     return (
         <section className="bg-gradient-to-br from-gray-50 to-white">
@@ -284,26 +380,33 @@ const Celebrate = () => {
                 </div>
             </div>
 
-            {/* Success Stories Section */}
             <div className='w-full mx-auto px-4 sm:px-6 md:px-16 my-20 text-white py-20 bg-[#125785]'>
                 <div className='max-w-9xl mx-auto flex flex-col justify-center items-center gap-6'>
-                    <h1 className='text-5xl font-medium text-center'>Student Success Stories</h1>
+                    <div className='flex items-center gap-4 mb-4'>
+                        <h1 className='text-5xl font-medium text-center'>Student Success Stories</h1>
+                        {loading && (
+                            <div className='flex items-center gap-2 text-blue-200'>
+                                <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+                                <span className='text-sm'>Loading live data...</span>
+                            </div>
+                        )}
+                    </div>
                     <h2 className='text-2xl text-medium text-center max-w-4xl'>
                         Discover how our learners turned RICR training into real-world achievements.
                     </h2>
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mt-10'>
-                        {SuccessStories.map((story) => (
+                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-10 mt-10'>
+                        {storiesToDisplay.map((story) => (
                             <div
                                 key={story.id}
-                                className='bg-white h-[450px] w-[320px] text-black rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105'
+                                className='bg-white h-[400px] w-[250px] text-black shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer'
+                                onClick={() => story.instagramUrl && openInstagramPost(story.instagramUrl)}
                             >
-                              
                                 <div className='h-[15%] flex items-center px-4 gap-3 border-b border-gray-200'>
                                     <img 
                                         src={story.Dp} 
                                         alt={`${story.profile} profile`}
-                                        className='h-8 w-8 rounded-full object-cover'
+                                        className='h-8 w-8 rounded-full border p-[1px] bg-blue-800 object-cover'
                                         onError={(e) => {
                                             e.target.src = 'https://via.placeholder.com/32/125785/ffffff?text=R';
                                         }}
@@ -312,39 +415,33 @@ const Celebrate = () => {
                                 </div>
 
                                 <div 
-                                    className='h-[70%] bg-cover bg-center relative group cursor-pointer'
+                                    className='h-[70%] bg-cover bg-center bg-no-repeat relative group'
                                     style={{ backgroundImage: `url(${story.image})` }}
                                 >
-                                    <div className='absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center'>
-                                        <div className='opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white bg-opacity-90 rounded-full p-3'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                            </svg>
-                                        </div>
-                                    </div>
+                                   
                                 </div>
 
-                                <div className='h-[15%] bg-gradient-to-r from-blue-600 to-green-600 flex gap-5 items-center px-4'>
+                                <div className='h-[15%] flex gap-5 items-center px-4'>
                                     <div className='flex items-center gap-2'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
                                         </svg>
-                                        <span className='text-white font-medium'>{story.likes.toLocaleString()}</span>
+                                        <span className='text-black font-medium'>{story.likes?.toLocaleString() || '0'}</span>
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-Black" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z" />
                                         </svg>
-                                        <span className='text-white font-medium'>{story.comments}</span>
+                                        <span className='text-black font-medium'>{story.comments || '0'}</span>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
+
+                  
                 </div>
             </div>
-
-
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4">
                     <div className="relative max-w-6xl max-h-full w-full h-full flex items-center justify-center">
@@ -415,5 +512,6 @@ const Celebrate = () => {
         </section>
     )
 }
+
 
 export default Celebrate
