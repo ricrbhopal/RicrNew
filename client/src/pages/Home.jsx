@@ -5,6 +5,7 @@ import Affiliation from '../components/home_Components/Affiliation&Accreditation
 import MeetOurMaestros from '../components/home_Components/MeetOurMaestros'
 import Celebrate from '../components/home_Components/Celebrate'
 import FeaturedQuestion from '../components/home_Components/FeaturedQuestion'
+import Footer from '../components/Footer'
 
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
         <MeetOurMaestros/>
         <Celebrate/>
         <FeaturedQuestion/>
+        <Footer/>
 
 
     <div>

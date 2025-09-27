@@ -220,5 +220,4 @@ const Why = () => {
         </section>
     );
 };
-
 export default Why;
