@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { MdCall, MdMenu, MdClose } from "react-icons/md";
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm border-b border-gray-100">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-8xl mx-auto px-12 sm:px-16 lg:px-20">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center gap-6">
             <a href="#" className="flex items-center">
@@ -14,8 +15,8 @@ const Navbar = () => {
             </a>
 
             <ul className="hidden md:flex items-center gap-8 text-gray-900 text-lg">
-              <li className="cursor-pointer hover:text-[#125785]">Home</li>
-              <li className="cursor-pointer hover:text-[#125785]">About</li>
+              <Link to={"/"} className="cursor-pointer hover:text-[#125785]">Home</Link>
+              <Link to={"/about"} className="cursor-pointer hover:text-[#125785]">About</Link>
               <li className="cursor-pointer hover:text-[#125785]">Courses</li>
               <li className="cursor-pointer hover:text-[#125785]">R-Sat</li>
               <li className="cursor-pointer hover:text-[#125785]">Contact</li>
