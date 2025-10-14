@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { FaLinkedin } from 'react-icons/fa';
-import Mentor1 from '../../assets/Mentor/Pranay Das Sir.webp'
-import Mentor2 from '../../assets/Mentor/Raj Vardhhan Sir.webp'
-import Mentor3 from '../../assets/Mentor/Mohit sir.jpg'
+import { maestorAPI } from '../../config/api.js';
 
 import Expert1 from '../../assets/Experts/1.webp'
 import Expert2 from '../../assets/Experts/2.webp'
@@ -15,26 +13,6 @@ import Expert8 from '../../assets/Experts/8.webp'
 import Expert9 from '../../assets/Experts/9.webp'
 
 const MeetOurMaestros = () => {
-  const Maestros = [
-    {
-      name: "Pranay Das",
-      img: Mentor1,
-      role: "Senior Java instructor",
-      linkedIn: "https://www.linkedin.com/in/pranay-das20"
-    },
-    {
-      name: "Raj vardhan",
-      img: Mentor2,
-      role: "Full Stack Trainer",
-      linkedIn: "https://www.linkedin.com/in/ravardh/"
-    },
-    {
-      name: "Mohit Payasi",
-      img: Mentor3,
-      role: "Data Science Trainer",
-      linkedIn: "https://www.linkedin.com/in/mohit-payasi/"
-    },
-  ]
 
   const Experts = [
     {
@@ -137,6 +115,29 @@ const MeetOurMaestros = () => {
     };
   }, [isPausedExperts, isDraggingExperts]);
 
+  // fetch maestros from server and show only active ones
+  const [maestrosRemote, setMaestrosRemote] = useState([]);
+  const [loadingMaestros, setLoadingMaestros] = useState(false);
+
+  useEffect(() => {
+    const fetchMaestros = async () => {
+      setLoadingMaestros(true);
+      try {
+        const res = await maestorAPI.getAllMaestros();
+        const all = res.data || [];
+        const active = all.filter(m => m.status === 'active');
+        setMaestrosRemote(active.map(m => ({ _id: m._id, name: m.name, img: m.img, role: m.role, linkedIn: m.linkedIn })));
+      } catch (e) {
+        console.warn('Failed to fetch maestros', e);
+        setMaestrosRemote([]);
+      } finally {
+        setLoadingMaestros(false);
+      }
+    };
+
+    fetchMaestros();
+  }, []);
+
 
   const handleExpertsMouseDown = (e) => {
     setIsDraggingExperts(true);
@@ -206,36 +207,42 @@ const MeetOurMaestros = () => {
           </h2>
 
            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10 mt-10'>
-            {Maestros.map((maestro, index) => (
-              <div
-                key={index}
-                className='relative rounded-lg overflow-hidden group transition-all duration-500 w-[350px] hover:scale-105'
-                style={{ height: '350px' }}
-              >
-                <div className='h-full w-full overflow-hidden'>
-                  <img
-                    src={maestro.img}
-                    alt={maestro.name}
-                    className='h-full w-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-110'
-                  />
-                </div>
+            {loadingMaestros ? (
+              <div className='col-span-full text-center text-gray-500'>Loading maestros...</div>
+            ) : maestrosRemote.length > 0 ? (
+              maestrosRemote.map((maestro) => (
+                <div
+                  key={maestro._id}
+                  className='relative rounded-lg overflow-hidden group transition-all duration-500 w-[350px] hover:scale-105'
+                  style={{ height: '350px' }}
+                >
+                  <div className='h-full w-full overflow-hidden'>
+                    <img
+                      src={maestro.img}
+                      alt={maestro.name}
+                      className='h-full w-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-110'
+                    />
+                  </div>
 
-                <div className='absolute bottom-0 left-0 right-0 bg-black/90 transform transition-all duration-500 ease-in-out group-hover:translate-y-0 translate-y-full h-1/2'>
-                  <div className='flex flex-col items-center text-center text-white h-full justify-end pb-4'>
-                    <h3 className='text-xl font-bold mb-2'>{maestro.name}</h3>
-                    <p className='text-md mb-3 opacity-90 leading-relaxed'>{maestro.role}</p>
-                    <a
-                      href={maestro.linkedIn}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className='inline-flex items-center justify-center p-2 transition hover:scale-110 z-50'
-                    >
-                      <FaLinkedin className='text-white text-lg cursor-pointer' />
-                    </a>
+                  <div className='absolute bottom-0 left-0 right-0 bg-black/90 transform transition-all duration-500 ease-in-out group-hover:translate-y-0 translate-y-full h-1/2'>
+                    <div className='flex flex-col items-center text-center text-white h-full justify-end pb-4'>
+                      <h3 className='text-xl font-bold mb-2'>{maestro.name}</h3>
+                      <p className='text-md mb-3 opacity-90 leading-relaxed'>{maestro.role}</p>
+                      <a
+                        href={maestro.linkedIn}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className='inline-flex items-center justify-center p-2 transition hover:scale-110 z-50'
+                      >
+                        <FaLinkedin className='text-white text-lg cursor-pointer' />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className='col-span-full text-center text-gray-600'>No active maestros available.</div>
+            )}
           </div>
         </div>
       </div>

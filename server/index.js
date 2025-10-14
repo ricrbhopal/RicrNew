@@ -2,7 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
-import BgBanner from './src/models/homeModels/heroPage/bgBannerModel.js';
+import bgBannerRoutes from './src/router/heroRoutes.js';
+import Affiliation from './src/router/affiliationRoutes.js';
+import Maestor from './src/router/maestorRoutes.js';
+import Expert from './src/router/expertRoutes.js';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,8 +17,10 @@ app.get('/', (req, res) => {
 });
 
 // Use BgBanner routes
-app.use('/api', BgBanner);
-
+app.use('/hero', bgBannerRoutes);
+app.use('/affiliations', Affiliation);
+app.use('/maestor', Maestor);
+app.use('/expert', Expert);
 
 connectDB();
 

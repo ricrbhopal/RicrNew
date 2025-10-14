@@ -384,12 +384,6 @@ const Celebrate = () => {
                 <div className='max-w-9xl mx-auto flex flex-col justify-center items-center gap-6'>
                     <div className='flex items-center gap-4 mb-4'>
                         <h1 className='text-5xl font-medium text-center'>Student Success Stories</h1>
-                        {loading && (
-                            <div className='flex items-center gap-2 text-blue-200'>
-                                <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
-                                <span className='text-sm'>Loading live data...</span>
-                            </div>
-                        )}
                     </div>
                     <h2 className='text-2xl text-medium text-center max-w-4xl'>
                         Discover how our learners turned RICR training into real-world achievements.
