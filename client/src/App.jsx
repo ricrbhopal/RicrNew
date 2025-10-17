@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
+import Praticed from "./pages/practice";
 
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
           <Route path="/" element={<Home/>} />
           <Route path="/about" element={<About/>} />
           <Route path="/admin" element={<AdminDashboard/>} />
+        <Route path="/practice" element={<Praticed/>} />
+
         </Routes>
       </BrowserRouter>
     </>

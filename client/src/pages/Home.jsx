@@ -1,11 +1,14 @@
 import React from 'react'
 import Hero from '../components/home_Components/Hero'
+import AdverstandingSection from '../components/home_Components/adverstandingSection'
 import Why from '../components/home_Components/Why'
 import Affiliation from '../components/home_Components/Affiliation&Accreditation'
 import MeetOurMaestros from '../components/home_Components/MeetOurMaestros'
+import ExpertsSection from '../components/home_Components/expert'
 import Celebrate from '../components/home_Components/Celebrate'
 import FeaturedQuestion from '../components/home_Components/FeaturedQuestion'
 import Footer from '../components/Footer'
+
 
 
 const Home = () => {
@@ -13,9 +16,12 @@ const Home = () => {
     <div>
         
         <Hero/>
+
+    <AdverstandingSection/>
         <Why/>
         <Affiliation/>
         <MeetOurMaestros/>
+        <ExpertsSection/>
         <Celebrate/>
         <FeaturedQuestion/>
         <Footer/>

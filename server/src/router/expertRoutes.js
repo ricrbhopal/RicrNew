@@ -9,9 +9,13 @@ import { uploadMedia } from '../../config/multer.js';
 
 const router = express.Router();
 
-router.post('/', uploadMedia, createExpert);
+// create a multer instance that accepts images/videos (memoryStorage)
+const upload = uploadMedia();
+
+// Use upload.any() to accept files regardless of the field name (tolerant for frontend)
+router.post('/', upload.any(), createExpert);
 router.get('/', getExperts);
-router.put('/:id', uploadMedia, updateExpert);
+router.put('/:id', upload.any(), updateExpert);
 router.delete('/:id', deleteExpert);
 
 export default router;

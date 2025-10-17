@@ -7,7 +7,8 @@ const SideBar = ({ activeTab, setActiveTab }) => {
     { id: 'about', label: 'About', icon: MdOutlineVideoLibrary },
     { id: 'collections', label: 'Collections', icon: MdCollections },
     { id: 'settings', label: 'Settings', icon: MdSettings },
-    { id: 'help', label: 'Help & Support', icon: MdHelp }
+    { id: 'help', label: 'Help & Support', icon: MdHelp },
+    
   ];
 
   return (

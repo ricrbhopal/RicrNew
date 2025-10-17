@@ -72,4 +72,46 @@ export const maestorAPI = {
 
 };
 
+
+export const expertAPI = {
+    createExpert: (formData) => api.post('/expert/', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    }),
+    getExperts: () => api.get('/expert'),
+    updateExpert: (id, formData) => api.put(`/expert/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    }),
+    deleteExpert: (id) => api.delete(`/expert/${id}`),
+};
+
+
+export const celebrateAPI = {
+    createCelebrate: (formData) => api.post('/celebrate/', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    }),
+    getCelebrates: () => api.get('/celebrate'),
+    updateCelebrateStatus: (id, status) => api.put(`/celebrate/${id}`, { status }),
+    deleteCelebrate: (id) => api.delete(`/celebrate/${id}`),
+};
+
+
+
+export const adverstandAPI = {
+    createAdverstanding: (formData) => api.post('/adverstand/', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    }),
+    getAdverstands: () => api.get('/adverstand'),
+    updateAdverstandStatus: (id, status) => api.put(`/adverstand/${id}/status`, { status }),
+    deleteAdverstand: (id) => api.delete(`/adverstand/${id}`),
+};
+
+
 export default api;

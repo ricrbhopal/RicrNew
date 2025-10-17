@@ -123,25 +123,25 @@ const Footer = () => {
                             <div className="pt-4">
                                 <div className="flex gap-5 text-2xl">
                                     <a
-                                        href="#"
+                                        href="https://www.facebook.com/ricredu"
                                         className="text-blue-300 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/10"
                                     >
                                         <FaFacebook />
                                     </a>
                                     <a
-                                        href="#"
+                                        href="https://www.instagram.com/ricredu/"
                                         className="text-blue-300 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/10"
                                     >
                                         <FaInstagram />
                                     </a>
                                     <a
-                                        href="#"
+                                        href="https://www.youtube.com/@ricredu"
                                         className="text-blue-300 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/10"
                                     >
                                         <FaYoutube />
                                     </a>
                                     <a
-                                        href="#"
+                                        href="https://www.linkedin.com/company/ricredu/"
                                         className="text-blue-300 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-white/10"
                                     >
                                         <FaLinkedin />
