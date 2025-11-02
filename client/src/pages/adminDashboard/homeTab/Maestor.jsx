@@ -13,7 +13,7 @@ import {
   MdImage,
   MdRefresh
 } from 'react-icons/md';
-import { maestorAPI } from '../../../config/api.js';
+import { adminAPI } from '../../../config/api.js';
 
 export default function Maestor() {
   const [maestros, setMaestros] = useState([]);
@@ -40,8 +40,16 @@ export default function Maestor() {
   const fetchMaestros = async () => {
     setLoading(true);
     try {
-      const res = await maestorAPI.getAllMaestros();
-      setMaestros(res.data || []);
+      const res = await adminAPI.getAllMaestros();
+      let maestrosData = res.data;
+      // Ensure maestrosData is always an array
+      if (Array.isArray(maestrosData)) {
+        setMaestros(maestrosData);
+      } else if (maestrosData && Array.isArray(maestrosData.data)) {
+        setMaestros(maestrosData.data);
+      } else {
+        setMaestros([]);
+      }
     } catch (err) {
       console.error(err);
       toast.error('Failed to load maestros');
@@ -108,7 +116,7 @@ export default function Maestor() {
     try {
       setSubmitting(true);
       toast.loading('Creating maestro...', { id: 'maestro-create' });
-      const res = await maestorAPI.uploadMaestor(form);
+      const res = await adminAPI.uploadMaestor(form);
       toast.dismiss('maestro-create');
       toast.success('Maestro created successfully');
       
@@ -135,7 +143,7 @@ export default function Maestor() {
       
       // Optimistic update
       setMaestros(ms => ms.map(m => m._id === id ? { ...m, status: newStatus } : m));
-      await maestorAPI.updateMaestroStatus(id, newStatus);
+      await adminAPI.updateMaestroStatus(id, newStatus);
       toast.success(`Maestro ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
     } catch (err) {
       console.error(err);
@@ -149,7 +157,7 @@ export default function Maestor() {
     
     const toastId = toast.loading('Deleting maestro...');
     try {
-      await maestorAPI.deleteMaestro(id);
+      await adminAPI.deleteMaestro(id);
       setMaestros(ms => ms.filter(m => m._id !== id));
       toast.dismiss(toastId); 
       toast.success('Maestro deleted successfully');
@@ -274,12 +282,7 @@ export default function Maestor() {
                       
                       <div className="text-center text-gray-500 text-sm">OR</div>
                       
-                      <input
-                        value={imageUrl}
-                        onChange={e => setImageUrl(e.target.value)}
-                        placeholder="Enter image URL"
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                      />
+                      
                     </div>
                   </div>
 

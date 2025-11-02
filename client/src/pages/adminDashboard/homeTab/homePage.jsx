@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import HeroTab from './heroTab';
-import AffiliationsTab from './AffilicationTab';
-import MaestorTab from './Maestor';
-import SettingsTab from './expertTab';
-import CelebrateTab from './CelebrateTab';
-import AdverstandingTab from './adverstandingTab';
+import React, { useState, lazy, Suspense } from 'react';
+
+// Use dynamic imports to avoid direct static imports at module load time
+const HeroTab = lazy(() => import('./heroTab'));
+const AffiliationsTab = lazy(() => import('./AffilicationTab'));
+const MaestorTab = lazy(() => import('./Maestor'));
+const ExpertsTab = lazy(() => import('./expertTab'));
+const CelebrateTab = lazy(() => import('./CelebrateTab'));
+const AdvertisingTab = lazy(() => import('./advertisingTab'));
 
 const HomePage = () => {
   const [active, setActive] = useState('hero');
@@ -13,9 +15,9 @@ const HomePage = () => {
     { id: 'hero', label: 'Hero Section' },
     { id: 'affiliations', label: 'Affiliation & Accreditation' },
     { id: 'maestor', label: 'Maestor' },
-    { id: 'settings', label: 'Settings' },
+    { id: 'Experts', label: 'Experts' },
     { id: 'celebrate', label: 'Celebrate' },
-    { id: 'adverstanding', label: 'Adverstanding' },
+    { id: 'advertising', label: 'Advertising' },
   ];
 
   return (
@@ -75,12 +77,14 @@ const HomePage = () => {
       {/* Content Area */}
       <div className="bg-white rounded-xl shadow-sm  cursor-pointer border border-gray-200 overflow-hidden">
         <div className="p-3 sm:p-4 md:p-6">
-          {active === 'hero' && <HeroTab />}
-          {active === 'adverstanding' && <AdverstandingTab />}
-          {active === 'affiliations' && <AffiliationsTab />}
-          {active === 'maestor' && <MaestorTab />}
-          {active === 'settings' && <SettingsTab />}
-          {active === 'celebrate' && <CelebrateTab />}
+          <Suspense fallback={<div className="p-6 text-center text-gray-600">Loading tab...</div>}>
+            {active === 'hero' && <HeroTab />}
+            {active === 'advertising' && <AdvertisingTab />}
+            {active === 'affiliations' && <AffiliationsTab />}
+            {active === 'maestor' && <MaestorTab />}
+            {active === 'Experts' && <ExpertsTab />}
+            {active === 'celebrate' && <CelebrateTab />}
+          </Suspense>
         </div>
       </div>
 

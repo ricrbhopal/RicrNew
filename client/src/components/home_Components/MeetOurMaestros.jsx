@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaLinkedin } from 'react-icons/fa';
-import { maestorAPI } from '../../config/api.js';
+import { adminAPI } from '../../config/api.js';
 
 const MaestrosSection = () => {
   const [maestrosRemote, setMaestrosRemote] = useState([]);
@@ -10,7 +10,7 @@ const MaestrosSection = () => {
     const fetchMaestros = async () => {
       setLoadingMaestros(true);
       try {
-        const res = await maestorAPI.getAllMaestros();
+        const res = await adminAPI.getAllMaestros();
         const all = res.data || [];
         const active = all.filter(m => m.status === 'active');
         setMaestrosRemote(active.map(m => ({ 

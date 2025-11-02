@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { adverstandAPI } from '../../../config/api';
+import { adminAPI } from '../../../config/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { 
   MdUpload, 
@@ -36,7 +36,7 @@ function AdverstandingTab() {
   const fetchAds = async () => {
     setLoading(true);
     try {
-      const res = await adverstandAPI.getAdverstands();
+  const res = await adminAPI.getAllAdvertising();
       setAds(res.data || []);
     } catch (err) {
       console.error(err);
@@ -112,11 +112,10 @@ function AdverstandingTab() {
       // Upload each file individually
       const uploadPromises = files.map(async (file) => {
         const formData = new FormData();
-        formData.append('media', file);
-        formData.append('medial', file.type.startsWith('video/') ? 'video' : 'image');
-        
-        const response = await adverstandAPI.createAdverstanding(formData);
-        return response.data;
+    formData.append('media', file);
+    formData.append('medial', file.type.startsWith('video/') ? 'video' : 'image');
+    const response = await adminAPI.createAdvertising(formData);
+    return response.data;
       });
 
       const results = await Promise.all(uploadPromises);
@@ -148,8 +147,8 @@ function AdverstandingTab() {
       setAds(prev => prev.map(item => 
         item._id === ad._id ? { ...item, status: newStatus } : item
       ));
-      
-      await adverstandAPI.updateAdverstandStatus(ad._id, newStatus);
+
+  await adminAPI.updateAdvertising(ad._id, { status: newStatus });
       toast.success(`Ad ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
     } catch (err) { 
       console.error(err); 
@@ -165,7 +164,7 @@ function AdverstandingTab() {
 
     const toastId = toast.loading('Deleting ad...');
     try {
-      await adverstandAPI.deleteAdverstand(id);
+  await adminAPI.deleteAdvertising(id);
       setAds(prev => prev.filter(ad => ad._id !== id));
       toast.dismiss(toastId); 
       toast.success('Ad deleted successfully');

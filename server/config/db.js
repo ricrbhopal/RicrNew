@@ -1,17 +1,20 @@
-
-import mongoose from 'mongoose';
+// ...existing code...
+import mongoose from "mongoose";
 
 const connectDB = async () => {
+  const uri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ricrDB";
+
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected');
+    // do a quick connect attempt (short timeout)
+    const conn = await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+    console.log(`✅ MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+    console.error("❌ MongoDB connection error:", error.message);
+    console.error("MongoDB is not reachable. Start mongod or fix MONGO_URI in .env.");
+    // do not exit immediately so developer can fix and server logs remain available
+    // process.exit(1); // <-- removed to avoid immediate crash during dev
   }
 };
 
-export default connectDB;
+export default connectDB;  // <-- very important
+// ...existing code...

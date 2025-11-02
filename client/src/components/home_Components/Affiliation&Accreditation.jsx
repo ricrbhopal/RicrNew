@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { affiliationAPI } from '../../config/api.js';
+import { adminAPI } from '../../config/api.js';
 
 const Affiliation = () => {
     const [remoteAffiliations, setRemoteAffiliations] = useState([]);
@@ -32,7 +32,7 @@ const Affiliation = () => {
         const fetchRemote = async () => {
             setLoadingRemote(true);
             try {
-                const res = await affiliationAPI.getAllAffiliations();
+                const res = await adminAPI.getAffiliations();
                 const all = res.data || [];
                 const activeOnly = all.filter(i => i.status === 'active');
                 setRemoteAffiliations(activeOnly.map(a => ({ img: a.image })));

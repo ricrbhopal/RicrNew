@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { adverstandAPI } from '../../config/api';
+import {adminAPI } from '../../config/api';
 
 function AdverstandingSection({ openOnLoginOnly = false }) {
     const [ads, setAds] = useState([]);
@@ -82,7 +82,7 @@ function AdverstandingSection({ openOnLoginOnly = false }) {
     const fetchActiveAds = async () => {
         setLoading(true);
         try {
-            const res = await adverstandAPI.getAdverstands();
+            const res = await adminAPI.getAllAdvertising();
             const active = (res.data || []).filter(a => a.status === 'active');
             setAds(active);
         } catch (err) {

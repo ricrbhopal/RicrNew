@@ -10,108 +10,100 @@ const api = axios.create({
     },
 });
 
-export const heroAPI = {
-    uploadBackgroundVideo: (formData) => api.post('/hero/uploadVideo', formData, {
+
+
+// ...existing code...
+export const adminAPI = {
+    // Hero (admin)
+    // server admin router is mounted at /admin -> adjust paths accordingly
+    uploadBackgroundVideo: (formData) => api.post('/admin/uploadVideo', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     }),
     // accept optional axios config (e.g., onUploadProgress)
-    uploadBackgroundVideoWithConfig: (formData, config = {}) => api.post('/hero/uploadVideo', formData, {
+    uploadBackgroundVideoWithConfig: (formData, config = {}) => api.post('/admin/uploadVideo', formData, {
         ...config,
         headers: {
             'Content-Type': 'multipart/form-data',
             ...(config.headers || {}),
         },
     }),
-    getHero: () => api.get('/hero/'),
-    updateHero: (heroData) => api.put('/hero', heroData),
-    getBgVideos: () => api.get('/hero/all'),
-    deleteHero: (id) => api.delete(`/hero/${id}`),
-    updateHeroStatus: (id, status) => api.put(`/hero/${id}/status`, { status }),
+    getHero: () => api.get('/admin/'),
+    updateHero: (heroData) => api.put('/admin', heroData),
+    getBgVideos: () => api.get('/admin/all'),
+    deleteHero: (id) => api.delete(`/admin/${id}`),
+    updateHeroStatus: (id, status) => api.put(`/admin/${id}/status`, { status }),
+
+
+    // backwards-compatible name used in some components
+    uploadAffiliationWithConfig: (formData, config = {}) =>
+        api.post('/admin/uploadAffiliation', formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getAffiliations: () => api.get('/admin/Affiliations'),
+    getAllAffiliations: () => api.get('/admin/Affiliations/all'),
+    deleteAffiliation: (id) => api.delete(`/admin/Affiliations/${id}`),
+    updateAffiliationStatus: (id, status) => api.put(`/admin/Affiliations/${id}/status`, { status }),
+
+    // Maestro (maestor)
+    uploadMaestor: (formData, config = {}) =>
+        api.post('/admin/maestros', formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getAllMaestros: () => api.get('/admin/maestros'),
+    updateMaestro: (id, formData, config = {}) =>
+        api.put(`/admin/maestros/${id}`, formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    deleteMaestro: (id) => api.delete(`/admin/maestros/${id}`),
+    updateMaestroStatus: (id, status) => api.put(`/admin/maestros/${id}/status`, { status }),
+
+    // Expert
+    createExpert: (formData, config = {}) =>
+        api.post('/admin/experts', formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getExperts: () => api.get('/admin/experts'),
+    updateExpert: (id, formData, config = {}) =>
+        api.put(`/admin/experts/${id}`, formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    deleteExpert: (id) => api.delete(`/admin/experts/${id}`),
+
+    // Celebrate
+    createCelebrate: (formData, config = {}) =>
+        api.post('/admin/celebrate', formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getCelebrates: () => api.get('/admin/celebrate'),
+    updateCelebrate: (id, data) => api.put(`/admin/celebrate/${id}`, data),
+    deleteCelebrate: (id) => api.delete(`/admin/celebrate/${id}`),
+
+
+
+    // Advertising
+    createAdvertising: (formData, config = {}) =>
+        api.post('/admin/advertising', formData, {  
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getAllAdvertising: () => api.get('/admin/advertising'),
+    updateAdvertising: (id, formData, config = {}) =>
+        api.put(`/admin/advertising/${id}`, formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    deleteAdvertising: (id) => api.delete(`/admin/advertising/${id}`),
+
 };
-
-
-export const affiliationAPI = {
-    uploadAffiliation: (formData) => api.post('/affiliations/upload', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-    // accept optional axios config (e.g., onUploadProgress)
-    uploadAffiliationWithConfig: (formData, config = {}) => api.post('/affiliations/upload', formData, {
-        ...config,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-            ...(config.headers || {}),
-        },
-    }),
-    getAffiliations: () => api.get('/affiliations'),
-    updateAffiliationStatus: (id, status) => api.put(`/affiliations/${id}/status`, { status }),
-    deleteAffiliation: (id) => api.delete(`/affiliations/${id}`),
-    getAllAffiliations: () => api.get('/affiliations/all'),
-};
-
-
-
-export const maestorAPI = {
-    uploadMaestor: (formData) => api.post('/maestor', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-       
-    updateMaestroStatus: (id, status) => api.put(`/maestor/${id}/status`, { status }),
-    deleteMaestro: (id) => api.delete(`/maestor/${id}`),
-    getAllMaestros: () => api.get('/maestor'),
-    updateMaestro: (id, formData) => api.put(`/maestor/${id}`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-
-};
-
-
-export const expertAPI = {
-    createExpert: (formData) => api.post('/expert/', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-    getExperts: () => api.get('/expert'),
-    updateExpert: (id, formData) => api.put(`/expert/${id}`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-    deleteExpert: (id) => api.delete(`/expert/${id}`),
-};
-
-
-export const celebrateAPI = {
-    createCelebrate: (formData) => api.post('/celebrate/', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-    getCelebrates: () => api.get('/celebrate'),
-    updateCelebrateStatus: (id, status) => api.put(`/celebrate/${id}`, { status }),
-    deleteCelebrate: (id) => api.delete(`/celebrate/${id}`),
-};
-
-
-
-export const adverstandAPI = {
-    createAdverstanding: (formData) => api.post('/adverstand/', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
-    getAdverstands: () => api.get('/adverstand'),
-    updateAdverstandStatus: (id, status) => api.put(`/adverstand/${id}/status`, { status }),
-    deleteAdverstand: (id) => api.delete(`/adverstand/${id}`),
-};
+// ...existing code...
 
 
 export default api;

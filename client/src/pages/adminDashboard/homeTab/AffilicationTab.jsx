@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { affiliationAPI } from '../../../config/api.js';
+import { adminAPI } from '../../../config/api.js';
 import toast, { Toaster } from 'react-hot-toast';
-import { 
-  MdUpload, 
-  MdDelete, 
-  MdImage, 
-  MdVisibility, 
-  MdVisibilityOff, 
+import {
+  MdUpload,
+  MdDelete,
+  MdImage,
+  MdVisibility,
+  MdVisibilityOff,
   MdAddPhotoAlternate,
   MdCloudUpload,
   MdRefresh,
@@ -26,25 +26,33 @@ export default function AffiliationsTab() {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
 
-  useEffect(() => { 
-    fetchItems(); 
-    return () => { 
-      (previews||[]).forEach(p=>{ 
-        try{ URL.revokeObjectURL(p.url) } catch(e){} 
-      }) 
-    } 
+  useEffect(() => {
+    fetchItems();
+    return () => {
+      (previews || []).forEach(p => {
+        try { URL.revokeObjectURL(p.url) } catch (e) { }
+      })
+    }
   }, []);
 
   const fetchItems = async () => {
     setLoading(true);
     try {
-      const res = await affiliationAPI.getAffiliations();
-      setItems(res.data || []);
+      // use getAllAffiliations to avoid route collisions on the server router
+      const res = await adminAPI.getAllAffiliations();
+      console.debug('fetchItems response:', res);
+      const data = res?.data || [];
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        // show a small info so user knows the call succeeded but no data
+        console.info('Affiliations fetch returned no items');
+      }
+      setItems(data);
     } catch (err) {
       console.error(err);
-      toast.error('Failed to load affiliations');
-    } finally { 
-      setLoading(false); 
+      const msg = err?.response?.data?.message || err?.message || 'Failed to load affiliations';
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,7 +76,7 @@ export default function AffiliationsTab() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     const fList = e.dataTransfer?.files;
     if (fList && fList.length > 0) {
       handleFiles(fList);
@@ -77,7 +85,7 @@ export default function AffiliationsTab() {
 
   const handleFiles = (fileList) => {
     const arr = Array.from(fileList).filter(file => file.type.startsWith('image/'));
-    
+
     if (arr.length === 0) {
       toast.error('Please select valid image files');
       return;
@@ -91,41 +99,41 @@ export default function AffiliationsTab() {
     }
 
     setFiles(arr);
-    setPreviews(arr.map(f => ({ 
-      url: URL.createObjectURL(f), 
+    setPreviews(arr.map(f => ({
+      url: URL.createObjectURL(f),
       type: f.type,
       name: f.name,
-      size: f.size 
+      size: f.size
     })));
   };
 
   const upload = async () => {
-    if (!files.length) { 
-      toast.error('Please select image(s) first'); 
-      return; 
+    if (!files.length) {
+      toast.error('Please select image(s) first');
+      return;
     }
-    
+
     const form = new FormData();
     files.forEach(f => form.append('media', f));
-    
+
     try {
       setUploading(true);
       toast.loading(`Uploading ${files.length} image${files.length > 1 ? 's' : ''}...`, { id: 'aff-upload' });
-      
-      const res = await affiliationAPI.uploadAffiliationWithConfig(form);
+
+      const res = await adminAPI.uploadAffiliationWithConfig(form);
       toast.dismiss('aff-upload');
       toast.success(`${files.length} image${files.length > 1 ? 's' : ''} uploaded successfully!`);
-      
-      setFiles([]); 
+
+      setFiles([]);
       setPreviews([]);
-      try { 
-        if (inputRef.current) { 
-          inputRef.current.value = null; 
-        } 
-      } catch(e){}
+      try {
+        if (inputRef.current) {
+          inputRef.current.value = null;
+        }
+      } catch (e) { }
 
       if (res && res.data && Array.isArray(res.data.created) && res.data.created.length) {
-        setItems(it => [...(it||[]), ...res.data.created]);
+        setItems(it => [...(it || []), ...res.data.created]);
       } else {
         fetchItems();
       }
@@ -143,14 +151,14 @@ export default function AffiliationsTab() {
     try {
       const cur = items.find(i => i._id === id) || {};
       const newStatus = cur.status === 'active' ? 'inactive' : 'active';
-      
+
       setItems(it => it.map(x => x._id === id ? { ...x, status: newStatus } : x));
-      await affiliationAPI.updateAffiliationStatus(id, newStatus);
+      await adminAPI.updateAffiliationStatus(id, newStatus);
       toast.success(`Image ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
-    } catch (err) { 
-      console.error(err); 
-      toast.error('Failed to update status'); 
-      fetchItems(); 
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update status');
+      fetchItems();
     }
   };
 
@@ -161,15 +169,15 @@ export default function AffiliationsTab() {
 
     const tId = toast.loading('Deleting...');
     try {
-      await affiliationAPI.deleteAffiliation(id);
+      await adminAPI.deleteAffiliation(id);
       setItems(it => it.filter(x => x._id !== id));
-      toast.dismiss(tId); 
+      toast.dismiss(tId);
       toast.success('Image deleted successfully');
-    } catch (err) { 
-      console.error(err); 
-      toast.dismiss(tId); 
-      toast.error('Delete failed'); 
-      fetchItems(); 
+    } catch (err) {
+      console.error(err);
+      toast.dismiss(tId);
+      toast.error('Delete failed');
+      fetchItems();
     }
   };
 
@@ -196,11 +204,10 @@ export default function AffiliationsTab() {
           <div className="flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab('create')}
-              className={`flex items-center gap-2 px-6 py-4 font-medium border-b-2 transition-colors ${
-                activeTab === 'create' 
-                  ? 'border-blue-600 text-blue-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex items-center gap-2 px-6 py-4 font-medium border-b-2 transition-colors ${activeTab === 'create'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
             >
               <MdAddPhotoAlternate className="text-lg" />
               Upload Images
@@ -212,11 +219,10 @@ export default function AffiliationsTab() {
             </button>
             <button
               onClick={() => setActiveTab('manage')}
-              className={`flex items-center gap-2 px-6 py-4 font-medium border-b-2 transition-colors ${
-                activeTab === 'manage' 
-                  ? 'border-blue-600 text-blue-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex items-center gap-2 px-6 py-4 font-medium border-b-2 transition-colors ${activeTab === 'manage'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
             >
               <MdImage className="text-lg" />
               Manage Affiliations
@@ -237,36 +243,33 @@ export default function AffiliationsTab() {
                       <MdCloudUpload className="text-gray-400" />
                       Select Images *
                     </label>
-                    
+
                     <div
                       onDragEnter={handleDrag}
                       onDragLeave={handleDrag}
                       onDragOver={handleDrag}
                       onDrop={handleDrop}
-                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 cursor-pointer ${
-                        dragActive 
-                          ? 'border-blue-400 bg-blue-50' 
-                          : 'border-gray-300 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50'
-                      }`}
+                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 cursor-pointer ${dragActive
+                        ? 'border-blue-400 bg-blue-50'
+                        : 'border-gray-300 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50'
+                        }`}
                       onClick={() => inputRef.current?.click()}
                     >
-                      <input 
-                        ref={inputRef} 
-                        type="file" 
-                        accept="image/*" 
-                        multiple 
-                        className="hidden" 
-                        onChange={onSelect} 
+                      <input
+                        ref={inputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={onSelect}
                       />
-                      
-                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                        dragActive ? 'bg-blue-100' : 'bg-gray-100'
-                      }`}>
-                        <MdCloudUpload className={`w-8 h-8 ${
-                          dragActive ? 'text-blue-600' : 'text-gray-400'
-                        }`} />
+
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${dragActive ? 'bg-blue-100' : 'bg-gray-100'
+                        }`}>
+                        <MdCloudUpload className={`w-8 h-8 ${dragActive ? 'text-blue-600' : 'text-gray-400'
+                          }`} />
                       </div>
-                      
+
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {dragActive ? 'Drop images here' : 'Click to select images'}
                       </h3>
@@ -295,7 +298,7 @@ export default function AffiliationsTab() {
                           </>
                         )}
                       </button>
-                      
+
                       <button
                         onClick={clearSelection}
                         className="flex items-center gap-2 px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors"
@@ -310,7 +313,7 @@ export default function AffiliationsTab() {
                 {/* Preview Section */}
                 <div className="lg:border-l lg:border-gray-200 lg:pl-8">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Preview</h3>
-                  
+
                   {previews.length > 0 ? (
                     <div className="space-y-4 max-h-96 overflow-y-auto">
                       {previews.map((preview, idx) => (
@@ -355,7 +358,7 @@ export default function AffiliationsTab() {
                     {activeItems.length} active, {inactiveItems.length} inactive
                   </p>
                 </div>
-                
+
                 <button
                   onClick={fetchItems}
                   disabled={loading}
@@ -396,24 +399,22 @@ export default function AffiliationsTab() {
                           alt="Affiliation"
                           className="w-full h-full object-contain p-4"
                         />
-                        
-                        <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium ${
-                          item.status === 'active' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
+
+                        <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-medium ${item.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                          }`}>
                           {item.status === 'active' ? 'Active' : 'Inactive'}
                         </div>
                       </div>
-                      
+
                       <div className="flex gap-2">
                         <button
                           onClick={() => toggle(item._id)}
-                          className={`flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-                            item.status === 'active'
-                              ? 'bg-orange-50 text-orange-700 hover:bg-orange-100'
-                              : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-                          }`}
+                          className={`flex-1 flex items-center justify-center gap-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${item.status === 'active'
+                            ? 'bg-orange-50 text-orange-700 hover:bg-orange-100'
+                            : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                            }`}
                         >
                           {item.status === 'active' ? (
                             <>
@@ -427,7 +428,7 @@ export default function AffiliationsTab() {
                             </>
                           )}
                         </button>
-                        
+
                         <button
                           onClick={() => del(item._id)}
                           className="flex items-center justify-center gap-1 py-2 px-3 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg text-sm font-medium transition-colors"
@@ -446,7 +447,7 @@ export default function AffiliationsTab() {
 
       </div>
 
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,

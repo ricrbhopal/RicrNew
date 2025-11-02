@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { celebrateAPI } from '../../../config/api';
+import { adminAPI } from '../../../config/api';
 import { MdUpload, MdDelete, MdVisibility, MdVisibilityOff, MdAdd, MdClear, MdWork, MdLink, MdImage, MdRefresh, MdPerson, MdBusiness } from 'react-icons/md';
 
 function CelebrateTab() {
@@ -26,7 +26,7 @@ function CelebrateTab() {
   const fetchCelebrates = async () => {
     setFetching(true);
     try {
-      const res = await celebrateAPI.getCelebrates();
+      const res = await adminAPI.getCelebrates();
       setCelebrates(res.data || []);
     } catch (err) {
       setMessage('❌ Error fetching success stories');
@@ -74,14 +74,27 @@ function CelebrateTab() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setMessage('');
+    // Debug log for image and companyLogo
+    if (!form.image) {
+      setMessage('❌ Student photo is required.');
+      return;
+    }
+    if (!form.companyLogo) {
+      setMessage('❌ Company logo is required.');
+      return;
+    }
+    setLoading(true);
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
         if (value) formData.append(key, value);
       });
-      await celebrateAPI.createCelebrate(formData);
+      // Debug: log FormData keys
+      for (let pair of formData.entries()) {
+        console.log(pair[0]+ ':', pair[1]);
+      }
+      await adminAPI.createCelebrate(formData);
       setMessage('🎉 Success story created successfully!');
       clearForm();
       fetchCelebrates();
@@ -98,7 +111,7 @@ function CelebrateTab() {
       const current = celebrates.find(c => c._id === id) || {};
       const newStatus = current.status === 'active' ? 'inactive' : 'active';
       setCelebrates(prev => prev.map(x => x._id === id ? { ...x, status: newStatus } : x));
-      await celebrateAPI.updateCelebrateStatus(id, newStatus);
+      await adminAPI.updateCelebrateStatus(id, newStatus);
       setMessage(`✅ Success story ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
     } catch (err) {
       setMessage('❌ Failed to update status');
@@ -109,14 +122,14 @@ function CelebrateTab() {
   const deleteCelebrate = async (id) => {
     if (!window.confirm('Are you sure you want to delete this success story?')) return;
     try {
-      await celebrateAPI.deleteCelebrate(id);
+      await adminAPI.deleteCelebrate(id);
       setCelebrates(prev => prev.filter(x => x._id !== id));
       setMessage('✅ Success story deleted successfully');
     } catch (err) {
       setMessage('❌ Failed to delete success story');
       fetchCelebrates();
     }
-  };
+  };  
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">

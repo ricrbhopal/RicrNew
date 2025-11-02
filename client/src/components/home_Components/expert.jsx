@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { FaLinkedin } from 'react-icons/fa';
 // import API
-import {expertAPI} from '../../config/api.js'; // adjust path if needed
+import {adminAPI} from '../../config/api.js'; // adjust path if needed
 
 
 
@@ -16,7 +16,7 @@ const ExpertsSection = () => {
   useEffect(() => {
     const fetchExperts = async () => {
       try {
-        const res = await expertAPI.getExperts();
+        const res = await adminAPI.getExperts();
         // Filter only experts with status "active"
         const activeExperts = res.data.filter(expert => expert.status === "active");
         setExperts(activeExperts);

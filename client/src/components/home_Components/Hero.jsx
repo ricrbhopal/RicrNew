@@ -1,5 +1,6 @@
+// ...existing code...
 import React, { useEffect, useState } from 'react';
-import { heroAPI } from '../../config/api';
+import { adminAPI } from '../../config/api';
 import { FaStar } from "react-icons/fa6";
 import { MdOutlineArrowForward } from "react-icons/md";
 import { motion } from "framer-motion";
@@ -16,34 +17,42 @@ const Hero = () => {
         visible: { opacity: 1, x: 0, transition: { delay: 1, duration: 0.5, ease: "easeOut" } }
     };
 
-    const [media, setMedia] = useState({ url: '/HeroVideo.mp4', mediaType: 'video' });
+    const [media, setMedia] = useState({ url: '/HeroVideo.mp4', mediaType: 'video', thumbnail: '' });
+    const [mediaError, setMediaError] = useState(false);
 
     useEffect(() => {
         const fetchMedia = async () => {
             try {
-                const res = await heroAPI.getHero();
-                // If API returns combined { hero, videos } use videos first
+                const res = await adminAPI.getHero();
                 if (res && res.data) {
                     const data = res.data;
-                    // if backend returns { hero, videos }
                     if (data.videos && data.videos.length > 0) {
                         const item = data.videos[0];
-                        setMedia({ url: item.url, mediaType: item.mediaType || (item.url?.endsWith('.jpg') || item.url?.endsWith('.png') ? 'image' : 'video') });
+                        setMedia({
+                            url: item.url,
+                            mediaType: item.mediaType || (item.url?.endsWith('.jpg') || item.url?.endsWith('.png') ? 'image' : 'video'),
+                            thumbnail: item.thumbnail || ''
+                        });
                         return;
                     }
-                    // else if backend returns just hero object
                     if (data.hero && data.hero.backgroundVideo) {
-                        setMedia({ url: data.hero.backgroundVideo, mediaType: data.hero.mediaType || (data.hero.backgroundVideo?.endsWith('.jpg') || data.hero.backgroundVideo?.endsWith('.png') ? 'image' : 'video') });
+                        setMedia({
+                            url: data.hero.backgroundVideo,
+                            mediaType: data.hero.mediaType || (data.hero.backgroundVideo?.endsWith('.jpg') || data.hero.backgroundVideo?.endsWith('.png') ? 'image' : 'video'),
+                            thumbnail: data.hero.thumbnail || ''
+                        });
                         return;
                     }
-                    // fallback: if API returned hero object directly
                     if (data.backgroundVideo) {
-                        setMedia({ url: data.backgroundVideo, mediaType: data.mediaType || (data.backgroundVideo?.endsWith('.jpg') || data.backgroundVideo?.endsWith('.png') ? 'image' : 'video') });
+                        setMedia({
+                            url: data.backgroundVideo,
+                            mediaType: data.mediaType || (data.backgroundVideo?.endsWith('.jpg') || data.backgroundVideo?.endsWith('.png') ? 'image' : 'video'),
+                            thumbnail: data.thumbnail || ''
+                        });
                         return;
                     }
                 }
             } catch (err) {
-                // ignore and keep default video
                 console.error('Failed to fetch hero/videos', err);
             }
         };
@@ -55,20 +64,29 @@ const Hero = () => {
 
             {media.mediaType === 'image' ? (
                 <img
-                    className='absolute inset-0 w-full h-full object-contain'
-                    src={media.url}
+                    className='absolute inset-0 w-full h-full object-cover'
+                    src={mediaError ? '/fallback-hero.jpg' : media.url}
                     alt='Hero background'
+                    loading='lazy'
+                    onError={() => setMediaError(true)}
                     aria-hidden='true'
                 />
             ) : (
                 <video
                     className='absolute inset-0 w-full h-full object-cover'
-                    src={media.url}
                     autoPlay
                     loop
                     muted
+                    playsInline
+                    preload='metadata'
+                    poster={media.thumbnail || ''}
                     aria-hidden='true'
-                />
+                >
+                    <source src={media.url} type='video/mp4' />
+                    <source src={media.url} type='video/webm' />
+                    {/* fallback */}
+                    Your browser does not support the video tag.
+                </video>
             )}
 
             <div className='absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60'></div>
@@ -96,22 +114,16 @@ const Hero = () => {
                     </motion.h1>
 
                     <motion.p className='text-sm md:text-lg max-w-xl text-white/90 mb-6' variants={fadeInRight} transition={{ delay: 0.4 }}>
-Unlock the potential of your college journey with expert coding guidance at RICR. Elevate your skills for a future in robotics and technology.                    </motion.p>
+                        Unlock the potential of your college journey with expert coding guidance at RICR. Elevate your skills for a future in robotics and technology.
+                    </motion.p>
 
                     <motion.div className='flex flex-col sm:flex-row gap-3 sm:gap-4' variants={buttonVariant}>
                         <button aria-label='Book a demo' className='group inline-flex items-center gap-2 px-6 py-3 bg-[#125785] hover:bg-[#0f4668] rounded-lg shadow-md font-medium transition transform hover:-translate-y-0.5'>
                             Book A Demo
                             <MdOutlineArrowForward className='text-lg transition-transform group-hover:translate-x-1' />
                         </button>
-
-                       
                     </motion.div>
-
-                    
                 </div>
-
-              
-
             </motion.div>
 
         </section>
@@ -119,3 +131,4 @@ Unlock the potential of your college journey with expert coding guidance at RICR
 }
 
 export default Hero;
+// ...existing code...

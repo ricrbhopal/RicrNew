@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { MdUpload, MdDelete, MdVisibility, MdVisibilityOff, MdAdd, MdClear, MdWork, MdLink, MdImage, MdRefresh, MdPerson } from 'react-icons/md';
-import { expertAPI } from '../../../config/api.js';
+import { adminAPI } from '../../../config/api.js';
 
 export default function ExpertAdmin() {
   const [experts, setExperts] = useState([]);
@@ -26,8 +26,15 @@ export default function ExpertAdmin() {
   const fetchExperts = async () => {
     setLoading(true);
     try {
-      const res = await expertAPI.getExperts();
-      setExperts(res.data || []);
+      const res = await adminAPI.getExperts();
+      let expertsData = res.data;
+      if (Array.isArray(expertsData)) {
+        setExperts(expertsData);
+      } else if (expertsData && Array.isArray(expertsData.data)) {
+        setExperts(expertsData.data);
+      } else {
+        setExperts([]);
+      }
     } catch (err) {
       console.error(err);
       toast.error('Failed to load experts');
@@ -63,7 +70,7 @@ export default function ExpertAdmin() {
     try {
       setSubmitting(true);
       toast.loading('Creating expert...', { id: 'expert-create' });
-      const res = await expertAPI.createExpert(form);
+      const res = await adminAPI.createExpert(form);
       toast.dismiss('expert-create');
       toast.success('Expert created successfully');
       if (res && res.data && res.data.expert) setExperts(prev => [res.data.expert, ...(prev || [])]);
@@ -82,7 +89,7 @@ export default function ExpertAdmin() {
       const cur = experts.find(e => e._id === id) || {};
       const newStatus = cur.status === 'active' ? 'inactive' : 'active';
       setExperts(es => es.map(x => x._id === id ? { ...x, status: newStatus } : x));
-      await expertAPI.updateExpert(id, { status: newStatus });
+      await adminAPI.updateExpert(id, { status: newStatus });
       toast.success(`Expert ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
     } catch (err) {
       console.error(err);
@@ -95,7 +102,7 @@ export default function ExpertAdmin() {
     if (!window.confirm('Are you sure you want to delete this expert?')) return;
     const t = toast.loading('Deleting expert...');
     try {
-      await expertAPI.deleteExpert(id);
+      await adminAPI.deleteExpert(id);
       setExperts(es => es.filter(x => x._id !== id));
       toast.dismiss(t); toast.success('Expert deleted');
     } catch (err) {

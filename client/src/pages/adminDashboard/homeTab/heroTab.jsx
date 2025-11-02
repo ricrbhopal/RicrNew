@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { heroAPI } from '../../../config/api.js';
+import { adminAPI } from '../../../config/api.js';
 import { 
   MdUpload, 
   MdDelete, 
@@ -77,7 +77,7 @@ export default function Home() {
     try {
       setUploading(true);
       toast.loading('Uploading...', { id: 'upload' });
-      const res = await heroAPI.uploadBackgroundVideoWithConfig(formData, {
+      const res = await adminAPI.uploadBackgroundVideoWithConfig(formData, {
         onUploadProgress: (evt) => {
           const percent = Math.round((evt.loaded * 100) / evt.total);
           setProgress(percent);
@@ -103,7 +103,7 @@ export default function Home() {
   const fetchVideos = async () => {
     setLoading(true);
     try {
-      const res = await heroAPI.getBgVideos();
+      const res = await adminAPI.getBgVideos();
       setVideos(res.data || []);
     } catch (err) {
       console.error('Failed to fetch bg videos', err);
@@ -131,7 +131,7 @@ export default function Home() {
       const newStatus = current.status === 'active' ? 'inactive' : 'active';
 
       setVideos(v => v.map(x => x._id === id ? { ...x, status: newStatus } : x));
-      await heroAPI.updateHeroStatus(id, newStatus);
+      await adminAPI.updateHeroStatus(id, newStatus);
       toast.success(`Video ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`);
     } catch (err) {
       console.error('Toggle failed', err);
@@ -147,7 +147,7 @@ export default function Home() {
 
     const toastId = toast.loading('Deleting video...');
     try {
-      await heroAPI.deleteHero(id);
+      await adminAPI.deleteHero(id);
       setVideos(v => v.filter(x => x._id !== id));
       toast.dismiss(toastId);
       toast.success('Video deleted successfully');
@@ -325,6 +325,8 @@ export default function Home() {
                                   src={preview.url}
                                   alt={`preview-${idx}`}
                                   className="w-full h-full object-cover"
+                                  loading="lazy"
+                                  onError={(e) => { e.target.src = '/placeholder-image.png'; }}
                                 />
                               ) : (
                                 <video
@@ -332,6 +334,9 @@ export default function Home() {
                                   className="w-full h-full object-cover"
                                   muted
                                   playsInline
+                                  controls
+                                  preload="metadata"
+                                  onError={(e) => { /* show poster fallback if available */ }}
                                 />
                               )}
                             </div>

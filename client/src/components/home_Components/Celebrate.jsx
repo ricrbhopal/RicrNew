@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { celebrateAPI } from '../../config/api';
+import { adminAPI } from '../../config/api';
 
 const Celebrate = () => {
     const sliderRef = useRef(null);
@@ -12,7 +12,7 @@ const Celebrate = () => {
 
     const fetchActiveStudents = async () => {
         try {
-            const res = await celebrateAPI.getCelebrates();
+            const res = await adminAPI.getCelebrates();
             setActiveStudents(res.data.filter(s => s.status === 'active'));
         } catch {
             setActiveStudents([]);

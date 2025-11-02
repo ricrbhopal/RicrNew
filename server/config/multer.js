@@ -16,7 +16,7 @@ export const uploadVideo = (options = {}) => {
 };
 
 export const uploadImage = (options = {}) => {
-  const limits = { fileSize: options.maxSize || 5 * 1024 * 1024 }; // default 5MB
+  const limits = { fileSize: options.maxSize || 200 * 1024 * 1024 }; // default 200MB
   return multer({ storage, fileFilter: fileFilter(['image']), limits });
 };
 
