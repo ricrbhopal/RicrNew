@@ -7,8 +7,9 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin:
     `${process.env.NODE_ENV === 'production'
-      ? process.env.FRONTEND_URL
-      : 'https://localhost:5173'}`,
+      ? process.env.FRONTEND_URL||'https://hackathon.ricr.in'
+      : 'http://localhost:5173'
+    }`,
   credentials: true
 }));
 
