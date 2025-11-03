@@ -28,7 +28,7 @@ export const adminAPI = {
     getHero: () => api.get('/admin/'),
     updateHero: (heroData) => api.put('/admin', heroData),
     getBgVideos: () => api.get('/admin/all'),
-    deleteHero: (id) => api.delete(`/admin/${id}`),
+    deleteHero: (id) => api.delete(`/admin/s/${id}`),
     updateHeroStatus: (id, status) => api.put(`/admin/${id}/status`, { status }),
 
 
