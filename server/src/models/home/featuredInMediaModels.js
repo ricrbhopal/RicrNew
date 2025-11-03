@@ -2,9 +2,7 @@ import mongoose from 'mongoose';
 
 
 const featuredInMediaSchema = new mongoose.Schema({
-    MediaUrl :{
-        type:String,
-    },
+ 
     image:{
         type:String,
         required:true

@@ -9,7 +9,7 @@ import Celebrate from '../components/home_Components/Celebrate'
 import FeaturedQuestion from '../components/home_Components/FeaturedQuestion'
 import Footer from '../components/Footer'
 import FeaturedInMedia from '../components/home_Components/featuredInMediaSection'
-
+import CodeCraft from '../components/home_Components/CodeCreaftSection'
 
 
 const Home = () => {
@@ -21,6 +21,7 @@ const Home = () => {
     <AdverstandingSection/>
         <Why/>
         <Affiliation/>
+        <CodeCraft/>
         <MeetOurMaestros/>
         <ExpertsSection/>
         <Celebrate/>

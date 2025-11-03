@@ -22,12 +22,15 @@ import {
   CreateFeaturedInMedia,
   GetAllFeaturedInMedia,
   UpdateFeaturedInMediaStatus,
-  DeleteFeaturedInMedia
+  DeleteFeaturedInMedia,
+  CreatePortfolio,
+  GetAllPortfolio,UpdatePortfolioStatus,
+  DeletePortfolio
 
  
 
 } from '../controller/adminController.js';
-import { uploadMedia ,uploadImage} from '../../config/multer.js';
+import { uploadMedia ,uploadImage} from '../config/multer.js';
 const router = express.Router();
 
 
@@ -86,5 +89,12 @@ router.post('/featuredInMedia', upload.any(), CreateFeaturedInMedia);
 router.get('/featuredInMedia', GetAllFeaturedInMedia);
 router.put('/featuredInMedia/:id/status', UpdateFeaturedInMediaStatus);
 router.delete('/featuredInMedia/:id', DeleteFeaturedInMedia);
+
+
+// Portfolio Routes Section
+router.post('/portfolio', upload.any(), CreatePortfolio);
+router.get('/portfolio', GetAllPortfolio);
+router.put('/portfolio/:id/status', UpdatePortfolioStatus);
+router.delete('/portfolio/:id', DeletePortfolio);
 
 export default router;

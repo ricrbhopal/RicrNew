@@ -114,8 +114,17 @@ export const adminAPI = {
     updateFeaturedInMediaStatus: (id, status) =>
         api.put(`/admin/featuredInMedia/${id}/status`, { status }),
     deleteFeaturedInMedia: (id) => api.delete(`/admin/featuredInMedia/${id}`),
-    
 
+// Portfolio
+    createPortfolio: (formData, config = {}) =>
+        api.post('/admin/portfolio', formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getAllPortfolio: () => api.get('/admin/portfolio'),
+    updatePortfolioStatus: (id, status) =>
+        api.put(`/admin/portfolio/${id}/status`, { status }),
+    deletePortfolio: (id) => api.delete(`/admin/portfolio/${id}`),
 };
 // ...existing code...
 

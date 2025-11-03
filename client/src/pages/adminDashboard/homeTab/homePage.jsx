@@ -8,6 +8,7 @@ const ExpertsTab = lazy(() => import('./expertTab'));
 const CelebrateTab = lazy(() => import('./CelebrateTab'));
 const AdvertisingTab = lazy(() => import('./advertisingTab'));
 const FeaturedInMediaTab = lazy(() => import('./featuredTab'));
+const CodeCraftTab = lazy(() => import('./CodeCraftTab'));
 
 const HomePage = () => {
   const [active, setActive] = useState('hero');
@@ -20,6 +21,7 @@ const HomePage = () => {
     { id: 'celebrate', label: 'Celebrate' },
     { id: 'advertising', label: 'Advertising' },
     { id: 'featuredInMedia', label: 'Featured In Media' },
+    { id: 'codeCraft', label: 'Code Craft' },
   ];
 
   return (
@@ -87,6 +89,7 @@ const HomePage = () => {
             {active === 'Experts' && <ExpertsTab />}
             {active === 'celebrate' && <CelebrateTab />}
             {active === 'featuredInMedia' && <FeaturedInMediaTab />}
+            {active === 'codeCraft' && <CodeCraftTab />}
           </Suspense>
         </div>
       </div>

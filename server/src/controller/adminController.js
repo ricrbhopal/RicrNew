@@ -5,8 +5,8 @@ import Expert from '../models/home/expertModel.js';
 import Celebrate from '../models/home/celebrateModel.js';
 import Advertising from '../models/home/advertisingModels.js';
 import FeaturedInMedia from '../models/home/featuredInMediaModels.js'
-
-import cloudinary from '../../config/cloudinary.js';
+import Portfolio from '../models/home/PortfolioModels.js'
+import cloudinary from '../config/cloudinary.js';
 import { Readable } from 'stream';
 
 
@@ -703,22 +703,23 @@ export const DeleteAdvertising = async (req, res) => {
 };
 
 
-export const CreateFeaturedInMedia =async (req, res)=>{
+export const CreateFeaturedInMedia = async (req, res) => {
   try {
-    // Accept both MediaUrl and mediaUrl for compatibility
-    const mediaUrl = req.body.MediaUrl || req.body.mediaUrl || '';
     const status = req.body.status || 'active';
     let imageUrl = req.body.image || '';
 
-    // If file is present, upload to Cloudinary
+    // Agar file aayi hai toh Cloudinary par upload karo
     const file = req.file || (Array.isArray(req.files) && req.files[0]);
     if (file && file.buffer) {
       const uploadStream = () => {
         return new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'featuredInMedia' }, (err, result) => {
-            if (err) return reject(err);
-            resolve(result);
-          });
+          const stream = cloudinary.uploader.upload_stream(
+            { resource_type: 'image', folder: 'featuredInMedia' },
+            (err, result) => {
+              if (err) return reject(err);
+              resolve(result);
+            }
+          );
           stream.end(file.buffer);
         });
       };
@@ -726,15 +727,14 @@ export const CreateFeaturedInMedia =async (req, res)=>{
       imageUrl = result.secure_url;
     }
 
-    // At least one of imageUrl or mediaUrl must be present
-    if (!imageUrl && !mediaUrl) {
-      return res.status(400).json({ error: 'At least one of image or mediaUrl is required' });
+    // Image must be present
+    if (!imageUrl) {
+      return res.status(400).json({ error: 'Image is required' });
     }
 
     const featuredInMedia = new FeaturedInMedia({
-      MediaUrl: mediaUrl,
       image: imageUrl,
-      status
+      status,
     });
 
     await featuredInMedia.save();
@@ -743,7 +743,7 @@ export const CreateFeaturedInMedia =async (req, res)=>{
     console.error('Error creating FeaturedInMedia:', error);
     res.status(500).json({ message: 'Server error' });
   }
-}
+};
 
 
 
@@ -788,3 +788,69 @@ export const DeleteFeaturedInMedia = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
 }
+
+export const CreatePortfolio = async (req, res) => {
+  try {
+    // Handle file upload (multer memoryStorage)
+    const file = req.file || (req.files && req.files[0]);
+    if (!file) return res.status(400).json({ message: 'No image file provided' });
+
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'portfolio_images' }, (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      }).end(file.buffer);
+    });
+
+    const portfolio = new Portfolio({
+      image: result.secure_url,
+      status: 'active',
+    });
+
+    await portfolio.save();
+    res.status(201).json(portfolio);
+  } catch (error) {
+    console.error('Error creating Portfolio:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+export const GetAllPortfolio = async (req, res) => {
+  try {
+    const portfolios = await Portfolio.find().sort({ createdAt: -1 });
+    res.status(200).json(portfolios);
+  } catch (error) {
+    console.error('Error fetching Portfolio:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const UpdatePortfolioStatus = async (req, res) => {
+  try {
+    const portfolio = await Portfolio.findById(req.params.id);
+    if (!portfolio) return res.status(404).json({ message: 'Portfolio not found' });
+    const newStatus = req.body.status && ['active', 'inactive'].includes(req.body.status)
+      ? req.body.status
+      : (portfolio.status === 'active' ? 'inactive' : 'active');
+    portfolio.status = newStatus;
+    await portfolio.save();
+    return res.json({ message: 'Status updated', portfolio });
+  } catch (err) {
+    console.error('UpdatePortfolioStatus error:', err);
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+
+};
+
+
+export const DeletePortfolio = async (req, res) => {
+  try {
+    const portfolio = await Portfolio.findByIdAndDelete(req.params.id);
+    if (!portfolio) return res.status(404).json({ message: 'Portfolio not found' });
+    return res.json({ message: 'Portfolio deleted' });
+  }
+  catch (err) {
+    console.error('DeletePortfolio error:', err);
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
