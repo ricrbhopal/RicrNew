@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ricrDB";
+  const uri = process.env.MONGO_URI || "mongodb+srv://contact_db_user:QL7z0tkGxA7Y60ri@ricr.wp5wt34.mongodb.net/RICR_DB?retryWrites=true&w=majority";
 
   try {
     // do a quick connect attempt (short timeout)

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4500';
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -10,25 +10,21 @@ const api = axios.create({
     },
 });
 
+// Add a request interceptor for multipart/form-data
+api.interceptors.request.use(config => {
+    // If the request data is FormData, set the header
+    if (config.data instanceof FormData) {
+        config.headers['Content-Type'] = 'multipart/form-data';
+    }
+    return config;
+});
 
-
-// ...existing code...
 export const adminAPI = {
     // Hero (admin)
     // server admin router is mounted at /admin -> adjust paths accordingly
-    uploadBackgroundVideo: (formData) => api.post('/admin/uploadVideo', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    }),
+    uploadBackgroundVideo: (formData) => api.post('/admin/uploadVideo', formData),
     // accept optional axios config (e.g., onUploadProgress)
-    uploadBackgroundVideoWithConfig: (formData, config = {}) => api.post('/admin/uploadVideo', formData, {
-        ...config,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-            ...(config.headers || {}),
-        },
-    }),
+    uploadBackgroundVideoWithConfig: (formData, config = {}) => api.post('/admin/uploadVideo', formData, config),
     getHero: () => api.get('/admin/'),
     updateHero: (heroData) => api.put('/admin', heroData),
     getBgVideos: () => api.get('/admin/all'),
@@ -38,10 +34,7 @@ export const adminAPI = {
 
     // backwards-compatible name used in some components
     uploadAffiliationWithConfig: (formData, config = {}) =>
-        api.post('/admin/uploadAffiliation', formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/uploadAffiliation', formData, config),
     getAffiliations: () => api.get('/admin/Affiliations'),
     getAllAffiliations: () => api.get('/admin/Affiliations/all'),
     deleteAffiliation: (id) => api.delete(`/admin/Affiliations/${id}`),
@@ -49,39 +42,24 @@ export const adminAPI = {
 
     // Maestro (maestor)
     uploadMaestor: (formData, config = {}) =>
-        api.post('/admin/maestros', formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/maestros', formData, config),
     getAllMaestros: () => api.get('/admin/maestros'),
     updateMaestro: (id, formData, config = {}) =>
-        api.put(`/admin/maestros/${id}`, formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.put(`/admin/maestros/${id}`, formData, config),
     deleteMaestro: (id) => api.delete(`/admin/maestros/${id}`),
     updateMaestroStatus: (id, status) => api.put(`/admin/maestros/${id}/status`, { status }),
 
     // Expert
     createExpert: (formData, config = {}) =>
-        api.post('/admin/experts', formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/experts', formData, config),
     getExperts: () => api.get('/admin/experts'),
     updateExpert: (id, formData, config = {}) =>
-        api.put(`/admin/experts/${id}`, formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.put(`/admin/experts/${id}`, formData, config),
     deleteExpert: (id) => api.delete(`/admin/experts/${id}`),
 
     // Celebrate
     createCelebrate: (formData, config = {}) =>
-        api.post('/admin/celebrate', formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/celebrate', formData, config),
     getCelebrates: () => api.get('/admin/celebrate'),
     updateCelebrate: (id, data) => api.put(`/admin/celebrate/${id}`, data),
     deleteCelebrate: (id) => api.delete(`/admin/celebrate/${id}`),
@@ -90,26 +68,17 @@ export const adminAPI = {
 
     // Advertising
     createAdvertising: (formData, config = {}) =>
-        api.post('/admin/advertising', formData, {  
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/advertising', formData, config),
     getAllAdvertising: () => api.get('/admin/advertising'),
     updateAdvertising: (id, formData, config = {}) =>
-        api.put(`/admin/advertising/${id}`, formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.put(`/admin/advertising/${id}`, formData, config),
     deleteAdvertising: (id) => api.delete(`/admin/advertising/${id}`),
 
 
 
     // Featured In Media
     createFeaturedInMedia: (formData, config = {}) =>
-        api.post('/admin/featuredInMedia', formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/featuredInMedia', formData, config),
     getAllFeaturedInMedia: () => api.get('/admin/featuredInMedia'),
     updateFeaturedInMediaStatus: (id, status) =>
         api.put(`/admin/featuredInMedia/${id}/status`, { status }),
@@ -117,16 +86,12 @@ export const adminAPI = {
 
 // Portfolio
     createPortfolio: (formData, config = {}) =>
-        api.post('/admin/portfolio', formData, {
-            ...config,
-            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
-        }),
+        api.post('/admin/portfolio', formData, config),
     getAllPortfolio: () => api.get('/admin/portfolio'),
     updatePortfolioStatus: (id, status) =>
         api.put(`/admin/portfolio/${id}/status`, { status }),
     deletePortfolio: (id) => api.delete(`/admin/portfolio/${id}`),
 };
-// ...existing code...
 
 
 export default api;
