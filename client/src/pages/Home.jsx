@@ -8,6 +8,7 @@ import ExpertsSection from '../components/home_Components/expert'
 import Celebrate from '../components/home_Components/Celebrate'
 import FeaturedQuestion from '../components/home_Components/FeaturedQuestion'
 import Footer from '../components/Footer'
+import FeaturedInMedia from '../components/home_Components/featuredInMediaSection'
 
 
 
@@ -23,6 +24,7 @@ const Home = () => {
         <MeetOurMaestros/>
         <ExpertsSection/>
         <Celebrate/>
+        <FeaturedInMedia/>
         <FeaturedQuestion/>
         <Footer/>
 

@@ -3,10 +3,11 @@ import React, { useState, lazy, Suspense } from 'react';
 // Use dynamic imports to avoid direct static imports at module load time
 const HeroTab = lazy(() => import('./heroTab'));
 const AffiliationsTab = lazy(() => import('./AffilicationTab'));
-const MaestorTab = lazy(() => import('./Maestor'));
+const MaestorTab = lazy(() => import('./MaestorTab'));
 const ExpertsTab = lazy(() => import('./expertTab'));
 const CelebrateTab = lazy(() => import('./CelebrateTab'));
 const AdvertisingTab = lazy(() => import('./advertisingTab'));
+const FeaturedInMediaTab = lazy(() => import('./featuredTab'));
 
 const HomePage = () => {
   const [active, setActive] = useState('hero');
@@ -18,6 +19,7 @@ const HomePage = () => {
     { id: 'Experts', label: 'Experts' },
     { id: 'celebrate', label: 'Celebrate' },
     { id: 'advertising', label: 'Advertising' },
+    { id: 'featuredInMedia', label: 'Featured In Media' },
   ];
 
   return (
@@ -84,6 +86,7 @@ const HomePage = () => {
             {active === 'maestor' && <MaestorTab />}
             {active === 'Experts' && <ExpertsTab />}
             {active === 'celebrate' && <CelebrateTab />}
+            {active === 'featuredInMedia' && <FeaturedInMediaTab />}
           </Suspense>
         </div>
       </div>

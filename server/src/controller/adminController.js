@@ -4,6 +4,7 @@ import Maestros from '../models/home/maestroModel.js';
 import Expert from '../models/home/expertModel.js';
 import Celebrate from '../models/home/celebrateModel.js';
 import Advertising from '../models/home/advertisingModels.js';
+import FeaturedInMedia from '../models/home/featuredInMediaModels.js'
 
 import cloudinary from '../../config/cloudinary.js';
 import { Readable } from 'stream';
@@ -702,3 +703,88 @@ export const DeleteAdvertising = async (req, res) => {
 };
 
 
+export const CreateFeaturedInMedia =async (req, res)=>{
+  try {
+    // Accept both MediaUrl and mediaUrl for compatibility
+    const mediaUrl = req.body.MediaUrl || req.body.mediaUrl || '';
+    const status = req.body.status || 'active';
+    let imageUrl = req.body.image || '';
+
+    // If file is present, upload to Cloudinary
+    const file = req.file || (Array.isArray(req.files) && req.files[0]);
+    if (file && file.buffer) {
+      const uploadStream = () => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'featuredInMedia' }, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+          });
+          stream.end(file.buffer);
+        });
+      };
+      const result = await uploadStream();
+      imageUrl = result.secure_url;
+    }
+
+    // At least one of imageUrl or mediaUrl must be present
+    if (!imageUrl && !mediaUrl) {
+      return res.status(400).json({ error: 'At least one of image or mediaUrl is required' });
+    }
+
+    const featuredInMedia = new FeaturedInMedia({
+      MediaUrl: mediaUrl,
+      image: imageUrl,
+      status
+    });
+
+    await featuredInMedia.save();
+    res.status(201).json(featuredInMedia);
+  } catch (error) {
+    console.error('Error creating FeaturedInMedia:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+
+
+export const GetAllFeaturedInMedia = async (req, res) => {
+  try {
+    const featuredInMedia = await FeaturedInMedia.find().sort({ createdAt: -1 });
+    res.status(200).json(featuredInMedia);
+  } catch (error) {
+    console.error('Error fetching FeaturedInMedia:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+
+export const UpdateFeaturedInMediaStatus =async (req,res)=>{
+  try {
+    const featuredInMedia = await FeaturedInMedia.findById(req.params.id);
+    if (!featuredInMedia) return res.status(404).json({ message: 'FeaturedInMedia not found' });
+
+    const newStatus = req.body.status && ['active', 'inactive'].includes(req.body.status)
+      ? req.body.status
+      : (featuredInMedia.status === 'active' ? 'inactive' : 'active');
+
+    featuredInMedia.status = newStatus;
+    await featuredInMedia.save();
+    return res.json({ message: 'Status updated', featuredInMedia });
+  } catch (err) {
+    console.error('UpdateFeaturedInMediaStatus error:', err);
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+}
+
+
+
+export const DeleteFeaturedInMedia = async (req, res) => {
+  try {
+    const featuredInMedia = await FeaturedInMedia.findByIdAndDelete(req.params.id);
+    if (!featuredInMedia) return res.status(404).json({ message: 'FeaturedInMedia not found' });
+    return res.json({ message: 'FeaturedInMedia deleted' });
+  } catch (err) {
+    console.error('DeleteFeaturedInMedia error:', err);
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+}

@@ -18,7 +18,11 @@ import {
   CreateAdvertising,
   GetAllAdvertising,
   UpdateAdvertisingStatus,
-  DeleteAdvertising
+  DeleteAdvertising,
+  CreateFeaturedInMedia,
+  GetAllFeaturedInMedia,
+  UpdateFeaturedInMediaStatus,
+  DeleteFeaturedInMedia
 
  
 
@@ -75,5 +79,12 @@ router.post('/advertising', upload.any(), CreateAdvertising);
 router.get('/advertising', GetAllAdvertising);
 router.put('/advertising/:id', upload.any(), UpdateAdvertisingStatus);
 router.delete('/advertising/:id', DeleteAdvertising);
+
+
+//Featured In Media Routes SEction
+router.post('/featuredInMedia', upload.any(), CreateFeaturedInMedia);
+router.get('/featuredInMedia', GetAllFeaturedInMedia);
+router.put('/featuredInMedia/:id/status', UpdateFeaturedInMediaStatus);
+router.delete('/featuredInMedia/:id', DeleteFeaturedInMedia);
 
 export default router;

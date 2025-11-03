@@ -102,6 +102,20 @@ export const adminAPI = {
         }),
     deleteAdvertising: (id) => api.delete(`/admin/advertising/${id}`),
 
+
+
+    // Featured In Media
+    createFeaturedInMedia: (formData, config = {}) =>
+        api.post('/admin/featuredInMedia', formData, {
+            ...config,
+            headers: { 'Content-Type': 'multipart/form-data', ...(config.headers || {}) },
+        }),
+    getAllFeaturedInMedia: () => api.get('/admin/featuredInMedia'),
+    updateFeaturedInMediaStatus: (id, status) =>
+        api.put(`/admin/featuredInMedia/${id}/status`, { status }),
+    deleteFeaturedInMedia: (id) => api.delete(`/admin/featuredInMedia/${id}`),
+    
+
 };
 // ...existing code...
 
