@@ -72,7 +72,8 @@ const Affiliation = () => {
     };
 
     useEffect(() => {
-        if (remoteAffiliations.length >= 3) {
+        // Start auto-scroll only when there are more than 3 items (i.e. 4+)
+        if (remoteAffiliations.length > 3) {
             startAutoScroll();
         } else {
             stopAutoScroll();
@@ -161,7 +162,7 @@ const Affiliation = () => {
                                 </p>
                             </div>
                         </div>
-                    ) : remoteAffiliations.length < 3 ? (
+                    ) : remoteAffiliations.length <= 3 ? (
                         <div className={`grid grid-cols-1 ${remoteAffiliations.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-1'} lg:grid-cols-${remoteAffiliations.length} gap-6 sm:gap-8 items-center justify-items-center max-w-4xl mx-auto px-4`}>
                             {remoteAffiliations.map((affiliation, index) => (
                                 <div 
@@ -215,8 +216,8 @@ const Affiliation = () => {
                                 ))}
                             </div>
 
-                            {/* Scroll Indicator - Only show for slider mode */}
-                            {remoteAffiliations.length >= 3 && (
+                            {/* Scroll Indicator - Only show for slider mode (4+ items) */}
+                            {remoteAffiliations.length > 3 && (
                                 <div className="flex justify-center mt-4 sm:mt-6">
                                     <div className="flex space-x-1 sm:space-x-2">
                                         <div
@@ -239,7 +240,7 @@ const Affiliation = () => {
                             )}
 
                             {/* Mobile Instructions */}
-                            {isMobile && remoteAffiliations.length >= 3 && (
+                            {isMobile && remoteAffiliations.length > 3 && (
                                 <div className="text-center mt-4">
                                     <p className="text-sm text-gray-500">Swipe to view more</p>
                                 </div>
