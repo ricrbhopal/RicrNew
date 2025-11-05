@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm border-b border-gray-100 ">
       <nav className="max-w-8xl mx-auto px-12 sm:px-16 lg:px-20">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-18">
           <div className="flex items-center gap-6">
             <a href="#" className="flex items-center">
               <img src="/logo-2.png" alt="RICR logo" className="h-9 w-auto" />

@@ -60,7 +60,7 @@ const Hero = () => {
     }, []);
 
     return (
-        <section className='relative min-h-screen flex items-center  overflow-hidden mt-20'>
+        <section className='relative min-h-screen flex items-center  overflow-hidden mt-18'>
 
             {media.mediaType === 'image' ? (
                 <img

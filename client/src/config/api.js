@@ -91,7 +91,18 @@ export const adminAPI = {
     updatePortfolioStatus: (id, status) =>
         api.put(`/admin/portfolio/${id}/status`, { status }),
     deletePortfolio: (id) => api.delete(`/admin/portfolio/${id}`),
+
+// Stories
+    createStory: (formData, config = {}) =>
+        api.post('/admin/stories', formData, config),
+    getAllStories: () => api.get('/admin/stories'),
+    refreshStoryMetadata: (id) => api.put(`/admin/stories/${id}/refresh-metadata`),
+    updateStoryStatus: (id, status) =>
+        api.put(`/admin/stories/${id}/status`, { status }),
+    deleteStory: (id) => api.delete(`/admin/stories/${id}`),
 };
+
+
 
 
 export default api;

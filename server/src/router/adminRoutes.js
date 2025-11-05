@@ -25,7 +25,13 @@ import {
   DeleteFeaturedInMedia,
   CreatePortfolio,
   GetAllPortfolio,UpdatePortfolioStatus,
-  DeletePortfolio
+  DeletePortfolio,
+  CreateStory,
+  GetAllStories,
+  FetchStoryMetadata,
+  RefreshStoryMetadata,
+  UpdateStoryStatus,
+  DeleteStory
 
  
 
@@ -96,5 +102,14 @@ router.post('/portfolio', upload.any(), CreatePortfolio);
 router.get('/portfolio', GetAllPortfolio);
 router.put('/portfolio/:id/status', UpdatePortfolioStatus);
 router.delete('/portfolio/:id', DeletePortfolio);
+
+
+// Stories Routes Section
+router.post('/stories', upload.any(), CreateStory);
+router.get('/stories', GetAllStories);
+router.get('/stories/metadata', FetchStoryMetadata);
+router.put('/stories/:id/refresh-metadata', RefreshStoryMetadata);
+router.put('/stories/:id/status', UpdateStoryStatus);
+router.delete('/stories/:id', DeleteStory);
 
 export default router;

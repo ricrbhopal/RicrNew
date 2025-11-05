@@ -6,6 +6,7 @@ import Celebrate from '../models/home/celebrateModel.js';
 import Advertising from '../models/home/advertisingModels.js';
 import FeaturedInMedia from '../models/home/featuredInMediaModels.js'
 import Portfolio from '../models/home/PortfolioModels.js'
+import Stories from '../models/home/storiesModels.js'
 import cloudinary from '../config/cloudinary.js';
 import { Readable } from 'stream';
 
@@ -854,3 +855,240 @@ export const DeletePortfolio = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+
+
+
+export const CreateStory = async (req, res) => {
+  try {
+    let imageUrl = req.body.image || '';
+    // accept either req.body.Url or req.body.url
+    const link = req.body.Url || req.body.url || '';
+
+    // support multer single file upload (memoryStorage)
+    const file = req.file || (Array.isArray(req.files) && req.files[0]);
+    if (file && file.buffer) {
+      const uploadToCloudinary = (file, folder = 'stories') =>
+        new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream({ resource_type: 'image', folder }, (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+          });
+          stream.end(file.buffer);
+        });
+
+      const result = await uploadToCloudinary(file, 'stories');
+      imageUrl = result.secure_url;
+    }
+
+    if (!imageUrl || !link) {
+      return res.status(400).json({ message: 'Both image (file or image URL) and Url are required' });
+    }
+
+    // Persist only the fields defined in the current Stories schema
+    const storyData = {
+      image: imageUrl,
+      Url: link,
+      status: req.body.status && ['active', 'inactive'].includes(req.body.status) ? req.body.status : 'active',
+    };
+
+    const story = new Stories(storyData);
+
+    await story.save();
+    res.status(201).json(story);
+  } catch (err) {
+    console.error('CreateStory error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const GetAllStories = async (req, res) => {
+  try {
+    const stories = await Stories.find().sort({ createdAt: -1 });
+    res.status(200).json(stories);
+  } catch (err) {
+    console.error('GetAllStories error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const UpdateStoryStatus = async (req, res) => {
+  try {
+    const story = await Stories.findById(req.params.id);
+    if (!story) return res.status(404).json({ message: 'Story not found' });
+
+    const newStatus = req.body.status && ['active', 'inactive'].includes(req.body.status)
+      ? req.body.status
+      : (story.status === 'active' ? 'inactive' : 'active');
+
+    story.status = newStatus;
+    await story.save();
+    res.json({ message: 'Status updated', story });
+  } catch (err) {
+    console.error('UpdateStoryStatus error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const DeleteStory = async (req, res) => {
+  try {
+    const story = await Stories.findByIdAndDelete(req.params.id);
+    if (!story) return res.status(404).json({ message: 'Story not found' });
+    res.json({ message: 'Story deleted' });
+  } catch (err) {
+    console.error('DeleteStory error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// Refresh metadata for a saved story by id (calls internal fetch helper and updates DB)
+export const RefreshStoryMetadata = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const story = await Stories.findById(id);
+    if (!story) return res.status(404).json({ message: 'Story not found' });
+
+    if (!story.Url && !story.url) return res.status(400).json({ message: 'Story has no Url to fetch metadata from' });
+    const url = story.Url || story.url;
+    // Fetch metadata but do NOT persist it because the current Stories schema
+    // does not include metadata fields. Return the fetched metadata to client.
+    const metadata = await fetchStoryMetadataInternal(url);
+    if (!metadata) return res.status(500).json({ message: 'Could not fetch metadata' });
+
+    return res.json({ message: 'Metadata fetched (not persisted)', metadata });
+  } catch (err) {
+    console.error('RefreshStoryMetadata error:', err);
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// Try to fetch metadata (username, thumbnail/avatar, likes, comments, mediaType) from a public URL
+export const FetchStoryMetadata = async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ message: 'url query param required' });
+
+  try {
+    const metadata = await fetchStoryMetadataInternal(url);
+    return res.json({ success: true, metadata });
+  } catch (err) {
+    console.error('FetchStoryMetadata error:', err);
+    return res.status(500).json({ success: false, message: 'metadata fetch failed', error: err.message });
+  }
+};
+
+// Internal helper: returns metadata object for a given url (best-effort)
+async function fetchStoryMetadataInternal(url) {
+  if (!url) return null;
+  // First, try Facebook/Instagram oEmbed if token is provided
+  const token = process.env.INSTAGRAM_OEMBED_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN;
+  if (token) {
+    const fetchUrl = `https://graph.facebook.com/v16.0/instagram_oembed?url=${encodeURIComponent(url)}&access_token=${token}`;
+    const resp = await fetch(fetchUrl).then(r => r.json());
+    return {
+      username: resp.author_name || null,
+      avatar: resp.thumbnail_url || null,
+      mediaType: resp.type || null,
+    };
+  }
+  // No token: try Instagram JSON endpoints first (often contain graphql.shortcode_media with counts)
+  try {
+    const parsedUrl = new URL(url);
+    const host = parsedUrl.hostname.toLowerCase();
+    const isInstagram = host.includes('instagram.com') || host.includes('instagr.am');
+
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+      Accept: 'text/html,application/xhtml+xml,application/json,application/xml;q=0.9,*/*;q=0.8'
+    };
+
+    if (isInstagram) {
+      // Try the __a=1 JSON endpoint (may be rate-limited/blocked but works in some setups)
+      const tryUrls = [
+        `${parsedUrl.origin}${parsedUrl.pathname}?__a=1&__d=dis`,
+        `${parsedUrl.origin}${parsedUrl.pathname}?__a=1`,
+        url
+      ];
+
+      for (const u of tryUrls) {
+        try {
+          const r = await fetch(u, { headers });
+          if (!r.ok) continue;
+          const text = await r.text();
+          // If content-type is JSON, parse directly
+          const contentType = r.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const json = JSON.parse(text);
+            // GraphQL path may be at graphql.shortcode_media or directly shortcode_media
+            const media = json.graphql?.shortcode_media || json.shortcode_media || json.items?.[0];
+            if (media) {
+              return {
+                username: media.owner?.username || media.user?.username || null,
+                avatar: media.owner?.profile_pic_url || media.user?.profile_pic_url || media.thumbnail_resources?.[0]?.src || null,
+                likes: media.edge_media_preview_like?.count || media.edge_media_like?.count || media.like_count || 0,
+                comments: media.edge_media_to_comment?.count || media.comment_count || 0,
+                mediaType: media.is_video ? 'video' : 'image',
+              };
+            }
+          } else {
+            // Not JSON: fallthrough to HTML parse below by using text
+            const html = text;
+            const sharedDataMatch = html.match(/window\._sharedData = (\{.*?\});<\/script>/s) || html.match(/<script type="text\/javascript">window\._sharedData = (\{.*?\});<\/script>/s);
+            if (sharedDataMatch && sharedDataMatch[1]) {
+              try {
+                const parsed = JSON.parse(sharedDataMatch[1]);
+                const media = parsed.entry_data?.PostPage?.[0]?.graphql?.shortcode_media;
+                if (media) {
+                  return {
+                    username: media.owner?.username || null,
+                    avatar: media.owner?.profile_pic_url || null,
+                    likes: media.edge_media_preview_like?.count || media.edge_media_preview_like || 0,
+                    comments: media.edge_media_to_comment?.count || 0,
+                    mediaType: media.is_video ? 'video' : 'image',
+                  };
+                }
+              } catch (e) {
+                // continue
+              }
+            }
+          }
+        } catch (e) {
+          // continue to next tryUrl
+        }
+      }
+    }
+  } catch (e) {
+    // ignore and fallback
+  }
+
+  // Last-resort: fetch page HTML and attempt to extract sharedData or og tags
+  try {
+    const r2 = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'text/html' } });
+    const html = await r2.text();
+
+    const sharedDataMatch = html.match(/window\._sharedData = (\{.*?\});<\/script>/s) || html.match(/<script type="text\/javascript">window\._sharedData = (\{.*?\});<\/script>/s);
+    if (sharedDataMatch && sharedDataMatch[1]) {
+      try {
+        const parsed = JSON.parse(sharedDataMatch[1]);
+        const media = parsed.entry_data?.PostPage?.[0]?.graphql?.shortcode_media;
+        if (media) {
+          return {
+            username: media.owner?.username || null,
+            avatar: media.owner?.profile_pic_url || null,
+            likes: media.edge_media_preview_like?.count || media.edge_media_preview_like || 0,
+            comments: media.edge_media_to_comment?.count || 0,
+            mediaType: media.is_video ? 'video' : 'image',
+          };
+        }
+      } catch (e) {
+        // parse failed, continue
+      }
+    }
+
+    const ogImage = (html.match(/<meta property="og:image" content="([^">]+)"/) || [])[1] || null;
+    const ogType = (html.match(/<meta property="og:type" content="([^">]+)"/) || [])[1] || null;
+    return { username: null, avatar: ogImage, mediaType: ogType };
+  } catch (err) {
+    // final fallback
+    return { username: null, avatar: null, mediaType: null };
+  }
+}
