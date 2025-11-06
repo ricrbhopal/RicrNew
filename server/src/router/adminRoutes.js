@@ -14,7 +14,6 @@ import {
   createCelebrate,
   updateCelebrate,
   deleteCelebrate,
-
   CreateAdvertising,
   GetAllAdvertising,
   UpdateAdvertisingStatus,
@@ -32,8 +31,6 @@ import {
   RefreshStoryMetadata,
   UpdateStoryStatus,
   DeleteStory
-
- 
 
 } from '../controller/adminController.js';
 import { uploadMedia ,uploadImage} from '../config/multer.js';

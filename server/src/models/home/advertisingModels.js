@@ -1,28 +1,27 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const adverstandSchema = new mongoose.Schema({
+const adverstandSchema = new mongoose.Schema(
+  {
     // kept original field name for backward compatibility
     medial: {
-        enum: ['image', 'video'],
-        type: String,
-        required: true
+      enum: ["image", "video"],
+      type: String,
+      required: true,
     },
     // secure URL returned by Cloudinary
     url: {
-        type: String,
-        required: true,
-    },
-    // Cloudinary public id for deletion
-    publicId: {
-        type: String,
+      type: String,
+      required: true,
     },
     status: {
-        enum: ['active', 'inactive'],
-        type: String,
-        default: 'active'
+      enum: ["active", "inactive"],
+      type: String,
+      default: "active",
     },
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-const Adverstand = mongoose.model('Adverstand', adverstandSchema);
+const Adverstand = mongoose.model("Adverstand", adverstandSchema);
 
 export default Adverstand;

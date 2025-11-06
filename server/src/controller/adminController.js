@@ -86,14 +86,29 @@ export const uploadBackgroundVideo = async (req, res) => {
 
 
 export const getHero = async (req, res) => {
-	try {
-		const hero = await Hero.findOne({ status: 'active' });
-		if (!hero) return res.status(404).json({ message: 'No active hero found' });
-		res.json(hero);
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ message: 'Server error', error: err.message });
-	}
+  try {
+    // Return a shape that includes an image-hero (if any) and video list so frontend
+    // can pick the preferred media (videos first, then hero image, then fallback).
+    const videos = await Hero.find({ mediaType: 'video', status: 'active' }).sort({ createdAt: -1 });
+    const heroImage = await Hero.findOne({ mediaType: 'image', status: 'active' }).sort({ createdAt: -1 });
+    const latest = await Hero.findOne({ status: 'active' }).sort({ createdAt: -1 });
+
+    // If nothing found, return 404 to keep behavior consistent
+    if (!latest && !heroImage && (!videos || videos.length === 0)) {
+      return res.status(404).json({ message: 'No active hero found' });
+    }
+
+    return res.json({
+      hero: heroImage || null,
+      videos: videos || [],
+      backgroundVideo: latest?.backgroundVideo || null,
+      mediaType: latest?.mediaType || null,
+      thumbnail: latest?.thumbnail || ''
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
 };
 
 

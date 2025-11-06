@@ -58,8 +58,8 @@ const MilneStoneRecoginzation = () => {
 									</div>
 
 									<a href={s.Url || s.url} target="_blank" rel="noopener noreferrer">
-										<div className="w-full h-28 sm:h-32 md:h-36 lg:h-40 overflow-hidden">
-											<img src={s.image} alt={s.caption || 'story image'} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" />
+										<div className="w-full h-60">
+											<img src={s.image} alt={s.caption || 'story image'} className="w-full h-60 object-cover transition-transform duration-300 hover:scale-105" loading="lazy" />
 										</div>
 									</a>
 
