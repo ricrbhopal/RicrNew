@@ -200,7 +200,7 @@ const Hero = () => {
       )}
 
       {/* Gradient overlay to improve text legibility */}
-      <div className='absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60'></div>
+      <div className='absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/30'></div>
 
       {/* Content */}
       <motion.div
