@@ -1,302 +1,284 @@
 // src/components/home_Components/Why.jsx
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-/**
- * Why.jsx
- * Donut-style segmented wheel with gaps between slices, auto-cycling active slice,
- * active slice "pops out" (translates outward + scales), and right-side details.
- *
- * Drop into a Vite+React+Tailwind project with framer-motion installed.
- */
+/*
+  Replace these with your actual image URLs (6 images, one per slice).
+  They will be used to fill each slice via SVG <pattern>.
+*/
+const IMAGE_URLS = [
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80", // sample 1
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=80", // sample 2
+  "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=1200&q=80", // sample 3
+  "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80", // sample 4
+  "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=1200&q=80", // sample 5
+  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80", // sample 6
+];
 
 const SEGMENTS = [
-  { id: 0, title: 'Fast', desc: 'High performance and low latency for fast user experiences.' },
-  { id: 1, title: 'Secure', desc: 'Built with security best-practices and encrypted data flows.' },
-  { id: 2, title: 'Reliable', desc: '99.9% uptime and robust fault-tolerant architecture.' },
-  { id: 3, title: 'Support', desc: '24x7 support & SLA-backed response times.' },
-  { id: 4, title: 'Scalable', desc: 'Grows with your needs — horizontal & vertical scaling.' },
-  { id: 5, title: 'Integrations', desc: 'Easy integrations with popular tools and APIs.' },
-]
+  { id: 0, title: "Fast", desc: "High performance and low latency for fast user experiences." },
+  { id: 1, title: "Secure", desc: "Built with security best-practices and encrypted data flows." },
+  { id: 2, title: "Reliable", desc: "99.9% uptime and robust fault-tolerant architecture." },
+  { id: 3, title: "Support", desc: "24x7 support & SLA-backed response times." },
+  { id: 4, title: "Scalable", desc: "Grows with your needs — horizontal & vertical scaling." },
+  { id: 5, title: "Integrations", desc: "Easy integrations with popular tools and APIs." },
+];
 
-// helper: degrees -> cartesian
 function polarToCartesian(cx, cy, r, angleDeg) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180.0
-  return {
-    x: cx + r * Math.cos(angleRad),
-    y: cy + r * Math.sin(angleRad),
-  }
+  const angleRad = ((angleDeg - 90) * Math.PI) / 180.0;
+  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) };
 }
 
-// helper: create donut segment path between startAngle and endAngle,
-// with small internal gapAngle to separate slices visually.
-function describeDonutSegment(cx, cy, innerR, outerR, startAngle, endAngle, gapAngle = 1) {
-  // shrink angles by half gap each side
-  const halfGap = gapAngle / 2
-  const s = startAngle + halfGap
-  const e = endAngle - halfGap
-
-  // points
-  const p1 = polarToCartesian(cx, cy, outerR, s)
-  const p2 = polarToCartesian(cx, cy, outerR, e)
-  const p3 = polarToCartesian(cx, cy, innerR, e)
-  const p4 = polarToCartesian(cx, cy, innerR, s)
-
-  // flags
-  const largeArc = e - s <= 180 ? '0' : '1'
-
-  // path: move to p1, arc outer to p2, line to p3, arc inner back to p4, close
-  const d = [
+function describeDonutSegment(cx, cy, innerR, outerR, startAngle, endAngle, gapAngle = 1.5) {
+  const halfGap = gapAngle / 2;
+  const s = startAngle + halfGap;
+  const e = endAngle - halfGap;
+  const p1 = polarToCartesian(cx, cy, outerR, s);
+  const p2 = polarToCartesian(cx, cy, outerR, e);
+  const p3 = polarToCartesian(cx, cy, innerR, e);
+  const p4 = polarToCartesian(cx, cy, innerR, s);
+  const largeArc = e - s <= 180 ? "0" : "1";
+  return [
     `M ${p1.x} ${p1.y}`,
     `A ${outerR} ${outerR} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
     `L ${p3.x} ${p3.y}`,
     `A ${innerR} ${innerR} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
-    'Z',
-  ].join(' ')
-  return d
+    "Z",
+  ].join(" ");
 }
 
 export default function Why() {
-  const [hovered, setHovered] = useState(null) // user hover/focus
-  const [autoActive, setAutoActive] = useState(0) // auto-cycling index
-  const autoRef = useRef(null)
-  const size = 360
-  const cx = size / 2
-  const cy = size / 2
-  const outerR = 200
-  const innerR = 98
-  const count = SEGMENTS.length
-  const angleStep = 360 / count
-  const gapAngle = 1 // degrees gap between slices to mimic video separation
+  // active slice index (for pop + details)
+  const [autoActive, setAutoActive] = useState(0);
 
-  // slices with paths
+  // refs for rotation loop
+  const rotRef = useRef(null);
+  const rafRef = useRef(null);
+  const rotationRef = useRef(0);
+  const lastTriggeredRef = useRef(null);
+
+  const size = 520; // slightly larger for better composition
+  const cx = size / 2;
+  const cy = size / 2;
+
+  // ring thickness (adjust as needed)
+  const outerR = 240;
+  const innerR = 130;
+
+  const count = SEGMENTS.length;
+  const angleStep = 360 / count;
+  const gapAngle = 1.5;
+
   const slices = useMemo(() => {
     return SEGMENTS.map((s, i) => {
-      const start = i * angleStep
-      const end = start + angleStep
+      const start = i * angleStep;
+      const end = start + angleStep;
       return {
         ...s,
         start,
         end,
         d: describeDonutSegment(cx, cy, innerR, outerR, start, end, gapAngle),
-        midAngle: start + angleStep / 2,
-      }
-    })
+        midAngle: start + angleStep / 2, // center of slice
+      };
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count])
+  }, [count]);
 
-  const activeIndex = hovered !== null ? hovered : autoActive
-  const isPaused = hovered !== null // pause rotation while interacting
+  // rotation + detection params
+  const ROTATION_SPEED = 14; // deg/sec (smooth)
+  const RIGHT_THRESHOLD = 12;
+  const MARKED_POSITION = 45; // you used 45 earlier — keeps the active slice a bit above horizontal
+  const POP_TRANSLATE = 48;
+  const POP_SCALE = 1.18;
 
-  // auto-cycle: change active slice every 2.8s when not hovered
-  useEffect(() => {
-    if (autoRef.current) {
-      clearInterval(autoRef.current)
-      autoRef.current = null
-    }
-    if (hovered === null) {
-      autoRef.current = setInterval(() => {
-        setAutoActive((prev) => (prev + 1) % count)
-      }, 2800)
-    }
-    return () => {
-      if (autoRef.current) {
-        clearInterval(autoRef.current)
-        autoRef.current = null
-      }
-    }
-  }, [hovered, count])
-
-  // palette
+  // palettes fallback for stroke edges (keeps visual contrast if you remove strokes)
   const palette = [
-    ['#7c3aed', '#a78bfa'],
-    ['#06b6d4', '#67e8f9'],
-    ['#ef4444', '#fb7185'],
-    ['#f97316', '#fdba74'],
-    ['#10b981', '#34d399'],
-    ['#6366f1', '#8b5cf6'],
-  ]
+    ["#7c3aed", "#a78bfa"],
+    ["#06b6d4", "#67e8f9"],
+    ["#ef4444", "#fb7185"],
+    ["#f97316", "#fdba74"],
+    ["#10b981", "#34d399"],
+    ["#6366f1", "#8b5cf6"],
+  ];
 
-  // keyframes inline for rotation
-  const rotationDuration = 50 // seconds for full rotation
-  const rotationStyle = isPaused ? '' : `spin-wheel ${rotationDuration}s linear infinite`
+  // continuous rotation + active-slice detection (no pausing)
+  useEffect(() => {
+    let lastTime = 0;
+    function step(time) {
+      if (!lastTime) lastTime = time;
+      const dt = (time - lastTime) / 1000;
+      lastTime = time;
+
+      rotationRef.current = (rotationRef.current + ROTATION_SPEED * dt) % 360;
+      if (rotRef.current) {
+        rotRef.current.setAttribute("transform", `rotate(${rotationRef.current} ${cx} ${cy})`);
+      }
+
+      // detect which slice is closest to MARKED_POSITION
+      let found = null;
+      for (let i = 0; i < slices.length; i++) {
+        const s = slices[i];
+        let rotatedMid = (s.midAngle + rotationRef.current) % 360;
+        if (rotatedMid < 0) rotatedMid += 360;
+        const normalized = rotatedMid > 180 ? rotatedMid - 360 : rotatedMid;
+        if (Math.abs(normalized - MARKED_POSITION) <= RIGHT_THRESHOLD) {
+          found = i;
+          break;
+        }
+      }
+
+      if (found !== null) {
+        if (lastTriggeredRef.current !== found) {
+          lastTriggeredRef.current = found;
+          setAutoActive(found);
+        }
+      } else {
+        lastTriggeredRef.current = null;
+      }
+
+      rafRef.current = requestAnimationFrame(step);
+    }
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slices]);
+
+  const activeIndex = autoActive;
 
   return (
-    <section className="w-full px-6 py-12 md:py-20">
-      <style>{`
-        @keyframes spin-wheel {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-
-      <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center gap-8">
-        {/* Wheel */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative" aria-hidden="false">
+    <section className="w-full px-6 py-12 md:py-20  h-[700px]">
+      <div className="w-full flex flex-col h-[500px] md:flex-row items-center gap-10">
+        {/* LEFT: Wheel with image-filled slices */}
+        <div className="w-full md:w-1/2 flex  " style={{ marginLeft: '-235px' }}>
+          <div className="relative" style={{ width: size, height: size }}>
             <svg
               width={size}
               height={size}
               viewBox={`0 0 ${size} ${size}`}
-              className={`relative ${!isPaused ? 'will-change-transform' : ''}`}
-              style={{ animation: !isPaused ? rotationStyle : 'none', overflow: 'visible' }}
               role="img"
-              aria-label="Features wheel"
+              className="relative"
+              style={{ overflow: "visible" }}
             >
-              {/* subtle outer glow/background */}
+              {/* Define image patterns — patternUnits=userSpaceOnUse so we can size images to the whole SVG */}
               <defs>
-                <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="8" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
+                {IMAGE_URLS.slice(0, slices.length).map((url, i) => (
+                  <pattern
+                    id={`img-${i}`}
+                    key={i}
+                    patternUnits="userSpaceOnUse"
+                    x={cx - outerR}
+                    y={cy - outerR}
+                    width={outerR * 2}
+                    height={outerR * 2}
+                    preserveAspectRatio="xMidYMid slice"
+                  >
+                    <image href={url} x={cx - outerR} y={cy - outerR} width={outerR * 2} height={outerR * 2} preserveAspectRatio="xMidYMid slice" />
+                  </pattern>
+                ))}
+
+                {/* a subtle stroke gradient for edges (optional) */}
+                <linearGradient id="edgeGrad" x1="0" x2="1">
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.04)" />
+                  <stop offset="100%" stopColor="rgba(0,0,0,0.06)" />
+                </linearGradient>
               </defs>
 
-              <g transform={`translate(0,0)`}>
-                {/* base ring to give depth */}
+              {/* Rotating group (only this rotates) */}
+              <g ref={rotRef}>
+                {/* faint outer circle */}
                 <circle cx={cx} cy={cy} r={outerR + 8} fill="rgba(255,255,255,0.02)" />
 
                 {slices.map((slice, idx) => {
-                  const isActive = activeIndex === idx
-                  const isHovered = hovered === idx
-                  const [c1, c2] = palette[idx % palette.length]
-                  const gid = `g${idx}`
-                  // translate outward when active to create pop-out (move along midAngle direction)
-                  const translateDist = isActive ? 14 : 0
-                  const tx = translateDist * Math.cos(((slice.midAngle - 90) * Math.PI) / 180)
-                  const ty = translateDist * Math.sin(((slice.midAngle - 90) * Math.PI) / 180)
+                  const isActive = activeIndex === idx;
+                  const gid = `img-${idx}`;
+                  const translateDist = isActive ? POP_TRANSLATE : 0;
+                  const tx = translateDist * Math.cos(((slice.midAngle - 90) * Math.PI) / 180);
+                  const ty = translateDist * Math.sin(((slice.midAngle - 90) * Math.PI) / 180);
 
                   return (
                     <g key={idx} transform={`translate(${tx}, ${ty})`}>
-                      <defs>
-                        <linearGradient id={gid} x1="0" x2="1">
-                          <stop offset="0%" stopColor={c1} />
-                          <stop offset="100%" stopColor={c2} />
-                        </linearGradient>
-                      </defs>
-
+                      {/* each slice filled with the matching pattern image */}
                       <motion.path
                         d={slice.d}
                         fill={`url(#${gid})`}
-                        stroke={isActive ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.06)'}
-                        strokeWidth={isActive ? 3 : 1}
-                        style={{ cursor: 'pointer', transformOrigin: `${cx}px ${cy}px` }}
-                        animate={isActive ? { scale: 1.03 } : { scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-                        onMouseEnter={() => setHovered(idx)}
-                        onMouseLeave={() => setHovered(null)}
-                        onFocus={() => setHovered(idx)}
-                        onBlur={() => setHovered(null)}
-                        tabIndex={0}
-                        aria-label={`${slice.title} feature`}
+                        stroke={isActive ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.06)"}
+                        strokeWidth={isActive ? 2 : 0.8}
+                        style={{
+                          transformOrigin: `${cx}px ${cy}px`,
+                          filter: isActive ? "drop-shadow(0 10px 30px rgba(0,0,0,0.35))" : undefined,
+                        }}
+                        animate={isActive ? { scale: POP_SCALE } : { scale: 1 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 22 }}
                       />
 
-                      {/* label on the slice (keeps readable by not translating) */}
-                      {(() => {
-                        const labelR = (innerR + outerR) / 2
-                        const pos = polarToCartesian(cx + tx, cy + ty, labelR, slice.midAngle)
-                        return (
-                          <text
-                            x={pos.x}
-                            y={pos.y}
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            style={{
-                              fontSize: 12,
-                              fill: isActive ? '#fff' : 'rgba(255,255,255,0.92)',
-                              fontWeight: 700,
-                              pointerEvents: 'none',
-                              fontFamily:
-                                'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue"',
-                            }}
-                          >
-                            {slice.title}
-                          </text>
-                        )
-                      })()}
+                      {/* rotating label (optional — hides well on image) */}
+                      <text
+                        x={polarToCartesian(cx + tx, cy + ty, (innerR + outerR) / 2, slice.midAngle).x}
+                        y={polarToCartesian(cx + tx, cy + ty, (innerR + outerR) / 2, slice.midAngle).y}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        style={{
+                          fontSize: 12,
+                          fill: isActive ? "#fff" : "rgba(255,255,255,0.9)",
+                          fontWeight: 800,
+                          pointerEvents: "none",
+                          textShadow: "0 1px 2px rgba(0,0,0,0.4)",
+                        }}
+                      >
+                        {slice.title}
+                      </text>
                     </g>
-                  )
+                  );
                 })}
-
-                {/* inner circle (knob) */}
-                <circle cx={cx} cy={cy} r={innerR - 8} fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.04)" />
-                <text
-                  x={cx}
-                  y={cy}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  style={{ fontSize: 13, fill: 'white', fontWeight: 700 }}
-                >
-                  Features
-                </text>
               </g>
+
+              {/* FIXED CENTER (NOT ROTATING) */}
+              <circle cx={cx} cy={cy} r={innerR - 10} fill="white" stroke="rgba(0,0,0,0.06)" />
+              <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: 16, fill: "black", fontWeight: 700 }}>
+                Why Choose
+              </text>
+              <text x={cx} y={cy + 14} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: 18, fill: "black", fontWeight: 700 }}>
+                RICR
+              </text>
             </svg>
           </div>
         </div>
 
-        {/* Details */}
-        <div className="flex-1">
-          <AnimatePresence mode="wait" initial={false}>
-            {activeIndex != null ? (
+        {/* RIGHT: content/illustration/details */}
+        <div className="w-full md:w-1/2 pr-6 md:pr-0">
+          <h2 className="text-3xl font-bold text-black mb-4">Diving</h2>
+          <p className="text-slate-600 mb-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.
+          </p>
+
+          {/* details card that updates with active slice */}
+          <div>
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={activeIndex}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 12 }}
-                transition={{ duration: 0.28, ease: 'easeOut' }}
-                className="rounded-2xl p-6 bg-gradient-to-br from-white/6 to-white/3 backdrop-blur-sm border border-white/8"
+                exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.28 }}
+                className="rounded-2xl p-5 bg-white shadow-md border"
               >
-                <div className="flex items-center gap-4">
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center shadow-md"
-                    style={{
-                      background: `linear-gradient(135deg, ${palette[activeIndex % palette.length][0]} 0%, ${palette[activeIndex % palette.length][1]} 100%)`,
-                    }}
-                    aria-hidden="true"
-                  >
-                    <span className="text-white font-bold text-sm">#{activeIndex + 1}</span>
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+                    <img src={IMAGE_URLS[activeIndex]} alt="" className="w-full h-full object-cover" />
                   </div>
-
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {SEGMENTS[activeIndex].title}
-                    </h3>
-                    <p className="mt-1 text-sm text-slate-300 max-w-xl">
-                      {SEGMENTS[activeIndex].desc}
-                    </p>
+                    <h3 className="text-lg font-semibold">{SEGMENTS[activeIndex].title}</h3>
+                    <p className="text-sm text-slate-600">{SEGMENTS[activeIndex].desc}</p>
                   </div>
                 </div>
-
-                <div className="mt-4 flex gap-3">
-                  <button className="px-3 py-1 rounded-md bg-white/6 text-white text-sm hover:bg-white/10 transition">
-                    Learn more
-                  </button>
-                  <button className="px-3 py-1 rounded-md border border-white/6 text-sm text-slate-200 hover:bg-white/6 transition">
-                    Contact us
-                  </button>
-                </div>
               </motion.div>
-            ) : (
-              <motion.div
-                key="placeholder"
-                initial={{ opacity: 0, x: 6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.24 }}
-                className="rounded-2xl p-6 bg-white/3 backdrop-blur-sm border border-white/6"
-              >
-                <h3 className="text-lg font-semibold text-white">Hover a slice</h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  Move your cursor over any segment to pause the wheel and read details about that
-                  feature. The wheel auto-highlights segments when idle.
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
