@@ -30,7 +30,15 @@ import {
   FetchStoryMetadata,
   RefreshStoryMetadata,
   UpdateStoryStatus,
-  DeleteStory
+  DeleteStory,
+    deleteAboutHero,
+  updateAboutHeroStatus,
+  getAllAboutHeroes,
+  createAboutHero,
+  createOurLogo,
+  getAllOurLogos,
+  updateOurLogoStatus,
+  deleteOurLogo
 
 } from '../controller/adminController.js';
 import { uploadMedia ,uploadImage} from '../config/multer.js';
@@ -108,5 +116,17 @@ router.get('/stories/metadata', FetchStoryMetadata);
 router.put('/stories/:id/refresh-metadata', RefreshStoryMetadata);
 router.put('/stories/:id/status', UpdateStoryStatus);
 router.delete('/stories/:id', DeleteStory);
+
+// About Hero Routes Section
+router.post('/aboutHero', upload.any(), createAboutHero);
+router.get('/aboutHero', getAllAboutHeroes);
+router.put('/aboutHero/:id/status', updateAboutHeroStatus);
+router.delete('/aboutHero/:id', deleteAboutHero);
+
+// Our Logo Routes Section
+router.post('/ourLogo', upload.any(), createOurLogo);
+router.get('/ourLogo', getAllOurLogos);
+router.put('/ourLogo/:id/status', updateOurLogoStatus);
+router.delete('/ourLogo/:id', deleteOurLogo);
 
 export default router;

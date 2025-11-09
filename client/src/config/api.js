@@ -100,6 +100,25 @@ export const adminAPI = {
     updateStoryStatus: (id, status) =>
         api.put(`/admin/stories/${id}/status`, { status }),
     deleteStory: (id) => api.delete(`/admin/stories/${id}`),
+
+
+// About Hero  
+  createAboutHero: (formData, config = {}) =>
+         api.post('/admin/aboutHero', formData, config),
+    getAllAboutHeroes: () => api.get('/admin/aboutHero'),
+    updateAboutHeroStatus: (id, status) =>
+        api.put(`/admin/aboutHero/${id}/status`, { status }),
+    deleteAboutHero: (id) => api.delete(`/admin/aboutHero/${id}`),
+    
+    // Our Logo
+  createOurLogo: (formData, config = {}) =>
+         api.post('/admin/ourLogo', formData, config),   
+    getAllOurLogos: () => api.get('/admin/ourLogo'),
+    updateOurLogoStatus: (id, status) =>
+        api.put(`/admin/ourLogo/${id}/status`, { status }),
+    deleteOurLogo: (id) => api.delete(`/admin/ourLogo/${id}`),
+
+
 };
 
 

@@ -17,7 +17,7 @@ const Navbar = () => {
             <ul className="hidden md:flex items-center gap-8 text-gray-900 text-lg font-semibold">
               <Link to={"/"} className="cursor-pointer hover:text-[#125785]">Home</Link>
               <Link to={"/about"} className="cursor-pointer hover:text-[#125785]">About</Link>
-              <li className="cursor-pointer hover:text-[#125785]">Courses</li>
+                <Link to={"/courses"} className="cursor-pointer hover:text-[#125785]">Courses</Link>
               <li className="cursor-pointer hover:text-[#125785]">R-Sat</li>
               <li className="cursor-pointer hover:text-[#125785]">Contact</li>
             </ul>

@@ -7,6 +7,8 @@ import Advertising from '../models/home/advertisingModels.js';
 import FeaturedInMedia from '../models/home/featuredInMediaModels.js'
 import Portfolio from '../models/home/PortfolioModels.js'
 import Stories from '../models/home/storiesModels.js'
+import AboutHero from '../models/about/heroModels.js';
+import OurLogo from '../models/about/ourLogoModels.js';
 import cloudinary from '../config/cloudinary.js';
 import { Readable } from 'stream';
 
@@ -1107,3 +1109,188 @@ async function fetchStoryMetadataInternal(url) {
     return { username: null, avatar: null, mediaType: null };
   }
 }
+
+// Controller for AboutHero
+export const createAboutHero = async (req, res) => {
+  try {
+    const { mediaType, status } = req.body;
+
+    // Validate mediaType
+    if (!['video', 'image'].includes(mediaType)) {
+      return res.status(400).json({ message: 'Invalid mediaType. Allowed values are video or image.' });
+    }
+
+    // Extract file from request
+    const file = req.file || (Array.isArray(req.files) && req.files[0]);
+    if (!file) {
+      return res.status(400).json({ message: 'No file provided. Please upload an image or video.' });
+    }
+
+    // Upload file to Cloudinary
+    const resourceType = mediaType === 'video' ? 'video' : 'image';
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: resourceType, folder: 'aboutHero' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      });
+    };
+
+    let uploadResult;
+    try {
+      uploadResult = await uploadToCloudinary();
+    } catch (error) {
+      console.error('Error uploading to Cloudinary:', error);
+      return res.status(500).json({ message: 'Error uploading file to Cloudinary', error: error.message });
+    }
+
+    // Create AboutHero entry
+    const aboutHero = new AboutHero({
+      mediaType,
+      status: status && ['active', 'inactive'].includes(status) ? status : 'active',
+      url: uploadResult.secure_url, // Save Cloudinary URL
+    });
+
+    await aboutHero.save();
+    res.status(201).json({ message: 'AboutHero created successfully', aboutHero });
+  } catch (err) {
+    console.error('Error creating AboutHero:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const getAllAboutHeroes = async (req, res) => {
+  try {
+    const aboutHeroes = await AboutHero.find().sort({ createdAt: -1 });
+    res.status(200).json(aboutHeroes);
+  } catch (err) {
+    console.error('Error fetching AboutHeroes:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const updateAboutHeroStatus = async (req, res) => {
+  try {
+    const aboutHero = await AboutHero.findById(req.params.id);
+    if (!aboutHero) return res.status(404).json({ message: 'AboutHero not found' });
+
+    const newStatus = req.body.status && ['active', 'inactive'].includes(req.body.status)
+      ? req.body.status
+      : (aboutHero.status === 'active' ? 'inactive' : 'active');
+
+    aboutHero.status = newStatus;
+    await aboutHero.save();
+    res.json({ message: 'Status updated', aboutHero });
+  } catch (err) {
+    console.error('Error updating AboutHero status:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+export const deleteAboutHero = async (req, res) => {
+  try {
+    const aboutHero = await AboutHero.findByIdAndDelete(req.params.id);
+    if (!aboutHero) return res.status(404).json({ message: 'AboutHero not found' });
+    res.json({ message: 'AboutHero deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting AboutHero:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// Controller for OurLogo
+export const createOurLogo = async (req, res) => {
+  try {
+    const { status, title, sub } = req.body;
+
+    // Extract file from request
+    const file = req.file || (Array.isArray(req.files) && req.files[0]);
+    if (!file) {
+      return res.status(400).json({ message: 'No file provided. Please upload an image.' });
+    }
+
+    // Upload file to Cloudinary
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: 'image', folder: 'ourLogo' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      });
+    };
+
+    let uploadResult;
+    try {
+      uploadResult = await uploadToCloudinary();
+    } catch (error) {
+      console.error('Error uploading to Cloudinary:', error);
+      return res.status(500).json({ message: 'Error uploading file to Cloudinary', error: error.message });
+    }
+
+    // Create OurLogo entry
+    const ourLogo = new OurLogo({
+      image: uploadResult.secure_url,
+      url: uploadResult.secure_url, // Save Cloudinary URL
+      title,
+      sub,
+      status: status && ['active', 'inactive'].includes(status) ? status : 'active',
+    });
+
+    await ourLogo.save();
+    res.status(201).json({ message: 'OurLogo created successfully', ourLogo });
+  } catch (err) {
+    console.error('Error creating OurLogo:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// Get all OurLogo entries
+export const getAllOurLogos = async (req, res) => {
+  try {
+    const ourLogos = await OurLogo.find().sort({ createdAt: -1 });
+    res.status(200).json(ourLogos);
+  } catch (err) {
+    console.error('Error fetching OurLogos:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// Update OurLogo status
+export const updateOurLogoStatus = async (req, res) => {
+  try {
+    const ourLogo = await OurLogo.findById(req.params.id);
+    if (!ourLogo) return res.status(404).json({ message: 'OurLogo not found' });
+
+    const newStatus = req.body.status && ['active', 'inactive'].includes(req.body.status)
+      ? req.body.status
+      : (ourLogo.status === 'active' ? 'inactive' : 'active');
+
+    ourLogo.status = newStatus;
+    await ourLogo.save();
+    res.json({ message: 'Status updated', ourLogo });
+  } catch (err) {
+    console.error('Error updating OurLogo status:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+// Delete OurLogo entry
+export const deleteOurLogo = async (req, res) => {
+  try {
+    const ourLogo = await OurLogo.findByIdAndDelete(req.params.id);
+    if (!ourLogo) return res.status(404).json({ message: 'OurLogo not found' });
+    res.json({ message: 'OurLogo deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting OurLogo:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};

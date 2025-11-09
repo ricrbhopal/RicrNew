@@ -1,288 +1,339 @@
-// src/components/home_Components/Why.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState, useRef } from 'react'
+import { motion } from 'framer-motion'
+import { FaLaptopCode, FaBook, FaLightbulb, FaChalkboardTeacher, FaListUl, FaRocket, FaCode, FaHandshake } from "react-icons/fa";
+import One from '../../assets/1.png'
+import Two from '../../assets/2.png'
+import { FaArrowRightLong } from "react-icons/fa6";
 
-const IMAGE_URLS = [
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80",
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600&q=80",
-  "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=1600&q=80",
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80",
-  "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=1600&q=80",
-  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1600&q=80",
+const items = [
+    { key: 'book', icon: FaBook },
+    { key: 'idea', icon: FaLightbulb },
+    { key: 'teacher', icon: FaChalkboardTeacher },
+    { key: 'list', icon: FaListUl },
+    { key: 'rocket', icon: FaRocket },
+    { key: 'code', icon: FaCode },
+    { key: 'hand', icon: FaHandshake },
+    { key: 'laptop', icon: FaLaptopCode },
 ];
 
-const SEGMENTS = [
-  { id: 0, title: "Fast", desc: "High performance and low latency for fast user experiences." },
-  { id: 1, title: "Secure", desc: "Built with security best-practices and encrypted data flows." },
-  { id: 2, title: "Reliable", desc: "99.9% uptime and robust fault-tolerant architecture." },
-  { id: 3, title: "Support", desc: "24x7 support & SLA-backed response times." },
-  { id: 4, title: "Scalable", desc: "Grows with your needs — horizontal & vertical scaling." },
-  { id: 5, title: "Integrations", desc: "Easy integrations with popular tools and APIs." },
-];
+const Why = () => {
+    const [buttonActive, setButtonActive] = useState("book");
+    const [isMobile, setIsMobile] = useState(false);
+    const intervalRef = useRef(null);
+    const radiusPercent = 38;
 
-function polarToCartesian(cx, cy, r, angleDeg) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180.0;
-  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) };
-}
+    // Check if mobile on mount and resize
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+        };
+    }, []);
 
-function describeDonutSegment(cx, cy, innerR, outerR, startAngle, endAngle, gapAngle = 1.5) {
-  const halfGap = gapAngle / 2;
-  const s = startAngle + halfGap;
-  const e = endAngle - halfGap;
-  const p1 = polarToCartesian(cx, cy, outerR, s);
-  const p2 = polarToCartesian(cx, cy, outerR, e);
-  const p3 = polarToCartesian(cx, cy, innerR, e);
-  const p4 = polarToCartesian(cx, cy, innerR, s);
-  const largeArc = e - s <= 180 ? "0" : "1";
-  return [
-    `M ${p1.x} ${p1.y}`,
-    `A ${outerR} ${outerR} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
-    `L ${p3.x} ${p3.y}`,
-    `A ${innerR} ${innerR} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
-    "Z",
-  ].join(" ");
-}
-
-export default function Why() {
-  const [autoActive, setAutoActive] = useState(0);
-
-  const rotRef = useRef(null);
-  const rafRef = useRef(null);
-  const rotationRef = useRef(0);
-  const lastTriggeredRef = useRef(null);
-
-  const size = 520;
-  const cx = size / 2;
-  const cy = size / 2;
-  const outerR = 240;
-  const innerR = 130;
-
-  const count = SEGMENTS.length;
-  const angleStep = 360 / count;
-  const gapAngle = 1.5;
-
-  const slices = useMemo(() => {
-    return SEGMENTS.map((s, i) => {
-      const start = i * angleStep;
-      const end = start + angleStep;
-      return {
-        ...s,
-        start,
-        end,
-        d: describeDonutSegment(cx, cy, innerR, outerR, start, end, gapAngle),
-        midAngle: start + angleStep / 2,
-      };
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count]);
-
-  const ROTATION_SPEED = 14;
-  const RIGHT_THRESHOLD = 12;
-  const MARKED_POSITION = 45;
-  const POP_TRANSLATE = 48;
-  const POP_SCALE = 1.18;
-
-  const palette = [
-    ["#7c3aed", "#a78bfa"],
-    ["#06b6d4", "#67e8f9"],
-    ["#ef4444", "#fb7185"],
-    ["#f97316", "#fdba74"],
-    ["#10b981", "#34d399"],
-    ["#6366f1", "#8b5cf6"],
-  ];
-
-  // continuous rotation + detection
-  useEffect(() => {
-    let lastTime = 0;
-    function step(time) {
-      if (!lastTime) lastTime = time;
-      const dt = (time - lastTime) / 1000;
-      lastTime = time;
-
-      rotationRef.current = (rotationRef.current + ROTATION_SPEED * dt) % 360;
-      if (rotRef.current) {
-        rotRef.current.setAttribute("transform", `rotate(${rotationRef.current} ${cx} ${cy})`);
-      }
-
-      let found = null;
-      for (let i = 0; i < slices.length; i++) {
-        const s = slices[i];
-        let rotatedMid = (s.midAngle + rotationRef.current) % 360;
-        if (rotatedMid < 0) rotatedMid += 360;
-        const normalized = rotatedMid > 180 ? rotatedMid - 360 : rotatedMid;
-        if (Math.abs(normalized - MARKED_POSITION) <= RIGHT_THRESHOLD) {
-          found = i;
-          break;
-        }
-      }
-
-      if (found !== null) {
-        if (lastTriggeredRef.current !== found) {
-          lastTriggeredRef.current = found;
-          setAutoActive(found);
-        }
-      } else {
-        lastTriggeredRef.current = null;
-      }
-
-      rafRef.current = requestAnimationFrame(step);
-    }
-
-    rafRef.current = requestAnimationFrame(step);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const startAuto = () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(() => {
+            setButtonActive((prev) => {
+                const idx = items.findIndex(i => i.key === prev);
+                const next = (idx + 1) % items.length;
+                return items[next].key;
+            });
+        }, 4000);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slices]);
 
-  const activeIndex = autoActive;
+    useEffect(() => {
+        startAuto();
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
+    }, []);
 
-  // background changes with active slice (keeps the large background image)
-  const backgroundStyle = {
-    backgroundImage: `url(${IMAGE_URLS[activeIndex % IMAGE_URLS.length]})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  };
+    const handleClick = (key) => {
+        setButtonActive(key);
+        startAuto();
+    };
 
-  return (
-    <section className="w-full px-6 py-12 md:py-20 h-[700px]" style={backgroundStyle}>
-      <div style={{  width: "100%", height: "100%" }}>
-        <div className="w-full flex flex-col h-[500px] md:flex-row items-center justify-center gap-10">
-          {/* LEFT: Wheel with image-filled slices */}
-          <div className="w-full md:w-1/2 flex" style={{ marginLeft: "-235px" }}>
-            <div className="relative" style={{ width: size, height: size }}>
-              <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" style={{ overflow: "visible" }}>
-                {/* Define image patterns for each slice */}
-                <defs>
-                  {IMAGE_URLS.slice(0, slices.length).map((url, i) => (
-                    <pattern
-                      id={`img-${i}`}
-                      key={i}
-                      patternUnits="userSpaceOnUse"
-                      x={cx - outerR}
-                      y={cy - outerR}
-                      width={outerR * 2}
-                      height={outerR * 2}
-                      preserveAspectRatio="xMidYMid slice"
-                    >
-                      <image
-                        href={url}
-                        x={cx - outerR}
-                        y={cy - outerR}
-                        width={outerR * 2}
-                        height={outerR * 2}
-                        preserveAspectRatio="xMidYMid slice"
-                      />
-                    </pattern>
-                  ))}
+    // Mobile-specific circular layout with smaller radius
+    const getMobilePosition = (index, total) => {
+        const radius = 30; // Smaller radius for mobile
+        const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+        const xPercent = 50 + Math.cos(angle) * radius;
+        const yPercent = 50 + Math.sin(angle) * radius;
+        return { xPercent, yPercent };
+    };
 
-                  {/* optional subtle edge gradient */}
-                  {palette.map(([a, b], i) => (
-                    <linearGradient id={`grad-${i}`} key={`grad-${i}`} x1="0" x2="1">
-                      <stop offset="0%" stopColor={a} />
-                      <stop offset="100%" stopColor={b} />
-                    </linearGradient>
-                  ))}
-                </defs>
+    // Desktop circular layout
+    const getDesktopPosition = (index, total) => {
+        const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+        const xPercent = 50 + Math.cos(angle) * radiusPercent;
+        const yPercent = 50 + Math.sin(angle) * radiusPercent;
+        return { xPercent, yPercent };
+    };
 
-                {/* rotating group */}
-                <g ref={rotRef}>
-                  <circle cx={cx} cy={cy} r={outerR + 8} fill="rgba(255,255,255,0.02)" />
+    return (
+        <section className="min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+            {/* Header Section */}
+            <motion.div
+                initial={{ opacity: 0, y: -40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl md:text-2xl font-bold mb-2 py-3 sm:py-5"
+            >
+                <img 
+                    src="/Starr.png" 
+                    alt="star" 
+                    className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10" 
+                />
+                <h2 className="text-orange-600 text-base sm:text-lg md:text-xl">
+                    Coding Excellence Awaits.
+                </h2>
+            </motion.div>
 
-                  {slices.map((slice, idx) => {
-                    const isActive = activeIndex === idx;
-                    const gid = `img-${idx}`;
-                    const translateDist = isActive ? POP_TRANSLATE : 0;
-                    const tx = translateDist * Math.cos(((slice.midAngle - 90) * Math.PI) / 180);
-                    const ty = translateDist * Math.sin(((slice.midAngle - 90) * Math.PI) / 180);
+            {/* Title Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="flex flex-col text-center justify-center items-center mb-8 sm:mb-12 font-medium max-w-3xl gap-3 sm:gap-5 px-2"
+            >
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                    Why Choose RICR
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed max-w-2xl">
+                    Unlock a world of coding possibilities with RICR's exceptional courses, expert mentors, and cutting-edge infrastructure. Your coding journey starts here.
+                </p>
+            </motion.div>
 
-                    return (
-                      <g key={idx} transform={`translate(${tx}, ${ty})`}>
-                        <motion.path
-                          d={slice.d}
-                          fill={`url(#${gid})`}
-                          stroke={isActive ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.06)"}
-                          strokeWidth={isActive ? 2 : 0.8}
-                          style={{
-                            transformOrigin: `${cx}px ${cy}px`,
-                            filter: isActive ? "drop-shadow(0 10px 30px rgba(0,0,0,0.35))" : undefined,
-                          }}
-                          animate={isActive ? { scale: POP_SCALE } : { scale: 1 }}
-                          transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                        />
+            {/* Circular Feature Selector & Content */}
+            <div className="flex flex-col lg:flex-row items-center w-full max-w-6xl gap-6 sm:gap-8 lg:gap-12 xl:gap-20 mb-12 sm:mb-16">
+                {/* Circular Button Container */}
+                <div className="relative flex justify-center items-center w-full lg:w-1/2 mb-6 lg:mb-0">
+                    <div className="relative w-56 sm:w-64 md:w-72 lg:w-80 xl:w-96 max-w-md" 
+                         style={{ aspectRatio: '1 / 1' }}>
+                        {items.map((it, i) => {
+                            const { xPercent, yPercent } = isMobile 
+                                ? getMobilePosition(i, items.length)
+                                : getDesktopPosition(i, items.length);
+                            
+                            const Icon = it.icon;
+                            const isActive = buttonActive === it.key;
 
-                        <text
-                          x={polarToCartesian(cx + tx, cy + ty, (innerR + outerR) / 2, slice.midAngle).x}
-                          y={polarToCartesian(cx + tx, cy + ty, (innerR + outerR) / 2, slice.midAngle).y}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          style={{
-                            fontSize: 12,
-                            fill: isActive ? "#fff" : "rgba(255,255,255,0.95)",
-                            fontWeight: 800,
-                            pointerEvents: "none",
-                            textShadow: "0 1px 2px rgba(0,0,0,0.4)",
-                          }}
-                        >
-                          {slice.title}
-                        </text>
-                      </g>
-                    );
-                  })}
-                </g>
+                            return (
+                                <motion.div
+                                    key={it.key}
+                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                                    style={{ 
+                                        left: `${xPercent}%`, 
+                                        top: `${yPercent}%`,
+                                        zIndex: isActive ? 10 : 1
+                                    }}
+                                    whileHover={{ scale: 1.1 }}
+                                    onClick={() => handleClick(it.key)}
+                                    animate={isActive ? { scale: 1.1 } : { scale: 1 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                                >
+                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 rounded-full flex items-center justify-center shadow-lg border-2 ${
+                                        isActive 
+                                            ? 'bg-[#125785] border-[#0f4668]' 
+                                            : 'bg-white border-gray-200 hover:border-gray-300'
+                                    }`}>
+                                        <Icon size={isMobile ? 20 : 24} className={isActive ? 'text-white' : 'text-gray-600'} />
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                {/* fixed center */}
-                <circle cx={cx} cy={cy} r={innerR - 10} fill="white" stroke="rgba(0,0,0,0.06)" />
-                <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: 16, fill: "black", fontWeight: 700 }}>
-                  Why Choose
-                </text>
-                <text x={cx} y={cy + 14} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: 18, fill: "black", fontWeight: 700 }}>
-                  RICR
-                </text>
-              </svg>
-            </div>
-          </div>
-
-          {/* RIGHT: details (no image) */}
-          <div className="w-full md:w-1/2 pr-6 md:pr-0">
-            <h2 className="text-3xl font-bold text-white mb-4">Diving</h2>
-            <p className="text-slate-200 mb-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas porttitor congue massa. Fusce posuere,
-              magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.
-            </p>
-
-            <div>
-              <AnimatePresence mode="wait" initial={false}>
+                {/* Content Display */}
                 <motion.div
-                  key={activeIndex}
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 8 }}
-                  transition={{ duration: 0.28 }}
-                  className="rounded-2xl p-5 bg-white/95 shadow-md border"
+                    key={buttonActive}
+                    initial={{ opacity: 0, x: isMobile ? 0 : 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative flex items-center w-full lg:w-1/2 px-2 sm:px-4"
                 >
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="w-14 h-14 rounded-lg flex-shrink-0 flex items-center justify-center text-white font-bold"
-                      style={{
-                        background: `linear-gradient(135deg, ${palette[activeIndex % palette.length][0]}, ${palette[activeIndex % palette.length][1]})`,
-                      }}
+                    <div className="w-full max-w-lg mx-auto text-center lg:text-left">
+                        {buttonActive === 'laptop' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Real-Life Project Experience, Not Just Clones
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Immerse yourself in hands-on projects, gaining real-world coding experience beyond mere replication.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'book' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Expert-Led Coding Education
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Master coding skills under expert guidance for a transformative educational experience.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'idea' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Innovative Curriculum Design
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Engage with a cutting-edge curriculum designed to foster creativity and problem-solving.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'teacher' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Optimal Student-to-Teacher Ratio (36:2)
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Experience optimal learning with a balanced student-to-teacher ratio, fostering individualized attention and support.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'list' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Personalized Learning with Accessible Student Portal
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Tailor your learning journey through a user-friendly portal, ensuring a personalized and accessible education.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'rocket' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Your Pathway to Tech Careers
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Chart your course to a tech career with specialized programs and career-oriented guidance.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'code' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Diverse Range of Coding Languages
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Explore a diverse array of coding languages, broadening your technical expertise and versatility.
+                                </p>
+                            </div>
+                        )}
+                        {buttonActive === 'hand' && (
+                            <div className="leading-relaxed">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-[#125785]">
+                                    Collaborative Learning Environment
+                                </h3>
+                                <p className="text-gray-700 text-sm sm:text-base md:text-lg">
+                                    Thrive in a collaborative atmosphere, enhancing your coding skills through shared learning experiences.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* Web IDE Section */}
+            <div className="flex flex-col lg:flex-row items-center w-full max-w-7xl gap-6 sm:gap-8 lg:gap-12 xl:gap-16 px-2 sm:px-4 py-8 sm:py-12 lg:py-16">
+                {/* Image Section */}
+                <div className='lg:w-1/2 w-full flex justify-center items-center order-2 lg:order-1'>
+                    <img 
+                        src="Code.webp" 
+                        alt="Web IDE Illustration" 
+                        className="max-w-full h-auto w-full max-w-md lg:max-w-lg xl:max-w-xl" 
+                    />
+                </div>
+                
+                {/* Content Section */}
+                <div className='lg:w-1/2 w-full order-1 lg:order-2 mb-6 lg:mb-0'>
+                    <motion.div
+                        initial={{ opacity: 0, y: -40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                        className="flex items-center gap-2 sm:gap-3 text-base sm:text-lg md:text-xl mb-3 sm:mb-4 py-1 sm:py-2"
                     >
-                      #{activeIndex + 1}
+                        <img 
+                            src="/Starr.png" 
+                            alt="star" 
+                            className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10" 
+                        />
+                        <h2 className="text-orange-600 text-sm sm:text-base md:text-lg">
+                            Code Anywhere, Achieve Everywhere.
+                        </h2>
+                    </motion.div>
+
+                    <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium pb-4 sm:pb-6 leading-tight'>
+                        RICR Web IDE: Your Gateway to Seamless Coding Experience
+                    </h1>
+                    
+                    <p className='text-sm sm:text-base md:text-lg text-gray-700 mb-6 sm:mb-8 leading-relaxed'>
+                        Access top programming languages, code effortlessly online, and run your creations instantly with RICR's innovative Web IDE.
+                    </p>
+
+                    {/* Feature 1 */}
+                    <div className='flex items-start py-3 sm:py-4'>
+                        <div className='flex-shrink-0'>
+                            <img 
+                                src={One} 
+                                alt="Multi-language support" 
+                                className='w-12 sm:w-14 md:w-16 lg:w-20 pe-3 sm:pe-4' 
+                            />
+                        </div>
+                        <div>
+                            <h3 className='text-lg sm:text-xl md:text-2xl font-medium mb-1 sm:mb-2'>
+                                Multi-Language Support
+                            </h3>
+                            <p className='text-gray-700 text-sm sm:text-base'>
+                                Write code in your preferred language, from Python to JavaScript, our IDE supports a spectrum of programming languages.
+                            </p>
+                        </div>
                     </div>
 
-                    <div>
-                      <h3 className="text-lg font-semibold text-black">{SEGMENTS[activeIndex].title}</h3>
-                      <p className="text-sm text-slate-700">{SEGMENTS[activeIndex].desc}</p>
+                    {/* Feature 2 */}
+                    <div className='flex items-start py-3 sm:py-4'>
+                        <div className='flex-shrink-0'>
+                            <img 
+                                src={Two} 
+                                alt="Instant code execution" 
+                                className='w-12 sm:w-14 md:w-16 lg:w-20 pe-3 sm:pe-4' 
+                            />
+                        </div>
+                        <div>
+                            <h3 className='text-lg sm:text-xl md:text-2xl font-medium mb-1 sm:mb-2'>
+                                Instant Code Execution
+                            </h3>
+                            <p className='text-gray-700 text-sm sm:text-base'>
+                                Test and debug seamlessly—run your code instantly on the web for a rapid and efficient coding experience.
+                            </p>
+                        </div>
                     </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+
+                    {/* CTA Button */}
+                    <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className='mt-6 sm:mt-8 inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[#125785] hover:bg-[#0f4668] rounded-lg shadow-lg font-medium text-white transition-colors duration-300 text-sm sm:text-base w-full sm:w-auto justify-center'
+                    >
+                        Try Web IDE Now <FaArrowRightLong />
+                    </motion.button>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+        </section>
+    );
+};
+
+export default Why;

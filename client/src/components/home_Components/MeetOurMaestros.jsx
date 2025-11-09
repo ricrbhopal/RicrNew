@@ -32,7 +32,7 @@ const MaestrosSection = () => {
   }, []);
 
   return (
-    <div className='w-full mx-auto px-4 sm:px-6 md:px-16 my-20 text-white py-20 bg-[#125785]'>
+    <div className='w-full mx-auto px-4 sm:px-6 md:px-16  text-white py-20 bg-[#125785]'>
       <div className='max-w-6xl mx-auto flex flex-col justify-center items-center gap-6'>
         <h1 className='text-5xl font-medium text-center'>Meet Our Coding Maestros</h1>
         <h2 className='text-2xl text-medium text-center max-w-4xl'>
