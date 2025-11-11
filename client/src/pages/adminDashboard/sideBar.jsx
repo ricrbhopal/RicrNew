@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { 
-  MdOutlineVideoLibrary, 
-  MdHome, 
-  MdCollections, 
-  MdSettings, 
-  MdHelp, 
+import React, { useState } from "react";
+import {
+  MdOutlineVideoLibrary,
+  MdHome,
+  MdCollections,
+  MdSettings,
+  MdHelp,
   MdChevronLeft,
-  MdChevronRight
-} from 'react-icons/md';
+  MdChevronRight,
+} from "react-icons/md";
 
 const SideBar = ({ activeTab, setActiveTab }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menuItems = [
-    { id: 'hero', label: 'Home', icon: MdHome },
-    { id: 'about', label: 'About', icon: MdOutlineVideoLibrary },
-    { id: 'collections', label: 'Collections', icon: MdCollections },
-    { id: 'settings', label: 'Settings', icon: MdSettings },
-    { id: 'help', label: 'Help & Support', icon: MdHelp },
+    { id: "hero", label: "Home", icon: MdHome },
+    { id: "about", label: "About", icon: MdOutlineVideoLibrary },
+    { id: "courses", label: "Courses", icon: MdCollections },
+    { id: "settings", label: "Settings", icon: MdSettings },
+    { id: "help", label: "Help & Support", icon: MdHelp },
   ];
 
   const toggleSidebar = () => {
@@ -49,18 +49,22 @@ const SideBar = ({ activeTab, setActiveTab }) => {
                   <li key={item.id} className="flex justify-center">
                     <button
                       className={`p-3 rounded-lg flex items-center justify-center transition-all duration-200 relative group ${
-                        activeTab === item.id 
-                          ? 'bg-blue-50 text-blue-700 shadow-sm' 
-                          : 'text-gray-700 hover:bg-gray-50'
+                        activeTab === item.id
+                          ? "bg-blue-50 text-blue-700 shadow-sm"
+                          : "text-gray-700 hover:bg-gray-50"
                       }`}
                       onClick={() => setActiveTab(item.id)}
                       title={item.label}
                     >
-                      <Icon 
-                        size={20} 
-                        className={activeTab === item.id ? 'text-blue-600' : 'text-gray-500'} 
+                      <Icon
+                        size={20}
+                        className={
+                          activeTab === item.id
+                            ? "text-blue-600"
+                            : "text-gray-500"
+                        }
                       />
-                      
+
                       {/* Tooltip for collapsed state */}
                       <span className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
                         {item.label}
@@ -93,9 +97,11 @@ const SideBar = ({ activeTab, setActiveTab }) => {
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                   <MdOutlineVideoLibrary className="text-white text-lg" />
                 </div>
-                <h1 className="text-lg font-bold text-gray-800">Admin Dashboard</h1>
+                <h1 className="text-lg font-bold text-gray-800">
+                  Admin Dashboard
+                </h1>
               </div>
-              
+
               {/* Open Button (acts as close button in expanded state) */}
               <button
                 onClick={toggleSidebar}
@@ -116,15 +122,19 @@ const SideBar = ({ activeTab, setActiveTab }) => {
                   <li key={item.id}>
                     <button
                       className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-all duration-200 ${
-                        activeTab === item.id 
-                          ? 'bg-blue-50 border border-blue-100 text-blue-700 font-semibold shadow-sm' 
-                          : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+                        activeTab === item.id
+                          ? "bg-blue-50 border border-blue-100 text-blue-700 font-semibold shadow-sm"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900 border border-transparent"
                       }`}
                       onClick={() => setActiveTab(item.id)}
                     >
-                      <Icon 
-                        size={20} 
-                        className={activeTab === item.id ? 'text-blue-600' : 'text-gray-500'} 
+                      <Icon
+                        size={20}
+                        className={
+                          activeTab === item.id
+                            ? "text-blue-600"
+                            : "text-gray-500"
+                        }
                       />
                       <span className="text-sm">{item.label}</span>
                     </button>
