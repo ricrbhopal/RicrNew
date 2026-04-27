@@ -11,16 +11,19 @@ import Footer from "../components/Footer";
 import FeaturedInMedia from "../components/home_Components/featuredInMediaSection";
 import CodeCraft from "../components/home_Components/CodeCreaftSection";
 import Stories from "../components/home_Components/Storie";
-
+import  PlacementSection from "../components/home_Components/placementSection";
+import ProgramSection from "../components/home_Components/programSection";
 const Home = () => {
   return (
     <div>
       <Hero />
-
+  <PlacementSection />
+      <ProgramSection />
       <AdverstandingSection />
       <Why />
       <Affiliation />
       <CodeCraft />
+    
       <MeetOurMaestros />
       <ExpertsSection />
       <Celebrate />

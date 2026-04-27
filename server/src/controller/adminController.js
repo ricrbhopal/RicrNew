@@ -14,99 +14,105 @@ import { Readable } from 'stream';
 
 
 export const uploadBackgroundVideo = async (req, res) => {
-	try {
-		const files = Array.isArray(req.files) ? req.files : (req.file ? [req.file] : []);
-    if (!files.length) return res.status(400).json({ message: 'No media file provided' });
+  try {
+    const files = Array.isArray(req.files)
+      ? req.files
+      : req.file
+      ? [req.file]
+      : [];
 
-    // Enforce Cloudinary per-file size limit (default 10MB) and return a clear 4xx error
-    const CLOUDINARY_MAX_FILE_SIZE = parseInt(process.env.CLOUDINARY_MAX_FILE_SIZE, 10) || 10 * 1024 * 1024; // bytes
+    if (!files.length)
+      return res.status(400).json({ message: "No media file provided" });
+
+    const CLOUDINARY_MAX_FILE_SIZE =
+      parseInt(process.env.CLOUDINARY_MAX_FILE_SIZE, 10) ||
+      10 * 1024 * 1024;
+
     for (const f of files) {
-      const isImage = (f.mimetype || '').startsWith('image/');
-      if (isImage && typeof f.size === 'number' && f.size > CLOUDINARY_MAX_FILE_SIZE) {
-        const maxMB = (CLOUDINARY_MAX_FILE_SIZE / (1024 * 1024)).toFixed(2);
-        const gotMB = (f.size / (1024 * 1024)).toFixed(2);
-        return res.status(400).json({ message: `File too large: ${f.originalname || f.name || 'file'} is ${gotMB} MB — max per-file is ${maxMB} MB` });
+      const isImage = (f.mimetype || "").startsWith("image/");
+      if (isImage && typeof f.size === "number" && f.size > CLOUDINARY_MAX_FILE_SIZE) {
+        return res.status(400).json({ message: "File too large" });
       }
     }
 
-    // --- Upload Function for Cloudinary ---
-    // Use upload_stream and stream.end(buffer) pattern to avoid pipe/readable edge-cases
     const uploadFile = (file) => {
       return new Promise((resolve, reject) => {
-        try {
-          const isImage = file.mimetype?.startsWith('image/');
-          const resource_type = isImage ? 'image' : 'video';
-          const folder = isImage ? 'bg_images' : 'bg_videos';
+        const isImage = file.mimetype?.startsWith("image/");
+        const resource_type = isImage ? "image" : "video";
+        const folder = isImage ? "bg_images" : "bg_videos";
 
-          const uploadStream = cloudinary.uploader.upload_stream(
-            { resource_type, folder },
-            (err, result) => {
-              if (err) return reject(err);
-              resolve({ result, mediaType: isImage ? 'image' : 'video' });
-            }
-          );
-
-          // Use stream.end(buffer) which is the recommended approach in other handlers
-          // This avoids subtle backpressure/pipe issues with Readable().pipe()
-          if (uploadStream && typeof uploadStream.end === 'function') {
-            uploadStream.end(file.buffer);
-          } else {
-            // fallback to piping if end is not available
-            const readable = new Readable();
-            readable.push(file.buffer);
-            readable.push(null);
-            readable.pipe(uploadStream);
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { resource_type, folder },
+          (err, result) => {
+            if (err) return reject(err);
+            resolve({ result, mediaType: isImage ? "image" : "video" });
           }
-        } catch (e) {
-          reject(e);
-        }
+        );
+
+        uploadStream.end(file.buffer);
       });
     };
 
-		// Upload all files (image/video mixed)
-		const uploadResults = await Promise.all(files.map(uploadFile));
-		const createdHeroes = [];
+    const uploadResults = await Promise.all(files.map(uploadFile));
+    const createdHeroes = [];
 
-		for (const { result, mediaType } of uploadResults) {
-			const hero = new Hero({
-				backgroundVideo: result.secure_url,
-				mediaType,
-				public_id: result.public_id,
-				thumbnail: result.secure_url,
-				status: req.body.status === 'inactive' ? 'inactive' : 'active',
-			});
-			await hero.save();
-			createdHeroes.push(hero);
-		}
+    for (const { result, mediaType } of uploadResults) {
+      const hero = new Hero({
+        backgroundVideo: result.secure_url,
+        mediaType,
+        public_id: result.public_id,
+        thumbnail: result.secure_url,
 
-		res.status(201).json({ message: 'Media uploaded successfully', created: createdHeroes });
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ message: 'Server error', error: err.message });
-	}
+        // 🔥 NEW DATA FROM BODY
+
+
+        cta1Text: req.body.cta1Text || "",
+        cta1Link: req.body.cta1Link || "",
+
+        cta2Text: req.body.cta2Text || "",
+        cta2Link: req.body.cta2Link || "",
+
+        status: req.body.status === "inactive" ? "inactive" : "active",
+      });
+
+      await hero.save();
+      createdHeroes.push(hero);
+    }
+
+    res.status(201).json({
+      message: "Media uploaded successfully",
+      created: createdHeroes,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 };
-
 
 export const getHero = async (req, res) => {
   try {
-    // Return a shape that includes an image-hero (if any) and video list so frontend
-    // can pick the preferred media (videos first, then hero image, then fallback).
-    const videos = await Hero.find({ mediaType: 'video', status: 'active' }).sort({ createdAt: -1 });
-    const heroImage = await Hero.findOne({ mediaType: 'image', status: 'active' }).sort({ createdAt: -1 });
-    const latest = await Hero.findOne({ status: 'active' }).sort({ createdAt: -1 });
+    // Get ALL active records
+    const allActive = await Hero.find({ status: 'active' }).sort({ createdAt: -1 });
 
-    // If nothing found, return 404 to keep behavior consistent
-    if (!latest && !heroImage && (!videos || videos.length === 0)) {
+    // Separate by type
+    const videos = allActive.filter(item => item.mediaType === 'video');
+    const images = allActive.filter(item => item.mediaType === 'image');
+
+    // Latest item (for fallback / background)
+    const latest = allActive[0] || null;
+
+    if (!allActive || allActive.length === 0) {
       return res.status(404).json({ message: 'No active hero found' });
     }
 
     return res.json({
-      hero: heroImage || null,
-      videos: videos || [],
+      heroes: images,        // all images
+      videos: videos,        // all videos
       backgroundVideo: latest?.backgroundVideo || null,
       mediaType: latest?.mediaType || null,
       thumbnail: latest?.thumbnail || ''
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });
