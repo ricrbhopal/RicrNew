@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { LoaderContext } from "../context/LoaderContext";
+import { LoaderContext } from "../context/loaderContext";
 
 const Loader = () => {
   const [progress, setProgress] = useState(0);
