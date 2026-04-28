@@ -10,7 +10,7 @@ const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [mediaError, setMediaError] = useState(false);
 
-  // ✅ FETCH FROM BACKEND
+  //  FETCH DATA
   useEffect(() => {
     const fetchMedia = async () => {
       try {
@@ -22,19 +22,13 @@ const Hero = () => {
         if (Array.isArray(data.heroes)) {
           data.heroes.forEach((item) => {
             const url =
-              item.backgroundVideo ||
-              item.image ||
-              item.secure_url ||
-              item.url;
+              item.backgroundVideo || item.image || item.secure_url || item.url;
 
             if (!url) return;
 
             list.push({
               url,
               mediaType: item.mediaType || "image",
-              thumbnail: item.thumbnail || "",
-
-              // 🔥 DYNAMIC CONTENT
               headline: item.headline || "",
               subtext: item.subtext || "",
               cta1Text: item.cta1Text || "",
@@ -45,9 +39,7 @@ const Hero = () => {
           });
         }
 
-        if (list.length > 0) {
-          setMediaList(list);
-        }
+        setMediaList(list);
       } catch (err) {
         console.log(err);
       }
@@ -56,7 +48,7 @@ const Hero = () => {
     fetchMedia();
   }, []);
 
-  // AUTO SLIDER
+  //  AUTO SLIDER
   useEffect(() => {
     if (mediaList.length <= 1) return;
 
@@ -67,65 +59,106 @@ const Hero = () => {
     return () => clearInterval(intervalRef.current);
   }, [mediaList]);
 
-  const handleDotClick = (index) => {
-    setActiveIndex(index);
-  };
+  //  IMPORTANT FIX (avoid crash)
+  if (!mediaList.length) {
+    return (
+      <section className="w-[90%] mx-auto mt-[90px] h-[300px] bg-gray-200 rounded-2xl flex items-center justify-center">
+        <p className="text-gray-500">Loading...</p>
+      </section>
+    );
+  }
 
   const current = mediaList[activeIndex];
 
   return (
-    <section className="relative h-[85vh] rounded-3xl w-[90%] ml-30 flex items-center overflow-hidden mt-23">
-
-      {/* Background */}
-      {current?.mediaType === "image" ? (
+    <section
+      className="relative w-[90%] md:w-[90%] mx-auto 
+mt-[80px] sm:mt-[90px] md:mt-[110px]
+h-[320px] sm:h-[420px] md:h-[70vh] lg:h-[80vh]
+rounded-2xl md:rounded-2xl overflow-hidden"
+    >
+      {/*  BACKGROUND */}
+      {current.mediaType === "video" ? (
+        <video
+          ref={videoRef}
+          key={current.url} //  important for refresh
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src={current.url} />
+        </video>
+      ) : (
         <img
-          src={mediaError ? "/fallback-hero.jpg" : current?.url}
+          src={mediaError ? "/fallback-hero.jpg" : current.url}
           className="absolute inset-0 w-full h-full object-cover"
           onError={() => setMediaError(true)}
         />
-      ) : (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-        >
-          <source src={current?.url} />
-        </video>
       )}
 
-      <div className="absolute inset-0 bg-black/60"></div>
+      {/*  OVERLAY */}
+      <div className="absolute inset-0 bg-black/10"></div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-6 md:ps-20 ps-10 w-full md:w-1/2 text-white mt-120">
+      {/*  CONTENT */}
+      <div className="relative z-10 h-full flex flex-col justify-center px-5 sm:px-8 md:px-16 text-white">
+        <div className="max-w-xl">
+          <h1 className="text-lg sm:text-2xl md:text-4xl font-semibold leading-tight">
+            {current.headline}
+          </h1>
 
-        {/* CTA BUTTONS */}
-        <div className="flex flex-wrap gap-4">
+          <p className="text-xs sm:text-sm md:text-base mt-3 text-gray-200">
+            {current.subtext}
+          </p>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3  sm:ml-0 md:ml-15 sm:mt-0 md:mt-70">
+          {/* PRIMARY BUTTON */}
           <a
-            href={current?.cta1Link}
-            className="px-6 py-3 bg-[#125785] rounded-lg flex items-center gap-2"
+            href={current.cta1Link}
+            className="
+      px-4 py-2 text-sm
+      sm:px-5 sm:py-2.5 sm:text-base
+      md:px-6 md:py-3 md:text-lg
+      bg-[#125785] rounded-lg flex items-center gap-2 font-medium
+      hover:bg-[#0f4668] transition
+    "
           >
-            {current?.cta1Text}
+            {current.cta1Text}
             <MdOutlineArrowForward />
           </a>
 
+          {/* SECONDARY BUTTON */}
           <a
-            href={current?.cta2Link}
-            className="px-6 py-3 border border-white rounded-lg hover:bg-white hover:text-black transition"
+            href={current.cta2Link}
+            className="
+      px-4 py-2 text-sm
+      sm:px-5 sm:py-2.5 sm:text-base
+      md:px-6 md:py-3 md:text-lg
+      border border-[#125785] rounded-lg font-medium text-[#125785]
+      hover:bg-white hover:text-black transition
+    "
+            className="
+      px-4 py-2 text-sm
+      sm:px-5 sm:py-2.5 sm:text-base
+      md:px-6 md:py-3 md:text-lg
+      bg-[#125785] rounded-lg flex items-center gap-2 font-medium
+      hover:bg-[#0f4668] transition
+    "
           >
-            {current?.cta2Text}
+            {current.cta2Text}
           </a>
         </div>
       </div>
 
-      {/* DOTS */}
-      <div className="absolute bottom-6 w-full flex justify-center gap-3">
+      {/*  DOTS */}
+      <div className="absolute bottom-3 w-full flex justify-center gap-2">
         {mediaList.map((_, i) => (
           <button
             key={i}
-            onClick={() => handleDotClick(i)}
-            className={`w-3 h-3 rounded-full ${
+            onClick={() => setActiveIndex(i)}
+            className={`w-2 h-2 rounded-full ${
               activeIndex === i ? "bg-white" : "bg-gray-400"
             }`}
           />

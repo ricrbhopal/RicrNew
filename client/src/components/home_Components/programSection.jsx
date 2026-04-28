@@ -1,85 +1,61 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
+import { MdOutlineArrowForward } from "react-icons/md";
 
-// 🔥 DATA
-const programData = [
+// 🔥 VIDEO IMPORT (tum apna video yaha replace kar dena)
+import programVideo from "../../assets/DataType.mp4";
+
+const programs = [
   {
-    name: "Full Stack Development",
-    children: ["HTML", "JavaScript", "React", "Node"],
+    title: "Full Stack Development",
+    desc: "Build scalable web apps using MERN stack and modern tools.",
   },
   {
-    name: "Data Science",
-    children: ["Python", "ML", "DL"],
+    title: "Data Science",
+    desc: "Work with AI, ML models, and real-world datasets.",
   },
   {
-    name: "Data Analytics",
-    children: ["Excel", "Power BI", "SQL"],
+    title: "Data Analytics",
+    desc: "Analyze data, create dashboards, and drive insights.",
   },
 ];
 
 const ProgramsSection = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
-
   return (
-    <section className="h-screen flex items-center justify-center bg-[#e5e5e5]">
-      
-      {/* STACK CONTAINER */}
-      <div className="relative w-[300px] h-[400px]">
+    <section className="w-[95%] md:w-[90%] mx-auto mt-16 space-y-12">
 
-        {programData.map((item, index) => {
-          const isActive = activeIndex === index;
+      {/* 🔥 VIDEO BANNER */}
+      <div className="relative w-full h-[280px] sm:h-[350px] md:h-[450px] lg:h-[520px] rounded-2xl overflow-hidden">
 
-          return (
-            <motion.div
-              key={index}
-              onClick={() =>
-                setActiveIndex(isActive ? null : index)
-              }
+        <video
+          src={programVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-              className="absolute w-full h-[260px] rounded-2xl cursor-pointer overflow-hidden shadow-xl"
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-black/50"></div>
 
-              style={{
-                zIndex: programData.length - index,
-              }}
+        {/* CONTENT */}
+        <div className="relative z-10 h-full flex flex-col justify-center px-5 sm:px-8 md:px-16 text-white max-w-3xl">
 
-              animate={{
-                y: isActive ? -120 : index * 20,
-                scale: isActive ? 1.05 : 1 - index * 0.05,
-              }}
+          <p className="text-xs sm:text-sm uppercase tracking-wide text-gray-300 mb-2">
+            PROGRAMS
+          </p>
 
-              transition={{ duration: 0.5 }}
-            >
-              {/* CARD */}
-              <div className="w-full h-full bg-gradient-to-br from-lime-400 to-green-700 text-white p-6 flex flex-col justify-between">
+          <h2 className="text-xl sm:text-3xl md:text-5xl font-semibold leading-tight mb-4">
+            Choose your path into tech
+          </h2>
 
-                {/* TOP */}
-                <h2 className="text-xl font-bold">
-                  {item.name}
-                </h2>
-
-                {/* INNER CARDS */}
-                {isActive && (
-                  <div className="mt-4 space-y-2">
-                    {item.children.map((child, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="bg-white text-black rounded-lg px-3 py-2 text-sm"
-                      >
-                        {child}
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-
-              </div>
-            </motion.div>
-          );
-        })}
-
+          <p className="text-xs sm:text-sm md:text-base text-gray-200">
+            Whether you're starting from scratch or upskilling, we have a structured path for you.
+          </p>
+        </div>
       </div>
+
+
     </section>
   );
 };
