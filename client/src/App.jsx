@@ -16,7 +16,7 @@ import YourFuture from "./pages/yourFuture";
 
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
 
-import { LoaderProvider, LoaderContext } from "./context/LoaderContext.jsx";
+import { LoaderProvider, LoaderContext } from "./context/loaderContext.jsx";
 import ScrollToTop from "./service/scrollTop.jsx";
 
 const MainLayout = ({ children }) => {
