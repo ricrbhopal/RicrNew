@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/navbar.jsx";
-import Footer from "./components/footer.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader";
 
