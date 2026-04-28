@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
-import SubFooter from "./components/subFooter";
+import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader";
 
-import Home from "./pages/home";
+import Home from "./pages/home";  
 import OurStory from "./pages/about";
 import OurProgram from "./pages/ourProgram";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
