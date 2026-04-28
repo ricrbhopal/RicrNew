@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MdCall, MdMenu, MdClose } from "react-icons/md";
 import { Link, useLocation } from 'react-router-dom';
 import { useContext } from "react";
-import { LoaderContext } from "../context/LoaderContext";
+import { LoaderContext } from "../context/loaderContext";
 
 const Navbar = () => {
   const { setLoading } = useContext(LoaderContext);
