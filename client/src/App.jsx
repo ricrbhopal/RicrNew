@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader.jsx";
-import Home from "./pages/home.jsx";  
+import Home from "./pages/Home.jsx";  
 import OurStory from "./pages/about.jsx";
 import OurProgram from "./pages/ourProgram.jsx";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard.jsx";
