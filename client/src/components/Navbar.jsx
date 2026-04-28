@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { MdCall, MdMenu, MdClose } from "react-icons/md";
 import { Link, useLocation } from 'react-router-dom';
+import { useContext } from "react";
+import { LoaderContext } from "../context/LoaderContext";
 
 const Navbar = () => {
+  const { setLoading } = useContext(LoaderContext);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
@@ -17,9 +20,9 @@ const Navbar = () => {
   }, []);
 
   // Close mobile menu when route changes
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
+useEffect(() => {
+  setIsOpen(false);
+}, [location]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -35,10 +38,10 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Courses', path: '/courses' },
-    { name: 'R-Sat', path: '#' },
-    { name: 'Contact', path: '#' },
+    { name: 'Our Story', path: '/ourStory' },
+    { name: 'Our Programs', path: '/ourProgram' },
+    { name: 'Our People', path: '/ourPeople' },
+    { name: 'Your Future', path: '/yourFuture' },
   ];
 
   return (
@@ -69,6 +72,7 @@ const Navbar = () => {
                           ? 'text-[#125785]'
                           : ''
                       }`}
+                      onClick={() => setLoading(true)}
                     >
                       {link.name}
                       <span
@@ -136,8 +140,8 @@ const Navbar = () => {
       <div
         className={`fixed inset-0 z-40 transition-all duration-300 ${
           isOpen
-            ? 'bg-black/40 backdrop-blur-sm pointer-events-auto'
-            : 'bg-black/0 backdrop-blur-none pointer-events-none'
+            ? ' pointer-events-auto'
+            : 'bg-black/0  pointer-events-none'
         }`}
         onClick={() => setIsOpen(false)}
         aria-hidden="true"

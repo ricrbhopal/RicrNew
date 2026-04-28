@@ -21,10 +21,10 @@ const programs = [
 
 const ProgramsSection = () => {
   return (
-    <section className="w-[95%] md:w-[90%] mx-auto mt-16 space-y-12">
+    <section className="w-[100%] md:w-[100%] mx-auto mt-16 space-y-12 rounded-1xl md:rounded-1xl overflow-hidden">
 
       {/* 🔥 VIDEO BANNER */}
-      <div className="relative w-full h-[280px] sm:h-[350px] md:h-[450px] lg:h-[520px] rounded-2xl overflow-hidden">
+      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[500px] lg:h-[650px]  overflow-hidden">
 
         <video
           src={programVideo}

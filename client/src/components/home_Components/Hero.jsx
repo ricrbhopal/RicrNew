@@ -62,7 +62,7 @@ const Hero = () => {
   //  IMPORTANT FIX (avoid crash)
   if (!mediaList.length) {
     return (
-      <section className="w-[90%] mx-auto mt-[90px] h-[300px] bg-gray-200 rounded-2xl flex items-center justify-center">
+      <section className="w-[100%] mx-auto mt-[90px] h-[300px] bg-gray-200 rounded-2xl flex items-center justify-center">
         <p className="text-gray-500">Loading...</p>
       </section>
     );
@@ -72,10 +72,10 @@ const Hero = () => {
 
   return (
     <section
-      className="relative w-[90%] md:w-[90%] mx-auto 
+      className="relative w-[100%] md:w-[100%] mx-auto 
 mt-[80px] sm:mt-[90px] md:mt-[110px]
 h-[320px] sm:h-[420px] md:h-[70vh] lg:h-[80vh]
-rounded-2xl md:rounded-2xl overflow-hidden"
+rounded-1xl md:rounded-1xl overflow-hidden"
     >
       {/*  BACKGROUND */}
       {current.mediaType === "video" ? (
@@ -122,8 +122,7 @@ rounded-2xl md:rounded-2xl overflow-hidden"
       sm:px-5 sm:py-2.5 sm:text-base
       md:px-6 md:py-3 md:text-lg
       bg-[#125785] rounded-lg flex items-center gap-2 font-medium
-      hover:bg-[#0f4668] transition
-    "
+      hover:bg-[#0f4668] transition"
           >
             {current.cta1Text}
             <MdOutlineArrowForward />
@@ -139,13 +138,7 @@ rounded-2xl md:rounded-2xl overflow-hidden"
       border border-[#125785] rounded-lg font-medium text-[#125785]
       hover:bg-white hover:text-black transition
     "
-            className="
-      px-4 py-2 text-sm
-      sm:px-5 sm:py-2.5 sm:text-base
-      md:px-6 md:py-3 md:text-lg
-      bg-[#125785] rounded-lg flex items-center gap-2 font-medium
-      hover:bg-[#0f4668] transition
-    "
+         
           >
             {current.cta2Text}
           </a>

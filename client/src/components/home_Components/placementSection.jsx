@@ -1,118 +1,478 @@
 import React, { useEffect, useRef } from "react";
 
 const placementData = [
+
   {
     name: "Rahul Sharma",
-    role: "Visionary Women",
     company: "Apple Music",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
     name: "Priya Verma",
-    role: "Visionary Women",
-    company: "Apple Music",
+    company: "Spotify",
     image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
     name: "Aman Gupta",
-    role: "Visionary Women",
-    company: "Apple Music Presents",
+    company: "Google",
     image: "https://randomuser.me/api/portraits/men/65.jpg",
   },
   {
     name: "Sneha Patil",
-    role: "Visionary Women",
-    company: "Apple Music",
+    company: "Microsoft",
     image: "https://randomuser.me/api/portraits/women/68.jpg",
   },
   {
     name: "Rohit Singh",
-    role: "Visionary Women",
-    company: "Apple Music",
+    company: "Amazon",
     image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+   {
+    name: "Rahul Sharma",
+    company: "Apple Music",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    name: "Priya Verma",
+    company: "Spotify",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    name: "Aman Gupta",
+    company: "Google",
+    image: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
+  {
+    name: "Sneha Patil",
+    company: "Microsoft",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
+  },
+  {
+    name: "Rohit Singh",
+    company: "Amazon",
+    image: "https://randomuser.me/api/portraits/men/75.jpg",
+  },
+  {
+    name: "Neha Kapoor",
+    company: "Adobe",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
   },
 ];
 
+
+// 🔥 duplicate for smooth infinite loop
+const loopData = [...placementData, ...placementData, ...placementData];
+
 const PlacementSection = () => {
-  const scrollRef = useRef(null);
+  const topRef = useRef(null);
+  const bottomRef = useRef(null);
 
-  // 🔥 AUTO SLIDE (responsive scroll)
   useEffect(() => {
-    const container = scrollRef.current;
-    let scroll = 0;
+    let frame;
+    const speed = 0.6;
 
-    const interval = setInterval(() => {
-      if (!container) return;
+    const animate = () => {
+      const top = topRef.current;
+      const bottom = bottomRef.current;
 
-      const cardWidth = container.firstChild?.clientWidth || 220;
-      scroll += cardWidth + 20;
-
-      if (scroll >= container.scrollWidth - container.clientWidth) {
-        scroll = 0;
+      if (top) {
+        top.scrollLeft += speed;
+        if (top.scrollLeft >= top.scrollWidth / 2) {
+          top.scrollLeft = 0;
+        }
       }
 
-      container.scrollTo({
-        left: scroll,
-        behavior: "smooth",
-      });
-    }, 2500);
+      if (bottom) {
+        bottom.scrollLeft += speed;
+        if (bottom.scrollLeft >= bottom.scrollWidth / 2) {
+          bottom.scrollLeft = 0;
+        }
+      }
 
-    return () => clearInterval(interval);
+      frame = requestAnimationFrame(animate);
+    };
+
+    // 🔥 IMPORTANT: initialize bottom position
+    if (bottomRef.current) {
+      bottomRef.current.scrollLeft = bottomRef.current.scrollWidth / 2;
+    }
+
+    animate();
+
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   return (
-    <section className="py-10 sm:py-14 md:py-16 bg-[#f5f5f7] w-[95%] sm:w-[92%] md:w-[90%] mx-auto rounded-xl sm:rounded-2xl mt-8 sm:mt-10">
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section className="py-14 bg-[#f5f5f7] w-full mt-10">
+      <div className=" mx-auto px-4">
+        <h2 className="text-3xl md:text-5xl font-semibold text-black mb-4 leading-tight text-center">
+          People Built well enough to get hired.
+        </h2>
 
-        {/* Heading */}
-        <div className="mb-8 sm:mb-10 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-black mb-3 sm:mb-4 leading-tight">
-            People Built well enough to get hired.
-          </h2>
-
-          <p className="text-gray-600 max-w-xl text-xs sm:text-sm md:text-base leading-relaxed">
-            At RICR, placements aren’t about promises. They’re the result of what you build, practice, and understand. 
-            We focus on making you interview-ready, not just course-complete.
-          </p>
+        <p className="text-center mb-10 font-semibold">
+          At RICR, placements aren’t about promises. <br />
+          They’re the result of what you build, practice, and understand. <br />
+          We focus on making you interview-ready, not just course-complete.
+        </p>
+        {/* 🔥 TOP ROW */}
+        <div ref={topRef} className="overflow-hidden">
+          <div className="flex gap-6 w-max">
+            {loopData.map((item, index) => (
+              <Card item={item} key={index} />
+            ))}
+          </div>
         </div>
 
-        {/* Slider */}
-        <div
-          ref={scrollRef}
-          className="flex gap-3 sm:gap-4 md:gap-5 overflow-x-auto scrollbar-hide scroll-smooth"
-        >
-          {placementData.map((item, index) => (
-            <div
-              key={index}
-              className="min-w-[180px] sm:min-w-[200px] md:min-w-[220px] 
-              bg-[#f2f2f2] rounded-lg sm:rounded-xl p-2 sm:p-3 flex-shrink-0"
-            >
-              {/* Image */}
-              <div className="w-full h-[180px] sm:h-[200px] md:h-[220px] rounded-md sm:rounded-lg overflow-hidden bg-gray-200">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover grayscale"
-                />
-              </div>
-
-              {/* Text */}
-              <div className="mt-2 sm:mt-3">
-                <h3 className="text-xs sm:text-sm font-semibold text-black leading-tight">
-                  {item.name}: {item.role}
-                </h3>
-
-                <p className="text-[10px] sm:text-xs text-gray-500 mt-1">
-                  {item.company}
-                </p>
-              </div>
-            </div>
-          ))}
+        {/* 🔥 BOTTOM ROW */}
+        <div ref={bottomRef} className="overflow-hidden mt-6">
+          <div className="flex gap-6 w-max">
+            {loopData.map((item, index) => (
+              <Card item={item} key={index} />
+            ))}
+          </div>
         </div>
-
       </div>
     </section>
+  );
+};
+
+// 🔥 CARD
+const Card = ({ item }) => {
+  return (
+    <div
+      className="
+      min-w-[240px]
+      bg-[#e9eeee]
+      rounded-xl
+      p-6
+      flex flex-col items-center
+      group
+      transition-all duration-300
+      hover:bg-white hover:shadow-lg
+      "
+    >
+      <img
+        src={item.image}
+        alt={item.name}
+        className="
+        w-14 h-14 rounded-full object-cover mb-3
+        grayscale group-hover:grayscale-0
+        transition duration-500
+        "
+      />
+
+      <h3 className="text-sm font-semibold text-black">{item.name}</h3>
+      <p className="text-xs text-gray-500">is in</p>
+
+      <p className="text-lg font-semibold text-[#0f766e] mt-2">
+        {item.company}
+      </p>
+    </div>
   );
 };
 

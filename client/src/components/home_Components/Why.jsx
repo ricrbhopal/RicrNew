@@ -352,7 +352,7 @@ const features = [
 
 const WhyRICR = () => {
   return (
-    <section className="py-14 md:py-20 bg-[#f5f5f7] px-4 md:px-10 w-[90%] mx-auto rounded-2xl mt-10">
+    <section className="py-14 md:py-20 bg-[#f5f5f7] px-4 md:px-10 w-[100%] mx-auto rounded-2xl mt-15">
 
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
 
