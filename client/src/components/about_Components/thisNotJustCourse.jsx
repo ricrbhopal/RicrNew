@@ -33,9 +33,9 @@ const ThisNotJustCourse = () => {
 
           {/*  TRANSFORMATION POINTS */}
           <div className="mt-6 space-y-2 text-xs sm:text-sm md:text-base text-gray-200 leading-relaxed">
-            <p>👉 watching → building</p>
-            <p>👉 memorising → understanding</p>
-            <p>👉 completing → creating</p>
+            <p> watching → building</p>
+            <p> memorising → understanding</p>
+            <p> completing → creating</p>
           </div>
 
         </div>
