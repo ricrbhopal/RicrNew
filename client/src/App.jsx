@@ -7,10 +7,10 @@ import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader.jsx";
 import Home from "./pages/Home.jsx";  
 import OurStory from "./pages/About.jsx";
-import Program from "./pages/OurProgram.jsx";
+import Program from "./pages/ourProgram.jsx";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard.jsx";
-import OurPeople from "./pages/OurPeople.jsx";
-import YourFuture from "./pages/YourFuture.jsx";
+import OurPeople from "./pages/ourPeople.jsx";
+import YourFuture from "./pages/yourFuture.jsx";
 
 import { LoaderProvider, LoaderContext } from "./context/LoaderContext.jsx";
 import ScrollToTop from "./service/scrollTop.jsx";
