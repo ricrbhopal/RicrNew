@@ -11,42 +11,42 @@ const Hero = () => {
   const [mediaError, setMediaError] = useState(false);
 
   //  FETCH DATA
-  useEffect(() => {
-    const fetchMedia = async () => {
-      try {
-        const res = await adminAPI.getHero();
-        const data = res.data;
+useEffect(() => {
+  const fetchMedia = async () => {
+    try {
+      const res = await adminAPI.getHero();
+      const data = res.data;
 
-        const list = [];
+      const list = [];
 
-        if (Array.isArray(data.heroes)) {
-          data.heroes.forEach((item) => {
-            const url =
-              item.backgroundVideo || item.image || item.secure_url || item.url;
+      if (data.hero) {
+        const item = data.hero;
 
-            if (!url) return;
+        const url =
+          item.backgroundVideo || item.image || item.secure_url || item.url;
 
-            list.push({
-              url,
-              mediaType: item.mediaType || "image",
-              headline: item.headline || "",
-              subtext: item.subtext || "",
-              cta1Text: item.cta1Text || "",
-              cta1Link: item.cta1Link || "#",
-              cta2Text: item.cta2Text || "",
-              cta2Link: item.cta2Link || "#",
-            });
+        if (url) {
+          list.push({
+            url,
+            mediaType: item.mediaType || "image",
+            headline: item.headline || "",
+            subtext: item.subtext || "",
+            cta1Text: item.cta1Text || "",
+            cta1Link: item.cta1Link || "#",
+            cta2Text: item.cta2Text || "",
+            cta2Link: item.cta2Link || "#",
           });
         }
-
-        setMediaList(list);
-      } catch (err) {
-        console.log(err);
       }
-    };
 
-    fetchMedia();
-  }, []);
+      setMediaList(list);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchMedia();
+}, []);
 
   //  AUTO SLIDER
   useEffect(() => {
