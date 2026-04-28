@@ -4,17 +4,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import SubFooter from "./components/subFooter.jsx";
-import Loader from "./service/commonLoader";
-// ddd
-import Home from "./pages/home";  
-import OurStory from "./pages/about";
-import OurProgram from "./pages/ourProgram";
-import AdminDashboard from "./pages/adminDashboard/adminDashboard";
-import OurPeople from "./pages/ourPeople";
-import YourFuture from "./pages/yourFuture";
+import Loader from "./service/commonLoader.jsx";
+import Home from "./pages/home.jsx";  
+import OurStory from "./pages/about.jsx";
+import OurProgram from "./pages/ourProgram.jsx";
+import AdminDashboard from "./pages/adminDashboard/adminDashboard.jsx";
+import OurPeople from "./pages/ourPeople.jsx";
+import YourFuture from "./pages/yourFuture.jsx";
 
-import { LoaderProvider, LoaderContext } from "./context/LoaderContext";
-import ScrollToTop from "./service/scrollTop";
+import { LoaderProvider, LoaderContext } from "./context/LoaderContext.jsx";
+import ScrollToTop from "./service/scrollTop.jsx";
 
 
 // 🔥 Layout
