@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Footer from "./components/footer";
+import Footer from "./components/footer.jsx";
 import SubFooter from "./components/subFooter";
 import Loader from "./service/commonLoader";
 
