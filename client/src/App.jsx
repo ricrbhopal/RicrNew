@@ -6,11 +6,11 @@ import Footer from "./components/Footer.jsx";
 import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader.jsx";
 import Home from "./pages/Home.jsx";  
-import OurStory from "./pages/about.jsx";
-import OurProgram from "./pages/ourProgram.jsx";
+import OurStory from "./pages/About.jsx";
+import OurProgram from "./pages/OurProgram.jsx";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard.jsx";
-import OurPeople from "./pages/ourPeople.jsx";
-import YourFuture from "./pages/yourFuture.jsx";
+import OurPeople from "./pages/OurPeople.jsx";
+import YourFuture from "./pages/YourFuture.jsx";
 
 import { LoaderProvider, LoaderContext } from "./context/LoaderContext.jsx";
 import ScrollToTop from "./service/scrollTop.jsx";
