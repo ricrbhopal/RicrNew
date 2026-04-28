@@ -7,7 +7,7 @@ import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader.jsx";
 import Home from "./pages/Home.jsx";  
 import OurStory from "./pages/About.jsx";
-import OurProgram from "./pages/OurProgram.jsx";
+import Program from "./pages/OurProgram.jsx";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard.jsx";
 import OurPeople from "./pages/OurPeople.jsx";
 import YourFuture from "./pages/YourFuture.jsx";
@@ -39,7 +39,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<MainLayout><Home /></MainLayout>} />
         <Route path="/ourStory" element={<MainLayout><OurStory /></MainLayout>} />
-        <Route path="/ourProgram" element={<MainLayout><OurProgram /></MainLayout>} />
+        <Route path="/ourProgram" element={<MainLayout><Program /></MainLayout>} />
         <Route path="/ourPeople" element={<MainLayout><OurPeople /></MainLayout>} />
         <Route path="/yourFuture" element={<MainLayout><YourFuture /></MainLayout>} />
 
