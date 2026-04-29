@@ -10,43 +10,61 @@ const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [mediaError, setMediaError] = useState(false);
 
-  //  FETCH DATA
-useEffect(() => {
-  const fetchMedia = async () => {
-    try {
-      const res = await adminAPI.getHero();
-      const data = res.data;
+  useEffect(() => {
+    const fetchMedia = async () => {
+      try {
+        const res = await adminAPI.getHero();
+        const data = res.data;
 
-      const list = [];
-
-      if (data.hero) {
-        const item = data.hero;
-
-        const url =
-          item.backgroundVideo || item.image || item.secure_url || item.url;
-
-        if (url) {
-          list.push({
-            url,
-            mediaType: item.mediaType || "image",
-            headline: item.headline || "",
-            subtext: item.subtext || "",
-            cta1Text: item.cta1Text || "",
-            cta1Link: item.cta1Link || "#",
-            cta2Text: item.cta2Text || "",
-            cta2Link: item.cta2Link || "#",
-          });
+        // Combine images and videos, both are already sorted by order from backend
+        let list = [];
+        if (Array.isArray(data.heroes)) {
+          list = list.concat(
+            data.heroes.map((item) => ({
+              url:
+                item.backgroundVideo ||
+                item.image ||
+                item.secure_url ||
+                item.url,
+              mediaType: item.mediaType || "image",
+              headline: item.headline || "",
+              subtext: item.subtext || "",
+              cta1Text: item.cta1Text || "",
+              cta1Link: item.cta1Link || "#",
+              cta2Text: item.cta2Text || "",
+              cta2Link: item.cta2Link || "#",
+              order: item.order || 0,
+            })),
+          );
         }
+        if (Array.isArray(data.videos)) {
+          list = list.concat(
+            data.videos.map((item) => ({
+              url:
+                item.backgroundVideo ||
+                item.image ||
+                item.secure_url ||
+                item.url,
+              mediaType: item.mediaType || "video",
+              headline: item.headline || "",
+              subtext: item.subtext || "",
+              cta1Text: item.cta1Text || "",
+              cta1Link: item.cta1Link || "#",
+              cta2Text: item.cta2Text || "",
+              cta2Link: item.cta2Link || "#",
+              order: item.order || 0,
+            })),
+          );
+        }
+        // Sort by order ascending
+        list.sort((a, b) => a.order - b.order);
+        setMediaList(list);
+      } catch (err) {
+        console.log(err);
       }
-
-      setMediaList(list);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  fetchMedia();
-}, []);
+    };
+    fetchMedia();
+  }, []);
 
   //  AUTO SLIDER
   useEffect(() => {
@@ -103,17 +121,7 @@ rounded-1xl md:rounded-1xl overflow-hidden"
 
       {/*  CONTENT */}
       <div className="relative z-10 h-full flex flex-col justify-center px-5 sm:px-8 md:px-16 text-white">
-        <div className="max-w-xl">
-          <h1 className="text-lg sm:text-2xl md:text-4xl font-semibold leading-tight">
-            {current.headline}
-          </h1>
-
-          <p className="text-xs sm:text-sm md:text-base mt-3 text-gray-200">
-            {current.subtext}
-          </p>
-        </div>
-
-        <div className="mt-5 flex flex-wrap gap-3  sm:ml-0 md:ml-15 sm:mt-0 md:mt-70">
+        <div className="mt-5  flex flex-wrap gap-3  sm:ml-0 md:ml-15 sm:mt-0 md:mt-120">
           {/* PRIMARY BUTTON */}
           <a
             href={current.cta1Link}
@@ -138,7 +146,6 @@ rounded-1xl md:rounded-1xl overflow-hidden"
       border border-[#125785] rounded-lg font-medium text-[#125785]
       hover:bg-white hover:text-black transition
     "
-         
           >
             {current.cta2Text}
           </a>

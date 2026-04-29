@@ -11,7 +11,18 @@ import AboutHero from '../models/about/heroModels.js';
 import OurLogo from '../models/about/ourLogoModels.js';
 import cloudinary from '../config/cloudinary.js';
 import { Readable } from 'stream';
+import Program from "../models/home/programModels.js";
+import HowItWork from "../models/home/howItWorkModels.js";
 
+
+
+
+
+
+
+
+
+// Home Page Controller
 
 export const uploadBackgroundVideo = async (req, res) => {
   try {
@@ -63,7 +74,7 @@ export const uploadBackgroundVideo = async (req, res) => {
         public_id: result.public_id,
         thumbnail: result.secure_url,
 
-        // 🔥 NEW DATA FROM BODY
+  order: Number(req.body.order) || 1,
 
 
         cta1Text: req.body.cta1Text || "",
@@ -88,56 +99,59 @@ export const uploadBackgroundVideo = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
 export const getHero = async (req, res) => {
   try {
-    // Get ALL active records
-    const allActive = await Hero.find({ status: 'active' }).sort({ createdAt: -1 });
+    const allActive = await Hero.find({ status: 'active' }).sort({ order: 1 });
 
-    // Separate by type
     const videos = allActive.filter(item => item.mediaType === 'video');
     const images = allActive.filter(item => item.mediaType === 'image');
 
-    // Latest item (for fallback / background)
-    const latest = allActive[0] || null;
+    const first = allActive[0] || null;
 
-    if (!allActive || allActive.length === 0) {
+    if (!allActive.length) {
       return res.status(404).json({ message: 'No active hero found' });
     }
 
     return res.json({
-      heroes: images,        // all images
-      videos: videos,        // all videos
-      backgroundVideo: latest?.backgroundVideo || null,
-      mediaType: latest?.mediaType || null,
-      thumbnail: latest?.thumbnail || ''
+      heroes: images,
+      videos: videos,
+      backgroundVideo: first?.backgroundVideo || null,
+      mediaType: first?.mediaType || null,
+      thumbnail: first?.thumbnail || ''
     });
 
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
-
-
 export const updateHero = async (req, res) => {
-	try {
-		const hero = await Hero.findOne().sort({ createdAt: -1 });
-		if (!hero) return res.status(404).json({ message: 'Hero not found' });
+  try {
+    const hero = await Hero.findById(req.params.id);
+    if (!hero) return res.status(404).json({ message: "Hero not found" });
 
-		if (req.body.backgroundVideo) hero.backgroundVideo = req.body.backgroundVideo;
-		if (req.body.status && ['active', 'inactive'].includes(req.body.status)) hero.status = req.body.status;
-		if (req.body.mediaType && ['video', 'image'].includes(req.body.mediaType)) hero.mediaType = req.body.mediaType;
+    if (req.body.backgroundVideo) hero.backgroundVideo = req.body.backgroundVideo;
+    if (req.body.mediaType) hero.mediaType = req.body.mediaType;
+    if (req.body.status) hero.status = req.body.status;
 
-		await hero.save();
-		res.json(hero);
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ message: 'Server error', error: err.message });
-	}
+    // 🔥 ADD THESE
+    if (req.body.cta1Text !== undefined) hero.cta1Text = req.body.cta1Text;
+    if (req.body.cta1Link !== undefined) hero.cta1Link = req.body.cta1Link;
+    if (req.body.cta2Text !== undefined) hero.cta2Text = req.body.cta2Text;
+    if (req.body.cta2Link !== undefined) hero.cta2Link = req.body.cta2Link;
+
+    // 🔥 ORDER FIX
+    if (req.body.order !== undefined) {
+      hero.order = Number(req.body.order);
+    }
+
+    await hero.save();
+    res.json(hero);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 };
-
-
 export const updateStatus = async (req, res) => {
 	try {
 		const hero = await Hero.findById(req.params.id);
@@ -157,8 +171,6 @@ export const updateStatus = async (req, res) => {
 		res.status(500).json({ message: 'Server error', error: err.message });
 	}
 };
-
-
 export const deleteHero = async (req, res) => {
 	try {
 		const hero = await Hero.findByIdAndDelete(req.params.id);
@@ -169,8 +181,6 @@ export const deleteHero = async (req, res) => {
 		res.status(500).json({ message: 'Server error', error: err.message });
 	}
 };
-
-
 export const getAllHeroes = async (req, res) => {
 	try {
 		const heroes = await Hero.find().sort({ createdAt: -1 });
@@ -180,7 +190,390 @@ export const getAllHeroes = async (req, res) => {
 		res.status(500).json({ message: 'Server error', error: err.message });
 	}
 };
+export const updateHeroOrder = async (req, res) => {
+  try {
+    const hero = await Hero.findById(req.params.id);
+    if (!hero) return res.status(404).json({ message: "Hero not found" });
 
+    hero.order = Number(req.body.order) || 1;
+
+    await hero.save();
+    res.json(hero);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+// Placement Controller
+// Get all celebrate entries
+export const getAllCelebrates = async (req, res) => {
+    try {
+        const celebrates = await Celebrate.find().sort({ createdAt: -1 });
+        res.status(200).json(celebrates);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+// Create a new celebrate entry
+export const createCelebrate = async (req, res) => {
+  try {
+    let imageUrl = '';
+    let companyLogoUrl = '';
+    // Robustly extract files from req.files (array or object)
+    let imageFile = null, companyLogoFile = null;
+    if (Array.isArray(req.files)) {
+      imageFile = req.files.find(f => f.fieldname === 'image');
+      companyLogoFile = req.files.find(f => f.fieldname === 'companyLogo');
+    } else if (req.files) {
+      imageFile = req.files.image && req.files.image[0];
+      companyLogoFile = req.files.companyLogo && req.files.companyLogo[0];
+    }
+    // Helper to upload a file buffer to Cloudinary
+    const uploadToCloudinary = (file, folder) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({
+          folder,
+          resource_type: 'image',
+        }, (error, result) => {
+          if (error) reject(error);
+          else resolve(result.secure_url);
+        });
+        stream.end(file.buffer);
+      });
+    };
+
+    if (imageFile) {
+      imageUrl = await uploadToCloudinary(imageFile, 'celebrate');
+    } else if (req.body.image) {
+      imageUrl = req.body.image;
+    }
+    if (companyLogoFile) {
+      companyLogoUrl = await uploadToCloudinary(companyLogoFile, 'celebrate');
+    } else if (req.body.companyLogo) {
+      companyLogoUrl = req.body.companyLogo;
+    }
+
+    // Save celebrate with Cloudinary image URLs
+    const celebrate = new Celebrate({
+      ...req.body,
+      image: imageUrl,
+      companyLogo: companyLogoUrl,
+    });
+    await celebrate.save();
+    res.status(201).json(celebrate);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+// Update a celebrate entry
+export const updateCelebrate = async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (!['active', 'inactive'].includes(status)) {
+            return res.status(400).json({ error: 'Invalid status value' });
+        }
+        const celebrate = await Celebrate.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true, runValidators: true }
+        );
+        if (!celebrate) return res.status(404).json({ error: 'Not found' });
+        res.status(200).json(celebrate);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+// Delete a celebrate entry
+export const deleteCelebrate = async (req, res) => {
+    try {
+        const celebrate = await Celebrate.findByIdAndDelete(req.params.id);
+        if (!celebrate) return res.status(404).json({ error: 'Not found' });
+        res.status(200).json({ message: 'Deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+
+
+//Program Controller
+
+// UPLOAD PROGRAM VIDEO
+export const uploadProgram = async (req, res) => {
+  try {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: "No video file provided" });
+    }
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { resource_type: "video", folder: "program_videos" },
+      async (err, result) => {
+        if (err) return res.status(500).json({ message: err.message });
+
+        const program = new Program({
+          video: result.secure_url,
+          subtext: req.body.subtext || "",
+          status: req.body.status === "inactive" ? "inactive" : "active",
+        });
+
+        await program.save();
+
+        res.status(201).json({
+          message: "Program uploaded successfully",
+          data: program,
+        });
+      }
+    );
+
+    uploadStream.end(file.buffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+//  GET ACTIVE PROGRAM (frontend ke liye)
+export const getProgram = async (req, res) => {
+  try {
+    const program = await Program.findOne({ status: "active" }).sort({
+      createdAt: -1,
+    });
+
+    if (!program) {
+      return res.status(404).json({ message: "No active program found" });
+    }
+
+    res.json(program);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+//  GET ALL PROGRAMS (admin ke liye)
+export const getAllPrograms = async (req, res) => {
+  try {
+    const programs = await Program.find().sort({ createdAt: -1 });
+    res.json(programs);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+//  UPDATE PROGRAM
+export const updateProgram = async (req, res) => {
+  try {
+    const program = await Program.findById(req.params.id);
+    if (!program) return res.status(404).json({ message: "Program not found" });
+
+    if (req.body.subtext !== undefined) {
+      program.subtext = req.body.subtext;
+    }
+
+    if (req.body.status && ["active", "inactive"].includes(req.body.status)) {
+      program.status = req.body.status;
+    }
+
+    await program.save();
+    res.json(program);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+//  TOGGLE STATUS
+export const updateProgramStatus = async (req, res) => {
+  try {
+    const program = await Program.findById(req.params.id);
+    if (!program) return res.status(404).json({ message: "Program not found" });
+
+    program.status =
+      program.status === "active" ? "inactive" : "active";
+
+    await program.save();
+
+    res.json(program);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+//  DELETE PROGRAM
+export const deleteProgram = async (req, res) => {
+  try {
+    const program = await Program.findByIdAndDelete(req.params.id);
+    if (!program) return res.status(404).json({ message: "Program not found" });
+
+    res.json({ message: "Program deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+
+
+
+
+// How It Works Controller
+
+// 🔥 HELPER: detect media type
+const getMediaType = (file) => {
+  if (!file?.mimetype) return "video";
+  return file.mimetype.startsWith("image") ? "image" : "video";
+};
+
+// 🔥 CREATE
+export const createHowItWork = async (req, res) => {
+  try {
+    let mediaUrl = "";
+    let mediaType = "video";
+
+    if (req.file) {
+      mediaType = req.file.mimetype.startsWith("image") ? "image" : "video";
+
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: mediaType,
+          folder: "howitwork",
+        },
+        async (err, result) => {
+          if (err) {
+            console.error("Cloudinary Error:", err);
+            return res.status(500).json({ message: err.message });
+          }
+
+          mediaUrl = result.secure_url;
+
+          const how = await HowItWork.create({
+            title: req.body.title || "",
+            mediaType,
+            mediaUrl,
+            status:
+              req.body.status === "active" ? "active" : "inactive",
+          });
+
+          return res.status(201).json({
+            message: "Created successfully",
+            data: how,
+          });
+        }
+      );
+
+      // 🔥 THIS IS THE KEY FIX
+      uploadStream.end(req.file.buffer);
+
+    } else {
+      return res.status(400).json({ message: "File missing" });
+    }
+
+  } catch (err) {
+    console.error("CREATE ERROR:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+// 🔥 GET ACTIVE
+export const getHowItWork = async (req, res) => {
+  try {
+    const data = await HowItWork.findOne({ status: "active" })
+      .sort({ createdAt: -1 });
+
+    if (!data) {
+      return res.status(404).json({ message: "No active data found" });
+    }
+
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// 🔥 GET ALL
+export const getAllHowItWorks = async (req, res) => {
+  try {
+    const list = await HowItWork.find().sort({ createdAt: -1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// 🔥 UPDATE
+export const updateHowItWork = async (req, res) => {
+  try {
+    const how = await HowItWork.findById(req.params.id);
+    if (!how) return res.status(404).json({ message: "Not found" });
+
+    if (req.body.title !== undefined) {
+      how.title = req.body.title;
+    }
+
+    // 🔥 NEW MEDIA UPLOAD
+    if (req.file) {
+      const newType = getMediaType(req.file);
+
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: newType,
+        folder: "howitwork",
+      });
+
+      how.mediaUrl = result.secure_url;
+      how.mediaType = newType;
+
+      fs.unlinkSync(req.file.path);
+    }
+
+    if (req.body.status && ["active", "inactive"].includes(req.body.status)) {
+      how.status = req.body.status;
+    }
+
+    await how.save();
+    res.json(how);
+
+  } catch (err) {
+    console.error("UPDATE ERROR:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// 🔥 TOGGLE STATUS
+export const updateHowItWorkStatus = async (req, res) => {
+  try {
+    const how = await HowItWork.findById(req.params.id);
+    if (!how) return res.status(404).json({ message: "Not found" });
+
+    how.status = how.status === "active" ? "inactive" : "active";
+
+    await how.save();
+    res.json(how);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// 🔥 DELETE
+export const deleteHowItWork = async (req, res) => {
+  try {
+    const how = await HowItWork.findByIdAndDelete(req.params.id);
+    if (!how) return res.status(404).json({ message: "Not found" });
+
+    res.json({ message: "Deleted successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 
 
@@ -551,101 +944,6 @@ export const deleteExpert = async (req, res) => {
 
 
 
-// Get all celebrate entries
-export const getAllCelebrates = async (req, res) => {
-    try {
-        const celebrates = await Celebrate.find().sort({ createdAt: -1 });
-        res.status(200).json(celebrates);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
-
-// Create a new celebrate entry
-export const createCelebrate = async (req, res) => {
-  try {
-    let imageUrl = '';
-    let companyLogoUrl = '';
-    // Robustly extract files from req.files (array or object)
-    let imageFile = null, companyLogoFile = null;
-    if (Array.isArray(req.files)) {
-      imageFile = req.files.find(f => f.fieldname === 'image');
-      companyLogoFile = req.files.find(f => f.fieldname === 'companyLogo');
-    } else if (req.files) {
-      imageFile = req.files.image && req.files.image[0];
-      companyLogoFile = req.files.companyLogo && req.files.companyLogo[0];
-    }
-    // Helper to upload a file buffer to Cloudinary
-    const uploadToCloudinary = (file, folder) => {
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream({
-          folder,
-          resource_type: 'image',
-        }, (error, result) => {
-          if (error) reject(error);
-          else resolve(result.secure_url);
-        });
-        stream.end(file.buffer);
-      });
-    };
-
-    if (imageFile) {
-      imageUrl = await uploadToCloudinary(imageFile, 'celebrate');
-    } else if (req.body.image) {
-      imageUrl = req.body.image;
-    }
-    if (companyLogoFile) {
-      companyLogoUrl = await uploadToCloudinary(companyLogoFile, 'celebrate');
-    } else if (req.body.companyLogo) {
-      companyLogoUrl = req.body.companyLogo;
-    }
-
-    // Save celebrate with Cloudinary image URLs
-    const celebrate = new Celebrate({
-      ...req.body,
-      image: imageUrl,
-      companyLogo: companyLogoUrl,
-    });
-    await celebrate.save();
-    res.status(201).json(celebrate);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Update a celebrate entry
-export const updateCelebrate = async (req, res) => {
-    try {
-        const { status } = req.body;
-        if (!['active', 'inactive'].includes(status)) {
-            return res.status(400).json({ error: 'Invalid status value' });
-        }
-        const celebrate = await Celebrate.findByIdAndUpdate(
-            req.params.id,
-            { status },
-            { new: true, runValidators: true }
-        );
-        if (!celebrate) return res.status(404).json({ error: 'Not found' });
-        res.status(200).json(celebrate);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-};
-
-// Delete a celebrate entry
-export const deleteCelebrate = async (req, res) => {
-    try {
-        const celebrate = await Celebrate.findByIdAndDelete(req.params.id);
-        if (!celebrate) return res.status(404).json({ error: 'Not found' });
-        res.status(200).json({ message: 'Deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
-
-
 export const CreateAdvertising = async (req, res) => {
   try {
     // Extract file from multer
@@ -839,7 +1137,7 @@ export const CreatePortfolio = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-export const GetAllPortfolio = async (req, res) => {
+export const GetAllPortfolio = async (req, res) => {11
   try {
     const portfolios = await Portfolio.find().sort({ createdAt: -1 });
     res.status(200).json(portfolios);

@@ -38,7 +38,24 @@ import {
   createOurLogo,
   getAllOurLogos,
   updateOurLogoStatus,
-  deleteOurLogo
+  deleteOurLogo,
+  updateHero
+,
+deleteProgram,
+updateProgram,
+updateProgramStatus,
+updateHeroOrder,
+getAllPrograms,
+getProgram,
+uploadProgram,
+deleteHowItWork,
+updateHowItWorkStatus,
+updateHowItWork,
+getAllHowItWorks,
+getHowItWork,
+createHowItWork
+
+
 
 } from '../controller/adminController.js';
 import { uploadMedia ,uploadImage} from '../config/multer.js';
@@ -49,14 +66,49 @@ const upload = uploadMedia();
 
 // Hero Routes Section
 
-
 router.post('/uploadVideo', upload.any(), uploadBackgroundVideo);
 router.get('/', getHero);
 router.get('/all', getAllHeroes);
 router.delete('/s/:id', deleteHero);
 router.put('/:id/status', updateStatus);
+router.put('/:id', updateHero);
+router.put('/:id/order', updateHeroOrder);
 
 
+
+
+
+// Celebrate Routes Section
+router.post('/celebrate', upload.any(), createCelebrate);
+router.get('/celebrate', getAllCelebrates);
+router.put('/celebrate/:id', updateCelebrate);
+router.delete('/celebrate/:id', deleteCelebrate);
+
+
+
+
+
+//Program Routes Section
+router.post('/program', upload.single('video'), uploadProgram);
+router.get('/program', getProgram); // frontend active
+router.get('/program/all', getAllPrograms); // admin
+router.put('/program/:id', updateProgram);
+router.put('/program/:id/status', updateProgramStatus);
+router.delete('/program/:id', deleteProgram);
+
+
+
+//How its Works Routes Section
+// How its Works Routes Section
+router.post("/howitwork", upload.single("media"), createHowItWork);
+
+router.get("/howitwork", getHowItWork);
+router.get("/howitwork/all", getAllHowItWorks);
+
+router.put("/howitwork/:id", upload.single("media"), updateHowItWork);
+
+router.put("/howitwork/:id/status", updateHowItWorkStatus);
+router.delete("/howitwork/:id", deleteHowItWork);
 
 // Affiliation Routes Section
 router.post('/uploadAffiliation', upload.any(), uploadAffiliation);
@@ -81,11 +133,6 @@ router.put('/experts/:id', upload.any(), updateExpert);
 router.delete('/experts/:id', deleteExpert);
 
 
-// Celebrate Routes Section
-router.post('/celebrate', upload.any(), createCelebrate);
-router.get('/celebrate', getAllCelebrates);
-router.put('/celebrate/:id', updateCelebrate);
-router.delete('/celebrate/:id', deleteCelebrate);
 
 
 // Advertising Routes Section

@@ -1,60 +1,58 @@
-import React from "react";
-import { MdOutlineArrowForward } from "react-icons/md";
-
-// 🔥 VIDEO IMPORT (tum apna video yaha replace kar dena)
-import programVideo from "../../assets/DataType.mp4";
-
-const programs = [
-  {
-    title: "Full Stack Development",
-    desc: "Build scalable web apps using MERN stack and modern tools.",
-  },
-  {
-    title: "Data Science",
-    desc: "Work with AI, ML models, and real-world datasets.",
-  },
-  {
-    title: "Data Analytics",
-    desc: "Analyze data, create dashboards, and drive insights.",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { adminAPI } from "../../config/api";
 
 const ProgramsSection = () => {
+  const [program, setProgram] = useState(null);
+
+  // 🔥 FETCH ACTIVE PROGRAM
+  useEffect(() => {
+    fetchProgram();
+  }, []);
+
+  const fetchProgram = async () => {
+    try {
+      const res = await adminAPI.getProgram();
+      setProgram(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <section className="w-[100%] md:w-[100%] mx-auto mt-16 space-y-12 rounded-1xl md:rounded-1xl overflow-hidden">
+    <section className="w-[100%] mx-auto mt-16 space-y-12 overflow-hidden">
 
       {/* 🔥 VIDEO BANNER */}
-      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[500px] lg:h-[650px]  overflow-hidden">
+      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[500px] lg:h-[650px] overflow-hidden">
 
-        <video
-          src={programVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        {/* 🔥 DYNAMIC VIDEO */}
+        {program?.video && (
+          <video
+            src={program.video}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
 
         {/* CONTENT */}
         <div className="relative z-10 h-full flex flex-col justify-center px-5 sm:px-8 md:px-16 text-white max-w-3xl">
 
-          <p className="text-xs sm:text-sm uppercase tracking-wide text-gray-300 mb-2">
-            PROGRAMS
-          </p>
 
-          <h2 className="text-xl sm:text-3xl md:text-5xl font-semibold leading-tight mb-4">
-            Choose your path into tech
-          </h2>
 
+
+
+          {/*  DYNAMIC SUBTEXT */}
           <p className="text-xs sm:text-sm md:text-base text-gray-200">
-            Whether you're starting from scratch or upskilling, we have a structured path for you.
+            {program?.subtext || "Loading program content..."}
           </p>
+
         </div>
       </div>
-
 
     </section>
   );

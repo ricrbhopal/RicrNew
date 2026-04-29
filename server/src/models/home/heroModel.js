@@ -1,30 +1,37 @@
 import mongoose from "mongoose";
 
-const heroSchema = new mongoose.Schema({
-  backgroundVideo: { type: String, required: true },
+const heroSchema = new mongoose.Schema(
+  {
+    backgroundVideo: { type: String, required: true },
 
-  mediaType: {
-    type: String,
-    enum: ["video", "image"],
-    default: "video",
+    mediaType: {
+      type: String,
+      enum: ["video", "image"],
+      default: "video",
+    },
+
+    order: {
+      type: Number,
+      default: 1,
+    },
+
+    headline: { type: String, default: "" },
+    subtext: { type: String, default: "" },
+
+    cta1Text: { type: String, default: "" },
+    cta1Link: { type: String, default: "" },
+
+    cta2Text: { type: String, default: "" },
+    cta2Link: { type: String, default: "" },
+
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
   },
-
-  // 🔥 NEW FIELDS
-  headline: { type: String, default: "" },
-  subtext: { type: String, default: "" },
-
-  cta1Text: { type: String, default: "" },
-  cta1Link: { type: String, default: "" },
-
-  cta2Text: { type: String, default: "" },
-  cta2Link: { type: String, default: "" },
-
-  status: {
-    type: String,
-    enum: ["active", "inactive"],
-    default: "active",
-  },
-}, { timestamps: true });
+  { timestamps: true },
+);
 
 const backgroundHero = mongoose.model("Hero", heroSchema);
 
