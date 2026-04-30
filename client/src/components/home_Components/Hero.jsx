@@ -20,28 +20,8 @@ useEffect(() => {
 
       let list = [];
 
-      // ✅ HANDLE BOTH (hero + heroes)
-      if (data.hero) {
-        // 👉 production case
-        list.push({
-          url:
-            data.hero.backgroundVideo ||
-            data.hero.image ||
-            data.hero.secure_url ||
-            data.hero.url ||
-            "",
-          mediaType: data.hero.mediaType || "image",
-          headline: data.hero.headline || "",
-          subtext: data.hero.subtext || "",
-          cta1Text: data.hero.cta1Text || "",
-          cta1Link: data.hero.cta1Link || "#",
-          cta2Text: data.hero.cta2Text || "",
-          cta2Link: data.hero.cta2Link || "#",
-          order: data.hero.order ?? 0,
-        });
-      } 
-      else if (Array.isArray(data.heroes)) {
-        // 👉 local case
+      // 🔥 FIRST PRIORITY: MULTIPLE HEROES
+      if (Array.isArray(data.heroes)) {
         const activeHeroes = data.heroes.filter(
           (item) => item.status === "active"
         );
@@ -66,7 +46,27 @@ useEffect(() => {
         );
       }
 
-      // ✅ VIDEOS
+      // 🔥 FALLBACK: SINGLE HERO (production safety)
+      if (data.hero && list.length === 0) {
+        list.push({
+          url:
+            data.hero.backgroundVideo ||
+            data.hero.image ||
+            data.hero.secure_url ||
+            data.hero.url ||
+            "",
+          mediaType: data.hero.mediaType || "image",
+          headline: data.hero.headline || "",
+          subtext: data.hero.subtext || "",
+          cta1Text: data.hero.cta1Text || "",
+          cta1Link: data.hero.cta1Link || "#",
+          cta2Text: data.hero.cta2Text || "",
+          cta2Link: data.hero.cta2Link || "#",
+          order: data.hero.order ?? 0,
+        });
+      }
+
+      // 🔥 VIDEOS ADD
       if (Array.isArray(data.videos)) {
         const activeVideos = data.videos.filter(
           (item) => item.status === "active"
@@ -92,6 +92,7 @@ useEffect(() => {
         );
       }
 
+      // 🔥 SORTING
       list.sort((a, b) => a.order - b.order);
 
       console.log("FINAL HERO LIST:", list);
