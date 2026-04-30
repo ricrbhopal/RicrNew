@@ -16,10 +16,32 @@ useEffect(() => {
       const res = await adminAPI.getHero();
       const data = res.data;
 
+      console.log("Fetched Hero Data:", data);
+
       let list = [];
 
-      // ✅ HERO IMAGES
-      if (Array.isArray(data.heroes)) {
+      // ✅ HANDLE BOTH (hero + heroes)
+      if (data.hero) {
+        // 👉 production case
+        list.push({
+          url:
+            data.hero.backgroundVideo ||
+            data.hero.image ||
+            data.hero.secure_url ||
+            data.hero.url ||
+            "",
+          mediaType: data.hero.mediaType || "image",
+          headline: data.hero.headline || "",
+          subtext: data.hero.subtext || "",
+          cta1Text: data.hero.cta1Text || "",
+          cta1Link: data.hero.cta1Link || "#",
+          cta2Text: data.hero.cta2Text || "",
+          cta2Link: data.hero.cta2Link || "#",
+          order: data.hero.order ?? 0,
+        });
+      } 
+      else if (Array.isArray(data.heroes)) {
+        // 👉 local case
         const activeHeroes = data.heroes.filter(
           (item) => item.status === "active"
         );
@@ -70,10 +92,8 @@ useEffect(() => {
         );
       }
 
-      // ✅ SORT (IMPORTANT)
       list.sort((a, b) => a.order - b.order);
 
-      // ✅ DEBUG (optional)
       console.log("FINAL HERO LIST:", list);
 
       setMediaList(list);
