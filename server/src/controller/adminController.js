@@ -100,6 +100,7 @@ export const uploadBackgroundVideo = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 export const getHero = async (req, res) => {
   try {
     const allActive = await Hero.find({ status: 'active' }).sort({ order: 1 });
@@ -125,34 +126,68 @@ export const getHero = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+
 export const updateHero = async (req, res) => {
   try {
     const hero = await Hero.findById(req.params.id);
     if (!hero) return res.status(404).json({ message: "Hero not found" });
 
-    if (req.body.backgroundVideo) hero.backgroundVideo = req.body.backgroundVideo;
+    // ✅ FILE UPLOAD (IMAGE / VIDEO)
+    if (req.file) {
+      const fileType = req.file.mimetype.startsWith("video") ? "video" : "image";
+
+      const uploaded = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            resource_type: fileType, // 🔥 important
+            folder: "hero_media",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        ).end(req.file.buffer);
+      });
+
+      // ✅ SET MEDIA
+      hero.backgroundVideo = uploaded.secure_url;
+      hero.mediaType = fileType;
+    }
+
+    // ✅ DIRECT URL UPDATE (optional)
+    if (req.body.backgroundVideo) {
+      hero.backgroundVideo = req.body.backgroundVideo;
+    }
+
     if (req.body.mediaType) hero.mediaType = req.body.mediaType;
     if (req.body.status) hero.status = req.body.status;
 
-    // 🔥 ADD THESE
+    // ✅ CTA BUTTONS
     if (req.body.cta1Text !== undefined) hero.cta1Text = req.body.cta1Text;
     if (req.body.cta1Link !== undefined) hero.cta1Link = req.body.cta1Link;
     if (req.body.cta2Text !== undefined) hero.cta2Text = req.body.cta2Text;
     if (req.body.cta2Link !== undefined) hero.cta2Link = req.body.cta2Link;
 
-    // 🔥 ORDER FIX
+    // ✅ ORDER FIX
     if (req.body.order !== undefined) {
       hero.order = Number(req.body.order);
     }
 
     await hero.save();
-    res.json(hero);
+
+    res.json({
+      message: "Hero updated successfully",
+      data: hero,
+    });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
 export const updateStatus = async (req, res) => {
 	try {
 		const hero = await Hero.findById(req.params.id);
@@ -172,6 +207,8 @@ export const updateStatus = async (req, res) => {
 		res.status(500).json({ message: 'Server error', error: err.message });
 	}
 };
+
+
 export const deleteHero = async (req, res) => {
 	try {
 		const hero = await Hero.findByIdAndDelete(req.params.id);
@@ -182,6 +219,8 @@ export const deleteHero = async (req, res) => {
 		res.status(500).json({ message: 'Server error', error: err.message });
 	}
 };
+
+
 export const getAllHeroes = async (req, res) => {
 	try {
 		const heroes = await Hero.find().sort({ createdAt: -1 });
@@ -191,6 +230,8 @@ export const getAllHeroes = async (req, res) => {
 		res.status(500).json({ message: 'Server error', error: err.message });
 	}
 };
+
+
 export const updateHeroOrder = async (req, res) => {
   try {
     const hero = await Hero.findById(req.params.id);

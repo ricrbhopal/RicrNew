@@ -10,61 +10,80 @@ const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [mediaError, setMediaError] = useState(false);
 
-  useEffect(() => {
-    const fetchMedia = async () => {
-      try {
-        const res = await adminAPI.getHero();
-        const data = res.data;
+useEffect(() => {
+  const fetchMedia = async () => {
+    try {
+      const res = await adminAPI.getHero();
+      const data = res.data;
 
-        // Combine images and videos, both are already sorted by order from backend
-        let list = [];
-        if (Array.isArray(data.heroes)) {
-          list = list.concat(
-            data.heroes.map((item) => ({
-              url:
-                item.backgroundVideo ||
-                item.image ||
-                item.secure_url ||
-                item.url,
-              mediaType: item.mediaType || "image",
-              headline: item.headline || "",
-              subtext: item.subtext || "",
-              cta1Text: item.cta1Text || "",
-              cta1Link: item.cta1Link || "#",
-              cta2Text: item.cta2Text || "",
-              cta2Link: item.cta2Link || "#",
-              order: item.order || 0,
-            })),
-          );
-        }
-        if (Array.isArray(data.videos)) {
-          list = list.concat(
-            data.videos.map((item) => ({
-              url:
-                item.backgroundVideo ||
-                item.image ||
-                item.secure_url ||
-                item.url,
-              mediaType: item.mediaType || "video",
-              headline: item.headline || "",
-              subtext: item.subtext || "",
-              cta1Text: item.cta1Text || "",
-              cta1Link: item.cta1Link || "#",
-              cta2Text: item.cta2Text || "",
-              cta2Link: item.cta2Link || "#",
-              order: item.order || 0,
-            })),
-          );
-        }
-        // Sort by order ascending
-        list.sort((a, b) => a.order - b.order);
-        setMediaList(list);
-      } catch (err) {
-        console.log(err);
+      let list = [];
+
+      // ✅ HERO IMAGES
+      if (Array.isArray(data.heroes)) {
+        const activeHeroes = data.heroes.filter(
+          (item) => item.status === "active"
+        );
+
+        list = list.concat(
+          activeHeroes.map((item) => ({
+            url:
+              item.backgroundVideo ||
+              item.image ||
+              item.secure_url ||
+              item.url ||
+              "",
+            mediaType: item.mediaType || "image",
+            headline: item.headline || "",
+            subtext: item.subtext || "",
+            cta1Text: item.cta1Text || "",
+            cta1Link: item.cta1Link || "#",
+            cta2Text: item.cta2Text || "",
+            cta2Link: item.cta2Link || "#",
+            order: item.order ?? 0,
+          }))
+        );
       }
-    };
-    fetchMedia();
-  }, []);
+
+      // ✅ VIDEOS
+      if (Array.isArray(data.videos)) {
+        const activeVideos = data.videos.filter(
+          (item) => item.status === "active"
+        );
+
+        list = list.concat(
+          activeVideos.map((item) => ({
+            url:
+              item.backgroundVideo ||
+              item.image ||
+              item.secure_url ||
+              item.url ||
+              "",
+            mediaType: item.mediaType || "video",
+            headline: item.headline || "",
+            subtext: item.subtext || "",
+            cta1Text: item.cta1Text || "",
+            cta1Link: item.cta1Link || "#",
+            cta2Text: item.cta2Text || "",
+            cta2Link: item.cta2Link || "#",
+            order: item.order ?? 0,
+          }))
+        );
+      }
+
+      // ✅ SORT (IMPORTANT)
+      list.sort((a, b) => a.order - b.order);
+
+      // ✅ DEBUG (optional)
+      console.log("FINAL HERO LIST:", list);
+
+      setMediaList(list);
+    } catch (err) {
+      console.error("Hero fetch error:", err);
+    }
+  };
+
+  fetchMedia();
+}, []);
 
   //  AUTO SLIDER
   useEffect(() => {
@@ -143,9 +162,8 @@ rounded-1xl md:rounded-1xl overflow-hidden"
       px-4 py-2 text-sm
       sm:px-5 sm:py-2.5 sm:text-base
       md:px-6 md:py-3 md:text-lg
-      border border-[#125785] rounded-lg font-medium text-[#125785]
-      hover:bg-white hover:text-black transition
-    "
+      bg-[#125785] rounded-lg flex items-center gap-2 font-medium
+      hover:bg-[#0f4668] transition"
           >
             {current.cta2Text}
           </a>

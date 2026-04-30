@@ -104,13 +104,13 @@ const formatted = filtered.map((s) => ({
         </div>
 
         {/* 🔥 BOTTOM ROW */}
-        <div ref={bottomRef} className="overflow-hidden mt-6">
+        {/* <div ref={bottomRef} className="overflow-hidden mt-6">
           <div className="flex gap-6 w-max">
             {loopData.map((item, index) => (
               <Card item={item} key={index} />
             ))}
           </div>
-        </div>
+        </div> */}
 
       </div>
     </section>

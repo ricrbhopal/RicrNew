@@ -238,36 +238,39 @@ export default function Home() {
   };
 
   // Update hero content
-  const handleUpdateHero = async () => {
-    if (!editingVideo) return;
+const handleUpdateHero = async () => {
+  if (!editingVideo) return;
 
-    const toastId = toast.loading("Updating hero content...");
-    try {
-      const updatedData = {
-        cta1Text: editCta1Text,
-        cta1Link: editCta1Link,
-        cta2Text: editCta2Text,
-        cta2Link: editCta2Link,
-      };
+  const toastId = toast.loading("Updating hero...");
 
-      await adminAPI.updateHero(editingVideo._id, updatedData);
+  try {
+    const formData = new FormData();
 
-      setVideos((v) =>
-        v.map((video) =>
-          video._id === editingVideo._id ? { ...video, ...updatedData } : video
-        )
-      );
+    formData.append("cta1Text", editCta1Text);
+    formData.append("cta1Link", editCta1Link);
+    formData.append("cta2Text", editCta2Text);
+    formData.append("cta2Link", editCta2Link);
 
-      toast.dismiss(toastId);
-      toast.success("Hero content updated successfully");
-      setShowEditModal(false);
-      setEditingVideo(null);
-    } catch (err) {
-      console.error("Update failed", err);
-      toast.dismiss(toastId);
-      toast.error(err.response?.data?.message || "Failed to update hero content");
+    // 🔥 FILE ADD
+    if (editingVideo.newFile) {
+      formData.append("media", editingVideo.newFile);
     }
-  };
+
+    await adminAPI.updateHero(editingVideo._id, formData);
+
+    toast.dismiss(toastId);
+    toast.success("Hero updated successfully");
+
+    setShowEditModal(false);
+    setEditingVideo(null);
+
+    fetchVideos(); // refresh
+  } catch (err) {
+    console.error(err);
+    toast.dismiss(toastId);
+    toast.error("Update failed");
+  }
+};
 
   // Update order
   const updateOrder = async (id, order) => {
@@ -294,9 +297,7 @@ export default function Home() {
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 Hero Section Management
               </h1>
-              <p className="text-gray-500 mt-2 text-sm sm:text-base">
-                Upload and manage background videos for your hero section with dynamic content
-              </p>
+     
             </div>
             <button
               onClick={fetchVideos}
@@ -576,7 +577,7 @@ export default function Home() {
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-6">
                     <div className="px-5 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
+                        <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-500 rounded-xl flex items-center justify-center shadow-md">
                           <MdEdit className="text-white text-lg" />
                         </div>
                         <div>
@@ -880,108 +881,149 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Edit Modal */}
-      {showEditModal && editingVideo && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <MdEdit className="text-blue-600 text-xl" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Edit Hero Content
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    Update the CTA buttons for this media
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-              >
-                <MdClose className="text-gray-500 text-2xl" />
-              </button>
-            </div>
+{/* Edit Modal */}
+{showEditModal && editingVideo && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 
-            <div className="p-6 space-y-5">
-
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    CTA 1 Text
-                  </label>
-                  <input
-                    type="text"
-                    value={editCta1Text}
-                    onChange={(e) => setEditCta1Text(e.target.value)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g., Get Started"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    CTA 1 Link
-                  </label>
-                  <input
-                    type="text"
-                    value={editCta1Link}
-                    onChange={(e) => setEditCta1Link(e.target.value)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://example.com"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    CTA 2 Text
-                  </label>
-                  <input
-                    type="text"
-                    value={editCta2Text}
-                    onChange={(e) => setEditCta2Text(e.target.value)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g., Learn More"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    CTA 2 Link
-                  </label>
-                  <input
-                    type="text"
-                    value={editCta2Link}
-                    onChange={(e) => setEditCta2Link(e.target.value)}
-                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://example.com/about"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 flex gap-3">
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="flex-1 px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpdateHero}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                Save Changes
-              </button>
-            </div>
+      {/* HEADER */}
+      <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <MdEdit className="text-blue-600 text-xl" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">
+              Edit Hero Content
+            </h3>
+            <p className="text-sm text-gray-500">
+              Update media + CTA buttons
+            </p>
           </div>
         </div>
-      )}
+        <button
+          onClick={() => setShowEditModal(false)}
+          className="p-2 hover:bg-gray-100 rounded-xl"
+        >
+          <MdClose className="text-gray-500 text-2xl" />
+        </button>
+      </div>
 
+      {/* BODY */}
+      <div className="p-6 space-y-6">
+
+        {/* 🔥 MEDIA CHANGE */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Change Image / Video
+          </label>
+
+          <input
+            type="file"
+            accept="image/*,video/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setEditingVideo((prev) => ({
+                  ...prev,
+                  newFile: file,
+                  preview: URL.createObjectURL(file),
+                }));
+              }
+            }}
+            className="w-full border border-gray-300 rounded-xl px-4 py-3"
+          />
+
+          {/* PREVIEW */}
+          <div className="mt-4 rounded-xl overflow-hidden border">
+            {editingVideo?.preview ? (
+              editingVideo.newFile?.type.startsWith("image") ? (
+                <img
+                  src={editingVideo.preview}
+                  className="w-full h-48 object-cover"
+                />
+              ) : (
+                <video
+                  src={editingVideo.preview}
+                  className="w-full h-48 object-cover"
+                  controls
+                />
+              )
+            ) : editingVideo.backgroundVideo ? (
+              editingVideo.mediaType === "image" ? (
+                <img
+                  src={editingVideo.backgroundVideo}
+                  className="w-full h-48 object-cover"
+                />
+              ) : (
+                <video
+                  src={editingVideo.backgroundVideo}
+                  className="w-full h-48 object-cover"
+                  controls
+                />
+              )
+            ) : null}
+          </div>
+        </div>
+
+        {/* CTA 1 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input
+            type="text"
+            value={editCta1Text}
+            onChange={(e) => setEditCta1Text(e.target.value)}
+            placeholder="CTA 1 Text"
+            className="border rounded-xl px-4 py-3"
+          />
+          <input
+            type="text"
+            value={editCta1Link}
+            onChange={(e) => setEditCta1Link(e.target.value)}
+            placeholder="CTA 1 Link"
+            className="border rounded-xl px-4 py-3"
+          />
+        </div>
+
+        {/* CTA 2 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input
+            type="text"
+            value={editCta2Text}
+            onChange={(e) => setEditCta2Text(e.target.value)}
+            placeholder="CTA 2 Text"
+            className="border rounded-xl px-4 py-3"
+          />
+          <input
+            type="text"
+            value={editCta2Link}
+            onChange={(e) => setEditCta2Link(e.target.value)}
+            placeholder="CTA 2 Link"
+            className="border rounded-xl px-4 py-3"
+          />
+        </div>
+
+      </div>
+
+      {/* FOOTER */}
+      <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex gap-3">
+        <button
+          onClick={() => setShowEditModal(false)}
+          className="flex-1 border px-6 py-3 rounded-xl"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={handleUpdateHero}
+          className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl"
+        >
+          Save Changes
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
       <Toaster
         position="top-right"
         toastOptions={{

@@ -11,18 +11,18 @@ const fileFilter = (allowedTypes) => (req, file, cb) => {
 };
 
 export const uploadVideo = (options = {}) => {
-  const limits = { fileSize: options.maxSize || 200 * 1024 * 1024 }; // default 200MB
+  const limits = { fileSize: options.maxSize || 500 * 1024 * 1024 }; // default 200MB
   return multer({ storage, fileFilter: fileFilter(['video']), limits });
 };
 
 export const uploadImage = (options = {}) => {
-  const limits = { fileSize: options.maxSize || 200 * 1024 * 1024 }; // default 200MB
+  const limits = { fileSize: options.maxSize || 500 * 1024 * 1024 }; // default 200MB
   return multer({ storage, fileFilter: fileFilter(['image']), limits });
 };
 
 // Accept both images and videos (useful for combined media upload endpoints)
 export const uploadMedia = (options = {}) => {
-  const limits = { fileSize: options.maxSize || 200 * 1024 * 1024 }; // default 200MB
+  const limits = { fileSize: options.maxSize || 500 * 1024 * 1024 }; // default 200MB
   return multer({ storage, fileFilter: fileFilter(['image', 'video']), limits });
 };
 

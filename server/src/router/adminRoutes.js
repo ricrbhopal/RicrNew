@@ -78,7 +78,7 @@ router.get('/', getHero);
 router.get('/all', getAllHeroes);
 router.delete('/s/:id', deleteHero);
 router.put('/:id/status', updateStatus);
-router.put('/:id', updateHero);
+router.put('/:id', upload.single("media"), updateHero);
 router.put('/:id/order', updateHeroOrder);
 
 

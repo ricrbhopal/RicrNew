@@ -15,8 +15,7 @@ const heroSchema = new mongoose.Schema(
       default: 1,
     },
 
-    headline: { type: String, default: "" },
-    subtext: { type: String, default: "" },
+
 
     cta1Text: { type: String, default: "" },
     cta1Link: { type: String, default: "" },
