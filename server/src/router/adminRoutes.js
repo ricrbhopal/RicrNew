@@ -93,7 +93,7 @@ router.delete('/celebrate/:id', deleteCelebrate);
 
 
 
-
+// dfsfsdfdsff
 
 //Program Routes Section
 router.post('/program', upload.single('video'), uploadProgram);
@@ -101,7 +101,7 @@ router.get('/program', getProgram); // frontend active
 router.get('/program/all', getAllPrograms); // admin
 router.put('/program/:id', updateProgram);
 router.put('/program/:id/status', updateProgramStatus);
-router.delete('/program/:id', deleteProgram);
+// router.delete('/program/:id', deleteProgram);
 
 
 
