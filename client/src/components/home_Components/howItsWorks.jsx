@@ -1,85 +1,84 @@
-import React from "react";
-
-const steps = [
-  {
-    title: "Learn",
-    desc: "Concepts explained simply, without unnecessary theory",
-  },
-  {
-    title: "Practice",
-    desc: "Daily coding with structured assignments",
-  },
-  {
-    title: "Build",
-    desc: "Real-world projects to strengthen your portfolio",
-  },
-  {
-    title: "Get Placed",
-    desc: "Interview prep, mock sessions, and hiring support",
-  },
-];
+import React, { useEffect, useState } from "react";
+import {adminAPI} from "../../config/api";
 
 const HowItWorks = () => {
+  const [steps, setSteps] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ================= FETCH =================
+  useEffect(() => {
+    const fetchSteps = async () => {
+      try {
+        const res = await adminAPI.getHowItWork(); // ✅ UPDATED
+
+        const data = Array.isArray(res.data)
+          ? res.data
+          : res.data
+          ? [res.data]
+          : [];
+
+        setSteps(data);
+      } catch (err) {
+        console.error(err);
+        setSteps([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSteps();
+  }, []);
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (!steps.length) return <div className="text-center py-10">No Data</div>;
+
+  const first = steps[0]; // 🔥 main banner data
+
   return (
-    <section
-      className="
-      bg-[#f5f5f7] 
-      w-[100%] sm:w-[100%] md:w-[100%] 
-      mx-auto 
-      mt-8 sm:mt-10 md:mt-12 
-      py-10 sm:py-14 md:py-20 
-      px-4 sm:px-6 md:px-10 
-      rounded-xl sm:rounded-2xl
-      "
-    >
-      {/* 🔥 Heading */}
-      <div className="max-w-6xl mx-auto mb-8 sm:mb-10 md:mb-12">
-        
-        <p className="text-gray-500 text-xs sm:text-sm md:text-base mb-2 tracking-wide">
-          HOW IT WORKS
-        </p>
+    <section className="w-full">
 
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl 
-        font-semibold text-black 
-        leading-tight sm:leading-snug">
-          A simple process that gets results
+      {/* 🔥 DYNAMIC TITLE (REPLACED STATIC TEXT) */}
+      {/* <div className="max-w-6xl mx-auto mt-10 px-6 text-center">
+        <h2 className="text-3xl md:text-5xl font-semibold text-black">
+          {first.title || "Default Title"}
         </h2>
+      </div> */}
+
+      {/* 🔥 BANNER */}
+      <div className="relative w-full h-[60vh] md:h-[80vh] mt-6 overflow-hidden">
+
+        {first.mediaType === "video" ? (
+          <video
+            src={first.mediaUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute w-full h-full object-cover"
+          />
+        ) : (
+          <img
+            src={first.mediaUrl}
+            alt={first.title}
+            className="absolute w-full h-full object-cover"
+          />
+        )}
+
+        {/* 🔥 OVERLAY */}
+        <div className="absolute inset-0 bg-black/50"></div>
+
+        {/* 🔥 TEXT ON VIDEO */}
+        <div className="relative z-10 flex flex-col justify-center items-center h-full text-center px-6">
+          <h2 className="text-white text-3xl md:text-5xl font-bold mb-4">
+            {first.title}
+          </h2>
+
+     
+        </div>
       </div>
 
-      {/* 🔥 Steps */}
-      <div className="max-w-6xl mx-auto grid 
-      grid-cols-1 
-      sm:grid-cols-2 
-      md:grid-cols-4 
-      gap-6 sm:gap-8 md:gap-10">
 
-        {steps.map((step, index) => (
-          <div key={index} className="relative group">
 
-            {/* 🔥 Step Number */}
-            <div className="text-4xl sm:text-5xl md:text-6xl 
-            font-semibold text-gray-200 mb-3 sm:mb-4">
-              {`0${index + 1}`}
-            </div>
-
-            {/* 🔥 Content */}
-            <h3 className="text-base sm:text-lg md:text-xl 
-            font-semibold text-black mb-2">
-              {step.title}
-            </h3>
-
-            <p className="text-xs sm:text-sm md:text-base 
-            text-gray-600 leading-relaxed">
-              {step.desc}
-            </p>
-
-            {/* 🔥 Hover line */}
-            <div className="mt-4 h-[2px] w-0 bg-black 
-            group-hover:w-full transition-all duration-300"></div>
-          </div>
-        ))}
-
-      </div>
     </section>
   );
 };

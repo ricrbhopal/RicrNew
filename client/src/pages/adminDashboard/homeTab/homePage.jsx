@@ -139,19 +139,21 @@ const ExpertsTab = lazy(() => import("./expertTab"));
 const CelebrateTab = lazy(() => import("./CelebrateTab"));
 const AdvertisingTab = lazy(() => import("./advertisingTab"));
 const FeaturedInMediaTab = lazy(() => import("./featuredTab"));
+const PlacementTab = lazy(() => import("./CelebrateTab"));
 const CodeCraftTab = lazy(() => import("./CodeCraftTab"));
 const StoriesTab = lazy(() => import("./storiesTab"));
 const ProgramTab = lazy(() => import("./programTab"));
 const HowItWorkTab = lazy(() => import("./howItWorkTab"));
-
+const WhyRICRTab = lazy(() => import("./whyRICRTab"));
 const HomePage = () => {
   const [active, setActive] = useState("hero");
 
   const tabs = [
     { id: "hero", label: "Hero Section" },
-    { id: "affiliations", label: "Placement Section" },
+    { id: "placement", label: "Placement Section" },
     {id: "program", label: "Program Section" },
     {id: "howItWork", label: "How It Work Section" },
+    {id: "whyRICR", label: "Why RICR Section" },
     { id: "maestor", label: "Maestor" },
     { id: "Experts", label: "Experts" },
     { id: "celebrate", label: "Celebrate" },
@@ -191,7 +193,7 @@ const HomePage = () => {
           >
             {active === "hero" && <HeroTab />}
             {active === "advertising" && <AdvertisingTab />}
-            {active === "affiliations" && <AffiliationsTab />}
+            {active === "placement" && <PlacementTab />}
             {active === "maestor" && <MaestorTab />}
             {active === "Experts" && <ExpertsTab />}
             {active === "celebrate" && <CelebrateTab />}
@@ -200,6 +202,8 @@ const HomePage = () => {
             {active === "stories" && <StoriesTab />}
             {active === "program" && <ProgramTab />}
             {active === "howItWork" && <HowItWorkTab />}
+            {active === "whyRICR" && <WhyRICRTab />}
+
           </Suspense>
         </div>
       </div>

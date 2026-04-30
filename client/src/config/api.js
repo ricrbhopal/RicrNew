@@ -96,6 +96,41 @@ deleteHowItWork: (id) =>
 
 
 
+// Why RICR Page Section API
+
+
+// ================= WHY RICR API =================
+
+// CREATE
+createWhyRICR: (formData, config = {}) =>
+  api.post("/admin/whyricr", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    ...config,
+  }),
+
+// GET ACTIVE
+getWhyRICR: () =>
+  api.get("/admin/whyricr"),
+
+// GET ALL
+getAllWhyRICR: () =>
+  api.get("/admin/whyricr/all"),
+
+// UPDATE
+updateWhyRICR: (id, formData, config = {}) =>
+  api.put(`/admin/whyricr/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    ...config,
+  }),
+
+// STATUS TOGGLE
+updateWhyRICRStatus: (id) =>
+  api.put(`/admin/whyricr/${id}/status`),
+
+// DELETE
+deleteWhyRICR: (id) =>
+  api.delete(`/admin/whyricr/${id}`),
+
 
   // backwards-compatible name used in some components
   uploadAffiliationWithConfig: (formData, config = {}) =>

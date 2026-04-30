@@ -53,7 +53,14 @@ updateHowItWorkStatus,
 updateHowItWork,
 getAllHowItWorks,
 getHowItWork,
-createHowItWork
+createHowItWork,
+  createWhyRICR,
+  getWhyRICR,
+  getAllWhyRICR,
+  updateWhyRICR,
+  updateWhyRICRStatus,
+  deleteWhyRICR,
+
 
 
 
@@ -109,6 +116,24 @@ router.put("/howitwork/:id", upload.single("media"), updateHowItWork);
 
 router.put("/howitwork/:id/status", updateHowItWorkStatus);
 router.delete("/howitwork/:id", deleteHowItWork);
+
+
+
+
+
+// ================= ADMIN =================
+router.post("/whyricr", upload.single("media"), createWhyRICR);
+
+router.get("/whyricr", getWhyRICR);
+router.get("/whyricr/all", getAllWhyRICR);
+
+router.put("/whyricr/:id", upload.single("media"), updateWhyRICR);
+
+router.put("/whyricr/:id/status", updateWhyRICRStatus);
+router.delete("/whyricr/:id", deleteWhyRICR);
+
+
+
 
 // Affiliation Routes Section
 router.post('/uploadAffiliation', upload.any(), uploadAffiliation);

@@ -13,6 +13,7 @@ import cloudinary from '../config/cloudinary.js';
 import { Readable } from 'stream';
 import Program from "../models/home/programModels.js";
 import HowItWork from "../models/home/howItWorkModels.js";
+import WhyRICR from "../models/home/whyRICRModel.js";
 
 
 
@@ -484,14 +485,10 @@ export const createHowItWork = async (req, res) => {
 // 🔥 GET ACTIVE
 export const getHowItWork = async (req, res) => {
   try {
-    const data = await HowItWork.findOne({ status: "active" })
+    const data = await HowItWork.find({ status: "active" })
       .sort({ createdAt: -1 });
 
-    if (!data) {
-      return res.status(404).json({ message: "No active data found" });
-    }
-
-    res.json(data);
+    res.json(data); // ✅ array return
 
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -575,6 +572,140 @@ export const deleteHowItWork = async (req, res) => {
   }
 };
 
+
+
+// Why RICR Controller
+
+
+// ================= CREATE =================
+export const createWhyRICR = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "File missing" });
+    }
+
+    const mediaType = getMediaType(req.file);
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: mediaType,
+        folder: "whyricr",
+      },
+      async (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: err.message });
+        }
+
+        const data = await WhyRICR.create({
+          title: req.body.title || "",
+          mediaType,
+          mediaUrl: result.secure_url,
+          status: req.body.status === "active" ? "active" : "inactive",
+        });
+
+        res.status(201).json({
+          message: "Created successfully",
+          data,
+        });
+      }
+    );
+
+    uploadStream.end(req.file.buffer);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ================= GET ACTIVE =================
+export const getWhyRICR = async (req, res) => {
+  try {
+    const data = await WhyRICR.find({ status: "active" })
+      .sort({ createdAt: -1 });
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ================= GET ALL =================
+export const getAllWhyRICR = async (req, res) => {
+  try {
+    const list = await WhyRICR.find().sort({ createdAt: -1 });
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ================= UPDATE =================
+export const updateWhyRICR = async (req, res) => {
+  try {
+    const data = await WhyRICR.findById(req.params.id);
+    if (!data) return res.status(404).json({ message: "Not found" });
+
+    if (req.body.title !== undefined) {
+      data.title = req.body.title;
+    }
+
+    if (req.file) {
+      const newType = getMediaType(req.file);
+
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: newType,
+        folder: "whyricr",
+      });
+
+      data.mediaUrl = result.secure_url;
+      data.mediaType = newType;
+
+      fs.unlinkSync(req.file.path);
+    }
+
+    if (req.body.status && ["active", "inactive"].includes(req.body.status)) {
+      data.status = req.body.status;
+    }
+
+    await data.save();
+    res.json(data);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ================= TOGGLE STATUS =================
+export const updateWhyRICRStatus = async (req, res) => {
+  try {
+    const data = await WhyRICR.findById(req.params.id);
+    if (!data) return res.status(404).json({ message: "Not found" });
+
+    data.status = data.status === "active" ? "inactive" : "active";
+
+    await data.save();
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ================= DELETE =================
+export const deleteWhyRICR = async (req, res) => {
+  try {
+    const data = await WhyRICR.findByIdAndDelete(req.params.id);
+    if (!data) return res.status(404).json({ message: "Not found" });
+
+    res.json({ message: "Deleted successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 
 export const uploadAffiliation = async (req, res) => {
