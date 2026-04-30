@@ -20,34 +20,32 @@ useEffect(() => {
 
       let list = [];
 
-      // 🔥 FIRST PRIORITY: MULTIPLE HEROES
-      if (Array.isArray(data.heroes)) {
+      // 🔥 HANDLE ARRAY (LOCAL + FUTURE)
+      if (Array.isArray(data.heroes) && data.heroes.length > 0) {
         const activeHeroes = data.heroes.filter(
           (item) => item.status === "active"
         );
 
-        list = list.concat(
-          activeHeroes.map((item) => ({
-            url:
-              item.backgroundVideo ||
-              item.image ||
-              item.secure_url ||
-              item.url ||
-              "",
-            mediaType: item.mediaType || "image",
-            headline: item.headline || "",
-            subtext: item.subtext || "",
-            cta1Text: item.cta1Text || "",
-            cta1Link: item.cta1Link || "#",
-            cta2Text: item.cta2Text || "",
-            cta2Link: item.cta2Link || "#",
-            order: item.order ?? 0,
-          }))
-        );
+        list = activeHeroes.map((item) => ({
+          url:
+            item.backgroundVideo ||
+            item.image ||
+            item.secure_url ||
+            item.url ||
+            "",
+          mediaType: item.mediaType || "image",
+          headline: item.headline || "",
+          subtext: item.subtext || "",
+          cta1Text: item.cta1Text || "",
+          cta1Link: item.cta1Link || "#",
+          cta2Text: item.cta2Text || "",
+          cta2Link: item.cta2Link || "#",
+          order: item.order ?? 0,
+        }));
       }
 
-      // 🔥 FALLBACK: SINGLE HERO (production safety)
-      if (data.hero && list.length === 0) {
+      // 🔥 HANDLE SINGLE (PRODUCTION)
+      if (data.hero) {
         list.push({
           url:
             data.hero.backgroundVideo ||
@@ -66,7 +64,7 @@ useEffect(() => {
         });
       }
 
-      // 🔥 VIDEOS ADD
+      // 🔥 VIDEOS
       if (Array.isArray(data.videos)) {
         const activeVideos = data.videos.filter(
           (item) => item.status === "active"
@@ -92,12 +90,17 @@ useEffect(() => {
         );
       }
 
-      // 🔥 SORTING
-      list.sort((a, b) => a.order - b.order);
+      // 🔥 REMOVE DUPLICATES (IMPORTANT)
+      const uniqueList = Array.from(
+        new Map(list.map((item) => [item.url, item])).values()
+      );
 
-      console.log("FINAL HERO LIST:", list);
+      // 🔥 SORT
+      uniqueList.sort((a, b) => a.order - b.order);
 
-      setMediaList(list);
+      console.log("FINAL HERO LIST:", uniqueList);
+
+      setMediaList(uniqueList);
     } catch (err) {
       console.error("Hero fetch error:", err);
     }
