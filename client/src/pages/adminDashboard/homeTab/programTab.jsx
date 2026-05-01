@@ -48,7 +48,6 @@ const handleUpload = async () => {
       },
     });
 
-    console.log("UPLOAD RESPONSE:", res.data);
 
     setLoading(false);
     setUploadProgress(0);

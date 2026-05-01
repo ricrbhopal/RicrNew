@@ -16,7 +16,7 @@ useEffect(() => {
       const res = await adminAPI.getHero();
       const data = res.data;
 
-      console.log("Fetched Hero Data:", data);
+     
 
       let list = [];
 
@@ -98,7 +98,6 @@ useEffect(() => {
       // 🔥 SORT
       uniqueList.sort((a, b) => a.order - b.order);
 
-      console.log("FINAL HERO LIST:", uniqueList);
 
       setMediaList(uniqueList);
     } catch (err) {
@@ -167,7 +166,7 @@ rounded-1xl md:rounded-1xl overflow-hidden"
         <div className="mt-5  flex flex-wrap gap-3  sm:ml-0 md:ml-15 sm:mt-0 md:mt-120">
           {/* PRIMARY BUTTON */}
           <a
-            href={current.cta1Link}
+            href=''
             className="
       px-4 py-2 text-sm
       sm:px-5 sm:py-2.5 sm:text-base
@@ -175,13 +174,14 @@ rounded-1xl md:rounded-1xl overflow-hidden"
       bg-[#125785] rounded-lg flex items-center gap-2 font-medium
       hover:bg-[#0f4668] transition"
           >
-            {current.cta1Text}
-            <MdOutlineArrowForward />
+    Start Your Journey
+
+            {/* <MdOutlineArrowForward /> */}
           </a>
 
           {/* SECONDARY BUTTON */}
           <a
-            href={current.cta2Link}
+            href=''
             className="
       px-4 py-2 text-sm
       sm:px-5 sm:py-2.5 sm:text-base
@@ -189,7 +189,7 @@ rounded-1xl md:rounded-1xl overflow-hidden"
       bg-[#125785] rounded-lg flex items-center gap-2 font-medium
       hover:bg-[#0f4668] transition"
           >
-            {current.cta2Text}
+      Explore Programs
           </a>
         </div>
       </div>

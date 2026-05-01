@@ -88,7 +88,7 @@ const FeaturedInMediaSection = () => {
                     alt="Featured In Media"
                     className="w-100 h-80 object-cover rounded-xl shadow cursor-pointer hover:scale-105 transition-transform mx-auto"
                     onClick={() => {
-                      console.log('Image clicked:', idx);
+                  
                       openModal(idx);
                     }}
                   />

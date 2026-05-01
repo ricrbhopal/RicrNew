@@ -40,7 +40,7 @@ const Loader = () => {
 
       <div className="relative w-[200px] h-[200px] flex items-center justify-center">
 
-        {/* 🔥 SEGMENTS */}
+        {/*  SEGMENTS */}
         {[...Array(totalBars)].map((_, i) => {
           const angle = (360 / totalBars) * i;
 
@@ -51,10 +51,10 @@ const Loader = () => {
               style={{
                 transform: `rotate(${angle}deg) translate(90px)`,
 
-                // 🔥 SAME COLOR AS TEXT
+                //  SAME COLOR AS TEXT
                 background: i < activeBars ? "#06b6d4" : "#1f2937",
 
-                // 🔥 GLOW EFFECT
+                //  GLOW EFFECT
                 boxShadow:
                   i < activeBars
                     ? "0 0 8px #06b6d4, 0 0 14px #06b6d4"
@@ -64,7 +64,7 @@ const Loader = () => {
           );
         })}
 
-        {/* 🔥 CENTER CIRCLE */}
+        {/* CENTER CIRCLE */}
         <div className="absolute w-[120px] h-[120px] bg-black rounded-full flex items-center justify-center shadow-inner">
 
           <span className="text-cyan-400 text-2xl font-mono font-bold">
@@ -77,7 +77,7 @@ const Loader = () => {
 
       {/* OPTIONAL TEXT */}
       <p className="absolute bottom-20 text-cyan-400 font-mono text-sm tracking-wide">
-        Loading system...
+    Welcome To Your Alternate Future
       </p>
 
     </div>

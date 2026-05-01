@@ -1,7 +1,6 @@
 # RicrNew
 
-<<<<<<< HEAD
-=======
+
 Full-stack React + Node.js application. This repository contains a Vite-powered React client (in `client/`) and an Express + Mongoose API server (in `server/`).
 
 ## Contents
@@ -43,7 +42,6 @@ Add the developer names below. Replace the placeholders or add more entries as n
 
 - Mentor : Pranay Das
 - Mentor : Raj Vardhan
-- Developer 1: Vineet
+- Developer : Vineet Pancheshwar
 
----
->>>>>>> cc050a67263c9c8aa4f4bab86b0bc28e2ace9679
+
