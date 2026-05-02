@@ -52,12 +52,12 @@ useEffect(() => {
           : 'bg-white shadow-sm border-b border-gray-100'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo Section */}
           <div className="flex items-center gap-6 lg:gap-10">
             <Link to="/" className="flex items-center transition-transform duration-300 hover:scale-105">
-              <img src="/logo-2.png" alt="RICR logo" className="h-9 w-auto object-contain" />
+              <img src="/logo-2.png" alt="RICR logo" className="h-9 w-auto object-contain mr-15" />
             </Link>
 
             {/* Desktop Navigation Links */}

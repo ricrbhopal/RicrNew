@@ -36,10 +36,17 @@ const WhyRICR = () => {
   const first = steps[0];
 
   return (
-    <section className="w-full">
+    <section className="w-full  mt-15">
+
+{/* 🔥 TEXT */}
+<div className="h-full w-[90%] text-center mx-auto flex items-center justify-center">
+  <h2 className="text-[#125785] text-3xl md:text-4xl font-bold">
+    {first.title || "Why RICR"}
+  </h2>
+</div>
 
       {/* 🔥 BANNER */}
-      <div className="relative w-full h-[60vh] md:h-[80vh] overflow-hidden mt-10">
+      <div className="relative w-[90%] justify-center mx-auto rounded-2xl h-[60vh] md:h-[80vh] overflow-hidden mt-10">
 
         {first.mediaType === "video" ? (
           <video
@@ -61,12 +68,7 @@ const WhyRICR = () => {
         {/* 🔥 OVERLAY */}
         <div className="absolute inset-0 bg-black/50"></div>
 
-        {/* 🔥 TEXT */}
-        <div className="relative z-10 flex flex-col justify-center items-center h-full text-center px-6">
-          <h2 className="text-white text-3xl md:text-5xl font-bold">
-            {first.title || "Why RICR"}
-          </h2>
-        </div>
+
 
       </div>
 

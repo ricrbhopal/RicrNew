@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { FaGraduationCap } from "react-icons/fa";
 import { adminAPI } from "../../config/api";
 
 const PlacementSection = () => {
@@ -41,13 +42,15 @@ const PlacementSection = () => {
       <section className="bg-[#f5f7fb] w-full">
         <div className="py-20 w-full flex flex-col lg:flex-row items-center justify-between">
           <div className="w-full lg:w-1/2 px-8 lg:px-16">
-            <span className="text-sm font-semibold text-[#0f766e] uppercase">Placements</span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-3 leading-tight">
+            <span className="text-sm font-semibold text-[#125785] uppercase animate-pulse">
+              Placements
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold mt-3 leading-tight animate-fade-in-up">
               Built for real-world hiring,
-              <span className="text-[#0f766e]"> not just certificates</span>
+              <span className="text-[#125785]"> not just certificates</span>
             </h2>
             <div className="flex justify-center py-20">
-              <div className="w-12 h-12 border-4 border-[#0f766e] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-12 h-12 border-4 border-[#125785] border-t-transparent rounded-full animate-spin"></div>
             </div>
           </div>
         </div>
@@ -72,174 +75,257 @@ const PlacementSection = () => {
   const bottomData = Array(repeatCountBottom).fill(bottomBase).flat();
 
   return (
-    <section className="bg-[#f5f7fb] w-full  mt-15">
-      <div className="py-20 w-full flex flex-col lg:flex-row items-center justify-between">
+    <section className=" w-full mt-10 overflow-hidden">
+      <div className="py-12 md:py-16 lg:py-20 w-full flex flex-col lg:flex-row items-center justify-between gap-10">
+        {/* Left IMAGE with enhanced animation */}
+        <div 
+          className="w-full lg:w-1/2 px-5 sm:px-8 lg:px-0 animate-fade-in-left"
+          style={{ animationDelay: "0.1s" }}
+        >
+          <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] relative rounded-2xl overflow-hidden md:ml-2 sm:ml-0 group cursor-pointer">
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+              alt="placement"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
 
-        {/* LEFT */}
-        <div className="w-full lg:w-1/2 px-8 lg:px-16">
+            {/* Animated Overlay */}
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-500"></div>
 
-          <span className="text-sm font-semibold text-[#0f766e] uppercase tracking-wide">
+            {/* Animated Badge */}
+            <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 bg-white/90 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2 rounded-xl shadow-lg animate-slide-up opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+              <p className="text-xs sm:text-sm font-semibold text-gray-800 flex items-center gap-1">
+                <FaGraduationCap className="text-[#125785] text-base sm:text-lg animate-bounce" />
+                Real Students • Real Placements
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Content with enhanced animations */}
+        <div className="w-full lg:w-1/2 px-5 sm:px-8 lg:px-16 animate-fade-in-right">
+          <span className="text-xs sm:text-sm font-bold text-[#125785] uppercase tracking-wide inline-block animate-slide-up">
             Placements
           </span>
 
-          <h2 className="text-2xl md:text-3xl font-bold mt-3 leading-tight">
-At RICR, placements aren't about promises — they're the result of what you build and practice.            <span className="text-[#0f766e]"> We focus on making you interview-ready.</span>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mt-3 leading-snug md:leading-tight animate-fade-in-up">
+            At RICR, placements aren't about promises — they're the result of
+            what you build and practice.
+            <span className="text-[#125785]">
+              {" "}
+              We focus on making you interview-ready.
+            </span>
           </h2>
 
-          {/* <p className="mt-6 text-lg text-gray-600 max-w-[550px]">
-            At RICR, placements aren't about promises — they're the result of what 
-            you build and practice. We focus on making you 
-            <span className="font-semibold text-gray-800"> interview-ready</span>.
-          </p> */}
-
-          {/* TOP ROW - moves Left to Right */}
-          <div className="mt-10">
-            <MarqueeRow 
-              ref={topRef} 
-              data={topData} 
-              direction="right" 
+          {/* TOP ROW */}
+          <div className="mt-8 md:mt-10 overflow-hidden animate-slide-up" style={{ animationDelay: "0.2s" }}>
+            <MarqueeRow
+              ref={topRef}
+              data={topData}
+              direction="right"
               speed={0.6}
             />
           </div>
 
-          {/* BOTTOM ROW - moves Right to Left */}
-          <div className="mt-6">
-            <MarqueeRow 
-              ref={bottomRef} 
-              data={bottomData} 
-              direction="left" 
+          {/* BOTTOM ROW */}
+          <div className="mt-4 md:mt-6 overflow-hidden animate-slide-up" style={{ animationDelay: "0.3s" }}>
+            <MarqueeRow
+              ref={bottomRef}
+              data={bottomData}
+              direction="left"
               speed={0.6}
             />
           </div>
-
         </div>
-
-        {/* RIGHT IMAGE */}
-        <div className="w-full mr-10  h-[600px] relative mt-10 lg:mt-0 rounded-2xl overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
-            alt="placement"
-            className="w-full h-full object-cover rounded-2xl "
-          />
-
-          <div className="absolute inset-0 bg-black/20 rounded-l-2xl"></div>
-
-          <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg">
-            <p className="text-sm font-semibold text-gray-800">
-              🎓 Real Students • Real Placements
-            </p>
-          </div>
-        </div>
-
       </div>
+
+      {/* Add global animation keyframes */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes fadeInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in-left {
+          animation: fadeInLeft 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in-right {
+          animation: fadeInRight 0.8s ease-out forwards;
+        }
+        
+        .animate-slide-up {
+          animation: slideUp 0.6s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 };
 
 // MARQUEE ROW COMPONENT with smooth animation
-const MarqueeRow = React.forwardRef(({ data, direction = "left", speed = 0.6 }, ref) => {
-  const scrollRef = useRef(null);
-  const animationRef = useRef(null);
+const MarqueeRow = React.forwardRef(
+  ({ data, direction = "left", speed = 0.6 }, ref) => {
+    const scrollRef = useRef(null);
+    const animationRef = useRef(null);
 
-  useEffect(() => {
-    const element = scrollRef.current;
-    if (!element || !data.length) return;
+    useEffect(() => {
+      const element = scrollRef.current;
+      if (!element || !data.length) return;
 
+      let lastTimestamp = 0;
+      const actualSpeed = speed;
 
-    let lastTimestamp = 0;
-    const actualSpeed = speed;
+      const animate = (timestamp) => {
+        if (!lastTimestamp) {
+          lastTimestamp = timestamp;
+          animationRef.current = requestAnimationFrame(animate);
+          return;
+        }
 
-    const animate = (timestamp) => {
-      if (!lastTimestamp) {
+        const delta = Math.min(32, timestamp - lastTimestamp);
+        const moveDistance = actualSpeed * (delta / 16);
         lastTimestamp = timestamp;
+
+        if (direction === "left") {
+          element.scrollLeft += moveDistance;
+          if (element.scrollLeft >= element.scrollWidth - element.clientWidth) {
+            element.scrollLeft = 0;
+          }
+        } else {
+          element.scrollLeft -= moveDistance;
+          if (element.scrollLeft <= 0) {
+            element.scrollLeft = element.scrollWidth - element.clientWidth;
+          }
+        }
+
         animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
+      };
 
-      const delta = Math.min(32, timestamp - lastTimestamp);
-      const moveDistance = actualSpeed * (delta / 16);
-      lastTimestamp = timestamp;
-
-      if (direction === "left") {
-        element.scrollLeft += moveDistance;
-        if (element.scrollLeft >= element.scrollWidth - element.clientWidth) {
-          element.scrollLeft = 0;
-        }
+      // Set initial position
+      if (direction === "right") {
+        element.scrollLeft = element.scrollWidth - element.clientWidth;
       } else {
-        element.scrollLeft -= moveDistance;
-        if (element.scrollLeft <= 0) {
-          element.scrollLeft = element.scrollWidth - element.clientWidth;
-        }
+        element.scrollLeft = 0;
       }
 
       animationRef.current = requestAnimationFrame(animate);
-    };
 
-    // Set initial position
-    if (direction === "right") {
-      element.scrollLeft = element.scrollWidth - element.clientWidth;
-    } else {
-      element.scrollLeft = 0;
-    }
+      return () => {
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+        }
+      };
+    }, [data, direction, speed]);
 
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+    // Combine refs
+    const setRefs = (el) => {
+      scrollRef.current = el;
+      if (typeof ref === "function") {
+        ref(el);
+      } else if (ref) {
+        ref.current = el;
       }
     };
-  }, [data, direction, speed]);
 
-
-
-  // Combine refs
-  const setRefs = (el) => {
-    scrollRef.current = el;
-    if (typeof ref === 'function') {
-      ref(el);
-    } else if (ref) {
-      ref.current = el;
-    }
-  };
-
-  return (
-    <div className="overflow-hidden">
-      <div
-        ref={setRefs}
-        className="overflow-x-auto scrollbar-hide"
-        style={{ 
-          scrollbarWidth: "none", 
-          msOverflowStyle: "none",
-          overflowX: "auto"
-        }}
-      >
-        <div className="flex gap-6 w-max">
-          {data.map((item, index) => (
-            <Card item={item} key={`${direction}-${index}`} />
-          ))}
+    return (
+      <div className="overflow-hidden">
+        <div
+          ref={setRefs}
+          className="overflow-x-auto scrollbar-hide"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            overflowX: "auto",
+          }}
+        >
+          <div className="flex gap-6 w-max">
+            {data.map((item, index) => (
+              <Card item={item} key={`${direction}-${index}`} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
-// ENHANCED CARD COMPONENT
+// ENHANCED CARD COMPONENT with more animations
 const Card = ({ item }) => {
   const [imageError, setImageError] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="group relative min-w-[340px] bg-[#e9eeee] rounded-2xl transition-all duration-500 hover:shadow-xl overflow-hidden cursor-pointer">
-      
+    <div 
+      className="group relative min-w-[340px] bg-[#e9eeee] rounded-2xl transition-all duration-500 hover:shadow-xl overflow-hidden cursor-pointer animate-fade-in"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ animationDelay: `${Math.random() * 0.3}s` }}
+    >
       {/* Top gradient bar on hover */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0f766e] to-[#0d9488] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
       
+      {/* Bottom gradient bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#0f766e] to-[#0d9488] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right delay-75"></div>
+
       <div className="p-5 flex items-start gap-4">
-        
         {/* Avatar with glow effect */}
         <div className="relative flex-shrink-0">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0f766e] to-[#0d9488] rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur"></div>
-          
+          <div className={`absolute -inset-0.5 bg-gradient-to-r from-[#0f766e] to-[#0d9488] rounded-full transition-all duration-500 ${isHovered ? 'opacity-30 blur-md scale-110' : 'opacity-0 blur'}`}></div>
+
           <div className="relative w-16 h-16 rounded-full overflow-hidden shadow-md bg-gray-200">
             {!imageError ? (
               <img
@@ -254,9 +340,9 @@ const Card = ({ item }) => {
               </div>
             )}
           </div>
-          
-          {/* Online status indicator */}
-          <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#e9eeee]"></div>
+
+          {/* Online status indicator with pulse animation */}
+          <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#e9eeee] animate-pulse"></div>
         </div>
 
         {/* Content */}
@@ -271,7 +357,7 @@ const Card = ({ item }) => {
               <img
                 src={item.companyLogo}
                 alt="logo"
-                className="w-5 h-5 rounded-full bg-white p-0.5 shadow-sm flex-shrink-0"
+                className="w-5 h-5 rounded-full bg-white p-0.5 shadow-sm flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
                 onError={(e) => {
                   e.target.style.display = "none";
                 }}
@@ -291,7 +377,7 @@ const Card = ({ item }) => {
           {/* Batch */}
           {item.batch && (
             <div className="mt-2">
-              <span className="inline-block text-xs font-medium text-gray-500 bg-white/50 px-2 py-0.5 rounded-full">
+              <span className="inline-block text-xs font-medium text-gray-500 bg-white/50 px-2 py-0.5 rounded-full transition-all duration-300 group-hover:bg-white/70 group-hover:shadow-sm">
                 Batch {item.batch}
               </span>
             </div>
@@ -302,15 +388,56 @@ const Card = ({ item }) => {
   );
 };
 
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style');
+if (typeof document !== "undefined") {
+  const style = document.createElement("style");
   style.textContent = `
     .scrollbar-hide::-webkit-scrollbar {
       display: none;
     }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+    
+    .animate-bounce {
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+    
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
   `;
-  if (!document.querySelector('style[data-scrollbar-hide]')) {
-    style.setAttribute('data-scrollbar-hide', 'true');
+  if (!document.querySelector("style[data-scrollbar-hide]")) {
+    style.setAttribute("data-scrollbar-hide", "true");
     document.head.appendChild(style);
   }
 }
