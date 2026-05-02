@@ -28,7 +28,7 @@ function MakeOurMentors() {
         e.preventDefault(); //  lock scroll
         video.pause();
       } else {
-        //  unlock scroll
+      
         video.play().catch(() => {});
         return;
       }
