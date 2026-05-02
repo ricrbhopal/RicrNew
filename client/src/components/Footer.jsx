@@ -11,7 +11,7 @@ import { MdOutlineMessage } from "react-icons/md";
 
 const Footer = () => {
     return (
-        <div className="mt-20 bg-[#125785] text-white w-full">
+        <div className=" bg-[#125785] text-white w-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
                     <div className="lg:col-span-1 pe-5">

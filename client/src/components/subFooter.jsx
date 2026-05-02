@@ -3,7 +3,7 @@ import { MdOutlineArrowForward } from "react-icons/md";
 
 const CTASection = () => {
   return (
-    <section className="w-[100%] mx-auto mt-16 sm:mt-20 md:mt-24 mb-10">
+    <section className="w-[100%] mx-auto mt-16 sm:mt-20 md:mt-24 ">
 
       <div className="bg-[#f5f5f7] rounded-2xl p-8 sm:p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
 
