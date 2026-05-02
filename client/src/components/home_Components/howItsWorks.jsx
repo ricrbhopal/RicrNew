@@ -9,7 +9,7 @@ const HowItWorks = () => {
   useEffect(() => {
     const fetchSteps = async () => {
       try {
-        const res = await adminAPI.getHowItWork(); // ✅ UPDATED
+        const res = await adminAPI.getHowItWork(); 
 
         const data = Array.isArray(res.data)
           ? res.data
@@ -32,7 +32,7 @@ const HowItWorks = () => {
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (!steps.length) return <div className="text-center py-10">No Data</div>;
 
-  const first = steps[0]; // 🔥 main banner data
+  const first = steps[0]; 
 
   return (
 <section className="w-full mt-20 overflow-hidden ">

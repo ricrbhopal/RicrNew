@@ -96,7 +96,7 @@ const MentorsPage = () => {
     px-4 sm:px-6 md:px-10 
     rounded-xl sm:rounded-2xl">
 
-      {/* 🔥 Heading */}
+      {/*  Heading */}
       <div className="max-w-[90%] mx-auto mb-8 sm:mb-10 md:mb-14">
         
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl 
@@ -115,7 +115,7 @@ const MentorsPage = () => {
 
       </div>
 
-      {/* 🔥 BANNER IMAGE */}
+      {/*  BANNER IMAGE */}
       <div className="max-w-[90%] mx-auto">
         
         <div className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden">
@@ -138,7 +138,7 @@ const MentorsPage = () => {
             "
           />
 
-          {/* 🔥 Premium Overlay */}
+          {/*  Premium Overlay */}
           <div className="absolute inset-0 
           bg-gradient-to-t 
           from-black/25 

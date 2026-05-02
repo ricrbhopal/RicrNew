@@ -8,6 +8,8 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  maxContentLength: Infinity,
+  maxBodyLength: Infinity,
 });
 
 // Add a request interceptor for multipart/form-data

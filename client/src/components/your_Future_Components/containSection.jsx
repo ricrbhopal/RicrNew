@@ -4,7 +4,7 @@ const Section2 = () => {
   return (
     <section className="w-[90%] mx-auto mt-14 sm:mt-16 md:mt-20">
 
-      {/* 🔥 HEADING */}
+      {/* HEADING */}
       <div className="max-w-4xl mb-8">
         <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold text-black leading-tight">
           Getting a job is one thing.
@@ -13,7 +13,7 @@ const Section2 = () => {
         </h2>
       </div>
 
-      {/* 🔥 SUBTEXT */}
+      {/*  SUBTEXT */}
       <div className="max-w-2xl">
         <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed">
           Many students get placed. <br />
@@ -21,7 +21,7 @@ const Section2 = () => {
         </p>
       </div>
 
-      {/* 🔥 PROBLEM POINTS */}
+      {/*  PROBLEM POINTS */}
       <div className="mt-8 grid sm:grid-cols-2 md:grid-cols-3 gap-6">
 
         {/* CARD 1 */}

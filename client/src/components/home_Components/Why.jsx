@@ -9,8 +9,7 @@ const WhyRICR = () => {
   useEffect(() => {
     const fetchSteps = async () => {
       try {
-        const res = await adminAPI.getWhyRICR(); // ✅ UPDATED
-        console.log("Fetched WhyRICR data:", res.data);
+        const res = await adminAPI.getWhyRICR(); 
 
         const data = Array.isArray(res.data)
           ? res.data
@@ -38,14 +37,14 @@ const WhyRICR = () => {
   return (
     <section className="w-full  mt-15">
 
-{/* 🔥 TEXT */}
+{/*  TEXT */}
 <div className="h-full w-[90%] text-center mx-auto flex items-center justify-center">
   <h2 className="text-[#125785] text-3xl md:text-4xl font-bold">
     {first.title || "Why RICR"}
   </h2>
 </div>
 
-      {/* 🔥 BANNER */}
+      {/*  BANNER */}
       <div className="relative w-[90%] justify-center mx-auto rounded-2xl h-[60vh] md:h-[80vh] overflow-hidden mt-10">
 
         {first.mediaType === "video" ? (
@@ -65,7 +64,7 @@ const WhyRICR = () => {
           />
         )}
 
-        {/* 🔥 OVERLAY */}
+        {/* OVERLAY */}
         <div className="absolute inset-0 bg-black/50"></div>
 
 

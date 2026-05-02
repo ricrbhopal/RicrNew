@@ -43,7 +43,7 @@ const mentors = [
   },
 ];
 
-// 🔥 duplicate for smooth infinite loop
+//  duplicate for smooth infinite loop
 const loopData = [...mentors, ...mentors, ...mentors];
 
 const PlacementSection = () => {
@@ -75,7 +75,7 @@ const PlacementSection = () => {
       frame = requestAnimationFrame(animate);
     };
 
-    // 🔥 IMPORTANT: initialize bottom position
+    //  IMPORTANT: initialize bottom position
     if (bottomRef.current) {
       bottomRef.current.scrollLeft = bottomRef.current.scrollWidth / 2;
     }
@@ -92,7 +92,7 @@ const PlacementSection = () => {
 Here’s how these people will actually help you grow        </h2>
 
 
-        {/* 🔥 TOP ROW */}
+        {/*  TOP ROW */}
         <div ref={topRef} className="overflow-hidden">
           <div className="flex gap-6 w-max">
             {loopData.map((item, index) => (
@@ -114,7 +114,7 @@ Here’s how these people will actually help you grow        </h2>
   );
 };
 
-// 🔥 CARD
+// CARD
 const Card = ({ item }) => {
   return (
     <div

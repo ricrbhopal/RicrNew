@@ -20,7 +20,7 @@ useEffect(() => {
 
       let list = [];
 
-      // 🔥 HANDLE ARRAY (LOCAL + FUTURE)
+      // HANDLE ARRAY (LOCAL + FUTURE)
       if (Array.isArray(data.heroes) && data.heroes.length > 0) {
         const activeHeroes = data.heroes.filter(
           (item) => item.status === "active"
@@ -44,7 +44,7 @@ useEffect(() => {
         }));
       }
 
-      // 🔥 HANDLE SINGLE (PRODUCTION)
+      //  HANDLE SINGLE (PRODUCTION)
       if (data.hero) {
         list.push({
           url:
@@ -64,7 +64,7 @@ useEffect(() => {
         });
       }
 
-      // 🔥 VIDEOS
+      // VIDEOS
       if (Array.isArray(data.videos)) {
         const activeVideos = data.videos.filter(
           (item) => item.status === "active"
@@ -90,12 +90,12 @@ useEffect(() => {
         );
       }
 
-      // 🔥 REMOVE DUPLICATES (IMPORTANT)
+      //  REMOVE DUPLICATES (IMPORTANT)
       const uniqueList = Array.from(
         new Map(list.map((item) => [item.url, item])).values()
       );
 
-      // 🔥 SORT
+      //  SORT
       uniqueList.sort((a, b) => a.order - b.order);
 
 

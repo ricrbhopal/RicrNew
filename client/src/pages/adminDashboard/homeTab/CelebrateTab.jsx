@@ -29,7 +29,7 @@ function CelebrateTab() {
       const res = await adminAPI.getCelebrates();
       setCelebrates(res.data || []);
     } catch (err) {
-      setMessage('❌ Error fetching success stories');
+      setMessage(' Error fetching success stories');
     } finally {
       setFetching(false);
     }
@@ -77,11 +77,11 @@ function CelebrateTab() {
     setMessage('');
     // Debug log for image and companyLogo
     if (!form.image) {
-      setMessage('❌ Student photo is required.');
+      setMessage(' Student photo is required.');
       return;
     }
     if (!form.companyLogo) {
-      setMessage('❌ Company logo is required.');
+      setMessage(' Company logo is required.');
       return;
     }
     setLoading(true);
@@ -90,17 +90,14 @@ function CelebrateTab() {
       Object.entries(form).forEach(([key, value]) => {
         if (value) formData.append(key, value);
       });
-      // Debug: log FormData keys
-      for (let pair of formData.entries()) {
-        console.log(pair[0]+ ':', pair[1]);
-      }
+
       await adminAPI.createCelebrate(formData);
-      setMessage('🎉 Success story created successfully!');
+      setMessage(' Success story created successfully!');
       clearForm();
       fetchCelebrates();
       setActiveTab('manage');
     } catch (err) {
-      setMessage('❌ Error: ' + (err.response?.data?.error || err.message));
+      setMessage(' Error: ' + (err.response?.data?.error || err.message));
     } finally {
       setLoading(false);
     }
@@ -112,9 +109,9 @@ function CelebrateTab() {
       const newStatus = current.status === 'active' ? 'inactive' : 'active';
       setCelebrates(prev => prev.map(x => x._id === id ? { ...x, status: newStatus } : x));
       await adminAPI.updateCelebrateStatus(id, newStatus);
-      setMessage(`✅ Success story ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
+      setMessage(`Success story ${newStatus === 'active' ? 'activated' : 'deactivated'}`);
     } catch (err) {
-      setMessage('❌ Failed to update status');
+      setMessage(' Failed to update status');
       fetchCelebrates();
     }
   };
@@ -124,9 +121,9 @@ function CelebrateTab() {
     try {
       await adminAPI.deleteCelebrate(id);
       setCelebrates(prev => prev.filter(x => x._id !== id));
-      setMessage('✅ Success story deleted successfully');
+      setMessage(' Success story deleted successfully');
     } catch (err) {
-      setMessage('❌ Failed to delete success story');
+      setMessage(' Failed to delete success story');
       fetchCelebrates();
     }
   };  
@@ -327,12 +324,12 @@ function CelebrateTab() {
                   {message && (
                     <div className={`p-3 rounded-lg ${message.includes('❌') ? 'bg-red-50 border border-red-200 text-red-700' : 'bg-green-50 border border-green-200 text-green-700'}`}>
                       <div className="flex items-center">
-                        {message.includes('❌') ? (
+                        {message.includes('') ? (
                           <MdClear className="w-4 h-4 mr-2" />
                         ) : (
                           <MdAdd className="w-4 h-4 mr-2" />
                         )}
-                        {message.replace('❌', '').replace('🎉', '')}
+                        {message.replace('', '').replace('', '')}
                       </div>
                     </div>
                   )}

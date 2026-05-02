@@ -9,7 +9,7 @@ const PlacementSection = () => {
   const [placementData, setPlacementData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🔥 FETCH DATA
+  //  FETCH DATA
   useEffect(() => {
     fetchData();
   }, []);
@@ -58,16 +58,16 @@ const PlacementSection = () => {
     );
   }
 
-  // 🔀 SHUFFLE FUNCTION
+  //  SHUFFLE FUNCTION
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
-  // 🔥 SPLIT DATA (ALTERNATE)
+  //  SPLIT DATA (ALTERNATE)
   const half = Math.ceil(placementData.length / 2);
 
   const topBase = shuffle(placementData.slice(0, half));
   const bottomBase = shuffle(placementData.slice(half));
 
-  // 🔥 DUPLICATE FOR LOOP (ensure enough items for smooth scroll)
+  //  DUPLICATE FOR LOOP (ensure enough items for smooth scroll)
   const minCards = 8; // Minimum cards to ensure smooth scroll
   const repeatCountTop = Math.ceil(minCards / (topBase.length || 1));
   const repeatCountBottom = Math.ceil(minCards / (bottomBase.length || 1));

@@ -17,9 +17,7 @@ function AdverstandingSection({ openOnLoginOnly = false }) {
     }, []);
 
     useEffect(() => {
-        // When ads are loaded, open modal if there are any.
-        // If openOnLoginOnly is true, wait for either a sessionStorage flag
-        // 'showAdOnLogin' or for a custom window event 'ricr:login' to be dispatched.
+   
         if (!ads || !ads.length) return;
 
         if (openOnLoginOnly) {
