@@ -12,14 +12,24 @@ timeout: 180000 ,
   maxBodyLength: Infinity,
 });
 
-// Add a request interceptor for multipart/form-data
-api.interceptors.request.use((config) => {
-  // If the request data is FormData, set the header
-  if (config.data instanceof FormData) {
-    config.headers["Content-Type"] = "multipart/form-data";
-  }
-  return config;
-});
+//  REQUEST INTERCEPTOR (FINAL)
+api.interceptors.request.use(
+  (config) => {
+    //  1. Attach Token
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    //  2. Handle FormData
+    if (config.data instanceof FormData) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export const adminAPI = {
   // Hero Page Section API
@@ -211,6 +221,12 @@ deleteWhyRICR: (id) =>
   updateOurLogoStatus: (id, status) =>
     api.put(`/admin/ourLogo/${id}/status`, { status }),
   deleteOurLogo: (id) => api.delete(`/admin/ourLogo/${id}`),
+};
+
+
+export const authAPI = {
+  login: (credentials) => api.post("/auth/login", credentials
+  ),
 };
 
 export default api;

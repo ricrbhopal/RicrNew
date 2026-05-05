@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './src/config/db.js';
 import Admin from './src/router/adminRoutes.js'
+import Auth from './src/router/authRoutes.js'
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors({
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/admin', Admin);
-
+app.use('/auth', Auth);
 connectDB();
 
 app.listen(PORT, () => {

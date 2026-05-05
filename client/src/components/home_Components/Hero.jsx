@@ -20,7 +20,7 @@ useEffect(() => {
 
       let list = [];
 
-      // HANDLE ARRAY (LOCAL + FUTURE)
+      // 🔥 HANDLE ARRAY (LOCAL + FUTURE)
       if (Array.isArray(data.heroes) && data.heroes.length > 0) {
         const activeHeroes = data.heroes.filter(
           (item) => item.status === "active"
@@ -44,7 +44,7 @@ useEffect(() => {
         }));
       }
 
-      //  HANDLE SINGLE (PRODUCTION)
+      // 🔥 HANDLE SINGLE (PRODUCTION)
       if (data.hero) {
         list.push({
           url:
@@ -64,7 +64,7 @@ useEffect(() => {
         });
       }
 
-      // VIDEOS
+      // 🔥 VIDEOS
       if (Array.isArray(data.videos)) {
         const activeVideos = data.videos.filter(
           (item) => item.status === "active"
@@ -90,12 +90,12 @@ useEffect(() => {
         );
       }
 
-      //  REMOVE DUPLICATES (IMPORTANT)
+      // 🔥 REMOVE DUPLICATES (IMPORTANT)
       const uniqueList = Array.from(
         new Map(list.map((item) => [item.url, item])).values()
       );
 
-      //  SORT
+      // 🔥 SORT
       uniqueList.sort((a, b) => a.order - b.order);
 
 
@@ -131,82 +131,45 @@ useEffect(() => {
   const current = mediaList[activeIndex];
 
   return (
-    <section
-      className="relative w-[100%] md:w-[100%] mx-auto 
-mt-[80px] sm:mt-[90px] md:mt-[110px]
-h-[320px] sm:h-[420px] md:h-[70vh] lg:h-[80vh]
-rounded-1xl md:rounded-1xl overflow-hidden"
-    >
-      {/*  BACKGROUND */}
-      {current.mediaType === "video" ? (
-        <video
-          ref={videoRef}
-          key={current.url} //  important for refresh
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src={current.url} />
-        </video>
-      ) : (
-        <img
-          src={mediaError ? "/fallback-hero.jpg" : current.url}
-          className="absolute inset-0 w-full h-full object-cover"
-          onError={() => setMediaError(true)}
-        />
-      )}
+<section
+  id="hero-section"
+  className="relative w-full 
+h-[300px] sm:h-[400px] md:h-[70vh] lg:h-[100vh] 
+bg-black overflow-hidden"
+>
 
-      {/*  OVERLAY */}
-      <div className="absolute inset-0 bg-black/10"></div>
+<video
+  ref={videoRef}
+  key={current.url}
+  className="absolute inset-0 w-full h-[300px] md:h-[70vh] lg:h-[100vh]  object-cover scale-100"
+  style={{ objectPosition: "center 75%" }} 
+  autoPlay
+  muted
+  loop
+  playsInline
+>
+  <source src={current.url} type="video/mp4" />
+</video>
 
-      {/*  CONTENT */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-5 sm:px-8 md:px-16 text-white">
-        <div className="mt-5  flex flex-wrap gap-3  sm:ml-0 md:ml-15 sm:mt-0 md:mt-120">
-          {/* PRIMARY BUTTON */}
-          <a
-            href=''
-            className="
-      px-4 py-2 text-sm
-      sm:px-5 sm:py-2.5 sm:text-base
-      md:px-6 md:py-3 md:text-lg
-      bg-[#125785] rounded-lg flex items-center gap-2 font-medium
-      hover:bg-[#0f4668] transition"
-          >
-    Start Your Journey
+  {/* SIDE GRADIENT (hide gap smartly) */}
+  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/20"></div>
 
-            {/* <MdOutlineArrowForward /> */}
-          </a>
+  {/* BOTTOM GRADIENT */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
 
-          {/* SECONDARY BUTTON */}
-          <a
-            href=''
-            className="
-      px-4 py-2 text-sm
-      sm:px-5 sm:py-2.5 sm:text-base
-      md:px-6 md:py-3 md:text-lg
-      bg-[#125785] rounded-lg flex items-center gap-2 font-medium
-      hover:bg-[#0f4668] transition"
-          >
-      Explore Programs
-          </a>
-        </div>
-      </div>
+  {/* CONTENT */}
+  <div className="absolute inset-0 flex items-center px-6 text-white z-10 md:mt-120 md:ml-30 sm:mt-5 mt-40 ">
+    <div className="flex gap-3">
+      <button className="px-5 py-2 bg-[#125785] rounded-lg">
+        Start Your Journey
+      </button>
+      <button className="px-5 py-2 bg-[#125785] rounded-lg">
+        Explore Programs
+      </button>
+    </div>
+  </div>
 
-      {/*  DOTS */}
-      <div className="absolute bottom-3 w-full flex justify-center gap-2">
-        {mediaList.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveIndex(i)}
-            className={`w-2 h-2 rounded-full ${
-              activeIndex === i ? "bg-white" : "bg-gray-400"
-            }`}
-          />
-        ))}
-      </div>
-    </section>
+</section>
   );
 };
 

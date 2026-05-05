@@ -6,7 +6,7 @@ const Hero = () => {
     <section
       className="
       relative w-[100%] mx-auto 
-      mt-[80px] sm:mt-[90px] md:mt-[110px]
+  
       h-[420px] sm:h-[520px] md:h-[75vh] lg:h-[85vh]
       rounded-1xl overflow-hidden
       "

@@ -1,22 +1,17 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import SubFooter from "./components/subFooter.jsx";
 import Loader from "./service/commonLoader.jsx";
-
 import Home from "./pages/Home";
 import OurStory from "./pages/About";
-
-// ✅ FIXED (match server file names)
 import OurProgram from "./pages/ourProgram";
 import OurPeople from "./pages/ourPeople";
 import YourFuture from "./pages/yourFuture";
-
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
-
 import { LoaderProvider, LoaderContext } from "./context/loaderContext.jsx";
+import Login from "./pages/login.jsx";
 import ScrollToTop from "./service/scrollTop.jsx";
 
 const MainLayout = ({ children }) => {
@@ -44,7 +39,8 @@ const AppContent = () => {
         <Route path="/ourPeople" element={<MainLayout><OurPeople /></MainLayout>} />
         <Route path="/yourFuture" element={<MainLayout><YourFuture /></MainLayout>} />
 
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
+        <Route path="/adminLogin" element={<Login />} />
       </Routes>
     </>
   );
