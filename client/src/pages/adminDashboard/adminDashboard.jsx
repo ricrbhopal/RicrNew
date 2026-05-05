@@ -7,18 +7,18 @@ import CoursesTab from './SilderTab/coursesTab.jsx';
 
 const AdminDashboard = () => {
 	const [activeTab, setActiveTab] = useState('hero');
-	const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+	// const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-	if (!token) {
-		return (
-			<div className="flex items-center justify-center min-h-screen bg-gray-100">
-				<div className="bg-white p-8 rounded-xl shadow text-center">
-					<h2 className="text-xl font-bold mb-2 text-[#125785]">Please login</h2>
-					<p className="text-gray-600">You must be logged in to view the admin dashboard.</p>
-				</div>
-			</div>
-		);
-	}
+	// if (!token) {
+	// 	return (
+	// 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
+	// 			<div className="bg-white p-8 rounded-xl shadow text-center">
+	// 				<h2 className="text-xl font-bold mb-2 text-[#125785]">Please login</h2>
+	// 				<p className="text-gray-600">You must be logged in to view the admin dashboard.</p>
+	// 			</div>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className="flex h-screen mt-20">
