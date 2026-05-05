@@ -22,8 +22,9 @@ app.get('/', (req, res) => {
 });
 
 
-app.use('/admin', Admin);
-app.use('/auth', Auth);
+
+app.use('/api/auth', Auth);
+app.use('/api/admin', Admin);
 connectDB();
 
 app.listen(PORT, () => {
