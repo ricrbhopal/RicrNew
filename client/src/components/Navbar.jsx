@@ -230,6 +230,7 @@ const Navbar = () => {
 
   // Show navbar only after hero section ends
   useEffect(() => {
+    let animationFrameId;
     const handleScroll = () => {
       const hero = document.getElementById('hero-section');
       if (hero) {
@@ -238,13 +239,17 @@ const Navbar = () => {
         setShowNavbar(window.scrollY >= heroBottom);
         setScrolled(window.scrollY > 10);
       } else {
-        setShowNavbar(true);
-        setScrolled(window.scrollY > 10);
+        // Try again on next frame if hero not found
+        animationFrameId = requestAnimationFrame(handleScroll);
       }
     };
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Delay initial check to ensure hero is rendered
+    animationFrameId = requestAnimationFrame(handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   // Close mobile menu when route changes
