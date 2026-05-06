@@ -102,7 +102,7 @@ router.get('/program', getProgram); // frontend active
 router.get('/program/all', getAllPrograms); // admin
 router.put('/program/:id', updateProgram);
 router.put('/program/:id/status', updateProgramStatus);
-// router.delete('/program/:id', deleteProgram);
+router.delete('/program/:id', deleteProgram);
 
 
 

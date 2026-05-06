@@ -13,6 +13,8 @@ import AdminDashboard from "./pages/adminDashboard/adminDashboard";
 import { LoaderProvider, LoaderContext } from "./context/loaderContext.jsx";
 import Login from "./pages/login.jsx";
 import GlobalScrollBar from "./service/globalScrollBar.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MainLayout = ({ children }) => {
   return (
@@ -48,13 +50,27 @@ const AppContent = () => {
 
 function App() {
   return (
-    <LoaderProvider>
-      <BrowserRouter>
+<LoaderProvider>
 
-        <GlobalScrollBar />
-        <AppContent />
-      </BrowserRouter>
-    </LoaderProvider>
+  <BrowserRouter>
+
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop
+      closeOnClick
+      pauseOnHover
+      theme="dark"
+    />
+
+    <GlobalScrollBar />
+
+    <AppContent />
+
+  </BrowserRouter>
+
+</LoaderProvider>
   );
 }
 

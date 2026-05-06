@@ -279,7 +279,7 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+      className={`main-navbar  fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         showNavbar
           ? 'bg-white/98 backdrop-blur-md shadow-xl '
           : ''

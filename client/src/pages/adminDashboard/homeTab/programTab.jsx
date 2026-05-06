@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { adminAPI } from "../../../config/api";
 
 const ProgramManager = () => {
@@ -26,45 +27,69 @@ const ProgramManager = () => {
   // 🔥 UPLOAD
 const handleUpload = async () => {
   try {
-    if (!file) return alert("Please select a video file");
-    if (!subtext.trim()) return alert("Please enter subtext");
+
+    if (!file)
+      return toast.error("Please select a video file");
+
+    if (!subtext.trim())
+      return toast.error("Please enter a title");
 
     const formData = new FormData();
+
     formData.append("video", file);
     formData.append("subtext", subtext);
 
     setLoading(true);
     setUploadProgress(10);
 
-    const res = await adminAPI.uploadProgram(formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (progressEvent) => {
-        const percent = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        setUploadProgress(percent);
-      },
-    });
+    const res = await adminAPI.uploadProgram(
+      formData,
+      {
+        headers: {
+          "Content-Type":
+            "multipart/form-data",
+        },
 
+        onUploadProgress: (
+          progressEvent
+        ) => {
+
+          const percent = Math.round(
+            (progressEvent.loaded * 100) /
+            progressEvent.total
+          );
+
+          setUploadProgress(percent);
+        },
+      }
+    );
 
     setLoading(false);
+
     setUploadProgress(0);
+
     setFile(null);
+
     setSubtext("");
 
     fetchPrograms();
 
-    alert("✅ Video uploaded successfully!");
+    toast.success(
+      "✅ Video uploaded successfully!"
+    );
 
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);
+
+    console.error(
+      "UPLOAD ERROR:",
+      err
+    );
 
     setLoading(false);
+
     setUploadProgress(0);
 
-    alert(
+    toast.error(
       err?.response?.data?.message ||
       "❌ Upload failed! Check backend / Cloudinary"
     );
@@ -179,7 +204,7 @@ const handleUpload = async () => {
 
               {/* Subtext Input */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Subtext / Description</label>
+                <label className="block text-sm font-medium text-gray-700">Title</label>
                 <textarea
                   placeholder="Enter program description or subtext..."
                   value={subtext}
