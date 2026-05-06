@@ -12,7 +12,7 @@ import YourFuture from "./pages/yourFuture";
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
 import { LoaderProvider, LoaderContext } from "./context/loaderContext.jsx";
 import Login from "./pages/login.jsx";
-import ScrollToTop from "./service/scrollTop.jsx";
+import GlobalScrollBar from "./service/globalScrollBar.jsx";
 
 const MainLayout = ({ children }) => {
   return (
@@ -50,7 +50,8 @@ function App() {
   return (
     <LoaderProvider>
       <BrowserRouter>
-        <ScrollToTop />
+
+        <GlobalScrollBar />
         <AppContent />
       </BrowserRouter>
     </LoaderProvider>
