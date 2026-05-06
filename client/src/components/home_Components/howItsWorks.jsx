@@ -1,144 +1,347 @@
-import React, { useEffect, useState } from "react";
-import {adminAPI} from "../../config/api";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import { adminAPI }
+from "../../config/api";
+
+// 🔥 COMMON VIDEO SKELETON
+import ScrollVideoSkeleton
+from "../commonComponents/ScrollTrigger";
 
 const HowItWorks = () => {
-  const [steps, setSteps] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const [steps, setSteps] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
 
   // ================= FETCH =================
   useEffect(() => {
-    const fetchSteps = async () => {
-      try {
-        const res = await adminAPI.getHowItWork(); 
 
-        const data = Array.isArray(res.data)
-          ? res.data
-          : res.data
-          ? [res.data]
-          : [];
+    const fetchSteps =
+      async () => {
+
+      try {
+
+        const res =
+          await adminAPI.getHowItWork();
+
+        const data =
+          Array.isArray(
+            res.data
+          )
+            ? res.data
+            : res.data
+            ? [res.data]
+            : [];
 
         setSteps(data);
+
       } catch (err) {
+
         console.error(err);
+
         setSteps([]);
+
       } finally {
+
         setLoading(false);
       }
     };
 
     fetchSteps();
+
   }, []);
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (!steps.length) return <div className="text-center py-10">No Data</div>;
+  // ================= LOADING =================
+  if (loading)
+    return (
+      <div
+        className="
+          text-center
+          py-10
+          text-lg
+          font-semibold
+        "
+      >
+        Loading...
+      </div>
+    );
 
-  const first = steps[0]; 
+  // ================= EMPTY =================
+  if (!steps.length)
+    return (
+      <div
+        className="
+          text-center
+          py-10
+          text-lg
+          font-semibold
+        "
+      >
+        No Data
+      </div>
+    );
 
   return (
-<section className="w-full mt-20 overflow-hidden ">
-  {/*  TITLE SECTION */}
-  <div className="relative z-10 flex flex-col px-4 sm:px-6 md:px-8 lg:px-16 mt-2 mb-6">
-    <div className="max-w-8xl mx-auto w-full">
+
+    <section
+      className="
+        w-full
    
-
-      {/* Main Title */}
-      <h2 className="text-[#125785] text-3xl md:text-4xl justify-center text-center mx-auto font-bold mb-4 leading-tight opacity-0 animate-slide-up">
-        {first.title || "Default Title"}
-      </h2>
-
-
-    </div>
-  </div>
-
-  {/*  BANNER SECTION */}
-  <div className="relative w-full max-w-[90%] sm:max-w-[85%] md:max-w-[90%] mx-auto mb-10 rounded-2xl h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] mt-6 overflow-hidden shadow-2xl group">
     
-    {/* MEDIA (VIDEO or IMAGE) */}
-    {first.mediaType === "video" ? (
-      <video
-        src={first.mediaUrl}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-      />
-    ) : (
-      <img
-        src={first.mediaUrl}
-        alt={first.title || "Banner image"}
-        className="absolute w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-      />
-    )}
-
-    {/*  ENHANCED OVERLAY with gradient */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent rounded-2xl"></div>
-    <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent rounded-2xl"></div>
+      "
+    >
 
 
 
-    {/* Corner gradient effects */}
-    <div className="absolute top-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-white/10 to-transparent rounded-tl-2xl"></div>
-    <div className="absolute bottom-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tl from-white/10 to-transparent rounded-br-2xl"></div>
-  </div>
+      {/* 🔥 SECTIONS */}
+      <div
+        className="
+          w-full
+          space-y-0
+  
+        "
+      >
 
-  {/* Animation Styles */}
-  <style jsx>{`
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-fade-in {
-      animation: fadeIn 0.8s ease-out forwards;
-    }
-    
-    .animate-slide-up {
-      animation: slideUp 0.6s ease-out forwards;
-    }
-    
-    .animate-slide-down {
-      animation: slideDown 0.6s ease-out forwards;
-    }
-    
-    .animate-ping {
-      animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
-    
-    @keyframes ping {
-      75%, 100% {
-        transform: scale(2);
-        opacity: 0;
-      }
-    }
-  `}</style>
-</section>
+        {steps.map(
+          (step, idx) =>
+
+            // ================= VIDEO =================
+            step.mediaType ===
+              "video" &&
+            step.mediaUrl ? (
+
+              <div
+                key={
+                  step._id || idx
+                }
+                className="
+                  relative
+                  bg-black
+                "
+              >
+
+                <ScrollVideoSkeleton
+
+                  videoSrc={
+                    step.mediaUrl
+                  }
+
+                  end={4000}
+
+            className="md:object-cover sm:object-contain "
+
+                  overlay={true}
+
+                
+                >
+
+                  {/* 🔥 TOP RIGHT TITLE */}
+                  <div
+                    className="
+                      absolute
+
+                      top-4
+                      right-4
+
+                      sm:top-6
+                      sm:right-6
+
+                      md:top-10
+                      md:right-10
+
+                      z-50
+                    "
+                  >
+
+                    <div
+                      className="
+                        bg-black/30
+                        backdrop-blur-md
+
+                        px-4
+                        py-3
+
+                        sm:px-5
+                        sm:py-4
+
+                        md:px-8
+                        md:py-5
+
+                        rounded-2xl
+                        shadow-2xl
+                      "
+                    >
+
+                      <h1
+                        className="
+                          text-white
+
+                          text-lg
+                          sm:text-2xl
+                          md:text-4xl
+                          lg:text-5xl
+
+                          font-bold
+
+                          text-right
+
+                          leading-tight
+                        "
+                      >
+
+                        {step.title}
+
+                      </h1>
+
+                    </div>
+
+                  </div>
+
+                </ScrollVideoSkeleton>
+
+              </div>
+
+            ) :
+
+            // ================= IMAGE =================
+            step.mediaType ===
+              "image" &&
+            step.mediaUrl ? (
+
+              <section
+                key={
+                  step._id || idx
+                }
+                className="
+                  relative
+                  w-full
+
+                  h-[70vh]
+                  sm:h-[80vh]
+                  md:h-screen
+
+                  overflow-hidden
+                  bg-black
+                "
+              >
+
+                {/* 🔥 IMAGE */}
+                <img
+                  src={
+                    step.mediaUrl
+                  }
+                  alt={
+                    step.title ||
+                    "Banner"
+                  }
+                  className="
+                    absolute
+                    inset-0
+
+                    w-full
+                    h-full
+
+                    object-cover
+                  "
+                />
+
+                {/* 🔥 OVERLAY */}
+                <div
+                  className="
+                    absolute
+                    inset-0
+
+                    bg-black/30
+                  "
+                />
+
+                {/* 🔥 CONTENT */}
+                <div
+                  className="
+                    relative
+                    z-20
+
+                    h-full
+
+                    flex
+                    items-center
+                    justify-center
+
+                    text-center
+
+                    px-4
+                    sm:px-6
+                    md:px-10
+                  "
+                >
+
+                  <div
+                    className="
+                      max-w-5xl
+                    "
+                  >
+
+                    <h1
+                      className="
+                        text-white
+
+                        text-3xl
+                        sm:text-5xl
+                        md:text-6xl
+                        lg:text-7xl
+
+                        font-bold
+
+                        leading-tight
+                      "
+                    >
+
+                      {step.title}
+
+                    </h1>
+
+                    {step.description && (
+
+                      <p
+                        className="
+                          text-white/90
+
+                          text-base
+                          sm:text-lg
+                          md:text-2xl
+
+                          mt-5
+                          md:mt-8
+
+                          leading-relaxed
+                        "
+                      >
+
+                        {
+                          step.description
+                        }
+
+                      </p>
+
+                    )}
+
+                  </div>
+
+                </div>
+
+              </section>
+
+            ) : null
+        )}
+
+      </div>
+
+    </section>
   );
 };
 

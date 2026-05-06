@@ -143,64 +143,50 @@
 
 // export default ProgramsSection;
 
-
-
 import React, { useEffect, useState } from "react";
 
 import { adminAPI } from "../../config/api";
 
-import ScrollVideoSection from "../commonComponents/ScrollTrigger";
+import ScrollVideoSkeleton from "../commonComponents/ScrollTrigger";
 
 const ProgramsSection = () => {
-
-  const [program, setProgram] =
-    useState(null);
+  const [program, setProgram] = useState(null);
 
   useEffect(() => {
     fetchProgram();
   }, []);
 
   const fetchProgram = async () => {
-
     try {
-
-      const res =
-        await adminAPI.getProgram();
+      const res = await adminAPI.getProgram();
 
       setProgram(res.data);
-
     } catch (err) {
-
       console.error(err);
     }
   };
 
   return (
     <section className="w-full mt-16 bg-white">
-
       {/* HEADER */}
       <div>
         <p className="text-3xl md:text-4xl text-[#125785] max-w-[90%] mx-auto mt-6 leading-relaxed font-semibold tracking-wide">
-
           {program?.subtext || "Loading..."}
-
         </p>
       </div>
 
       {/* REUSABLE VIDEO */}
       {program?.video && (
-
-        <ScrollVideoSection
+        <ScrollVideoSkeleton
           videoSrc={program.video}
           title={program.title}
           description={program.description}
           end={4000}
           object="contain"
-           className=""
+          overlay={false}
+          className=""
         />
-
       )}
-
     </section>
   );
 };
