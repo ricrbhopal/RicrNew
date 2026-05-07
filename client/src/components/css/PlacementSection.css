@@ -1,3 +1,7 @@
+/* =========================================
+   MAIN SECTION
+========================================= */
+
 .placement-main-wrapper {
 
   position: relative;
@@ -9,7 +13,13 @@
   background: white;
 
   overflow: hidden;
+
+  z-index: 2;
 }
+
+/* =========================================
+   SVG WRAPPER
+========================================= */
 
 .svg-line-wrapper {
 
@@ -24,7 +34,19 @@
   overflow: hidden;
 
   pointer-events: none;
+
+  backface-visibility: hidden;
+
+  transform: translateZ(0);
+
+  will-change: transform;
+
+  display: block;
 }
+
+/* =========================================
+   PATH
+========================================= */
 
 .animated-path {
 
@@ -32,7 +54,7 @@
 
   stroke: #7b87ff;
 
-  stroke-width: 12;
+  stroke-width: 14;
 
   stroke-linecap: round;
 
@@ -47,8 +69,63 @@
   backface-visibility:
     hidden;
 
+  will-change:
+    stroke-dashoffset;
 
+  filter:
+    drop-shadow(
+      0 0 12px #7b87ff
+    )
+    drop-shadow(
+      0 0 25px #7b87ff
+    )
+    drop-shadow(
+      0 0 40px #7b87ff
+    );
 }
+
+/* =========================================
+   PIN SPACER FIX
+========================================= */
+
+.pin-spacer {
+
+  background:
+    white !important;
+
+  overflow: hidden !important;
+}
+
+/* =========================================
+   NEXT SECTION OVERLAP FIX
+========================================= */
+
+/* =========================================
+   ONLY PLACEMENT SECTION
+========================================= */
+
+.placement-main-wrapper {
+
+  position: relative;
+
+  z-index: 1;
+}
+
+/* =========================================
+   NEXT SECTION FIX
+========================================= */
+
+.meet-master-wrapper {
+
+  position: relative;
+
+  z-index: 2;
+
+  background: white;
+}
+/* =========================================
+   GLOBAL FIX
+========================================= */
 
 html,
 body {
@@ -59,5 +136,34 @@ body {
 
   overflow-x: hidden;
 
-  background: black;
+  background: white;
+
+  scroll-behavior: smooth;
+}
+
+/* =========================================
+   SVG FIX
+========================================= */
+
+svg {
+
+  display: block;
+
+  backface-visibility:
+    hidden;
+
+  transform:
+    translateZ(0);
+}
+
+/* =========================================
+   MOBILE FIX
+========================================= */
+
+@media (max-width: 768px) {
+
+  .animated-path {
+
+    stroke-width: 8;
+  }
 }

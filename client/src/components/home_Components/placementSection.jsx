@@ -1,9 +1,14 @@
+// ========================================
+// PlacementSection.jsx (FINAL FIXED)
+// ========================================
+
 import React, {
   useEffect,
   useRef,
 } from "react";
 
 import gsap from "gsap";
+import Videos from "../../assets/videos/placement.mp4";
 
 import {
   ScrollTrigger,
@@ -41,7 +46,10 @@ const PlacementSection = () => {
     const pathLength =
       path.getTotalLength();
 
-    // initial hidden
+    // ========================================
+    // INITIAL STATE
+    // ========================================
+
     gsap.set(path, {
 
       strokeDasharray:
@@ -53,94 +61,129 @@ const PlacementSection = () => {
     });
 
     // ========================================
-    // SCROLL TRIGGER
+    // ANIMATION
     // ========================================
 
-const trigger = gsap.to(path, {
+    const animation =
+      gsap.to(path, {
 
-  strokeDashoffset: 0,
+        strokeDashoffset: 0,
 
-  ease: "none",
+        ease: "none",
 
-  scrollTrigger: {
+        scrollTrigger: {
 
-    trigger: section,
+          trigger: section,
 
-    start: "top top",
+          start: "top top",
 
-    end: "+=2000",
+        end: "bottom top",
+          scrub: 1,
 
-    scrub: true,
+          pin: true,
 
-    pin: true,
+          // 🔥 IMPORTANT FIX
+          pinSpacing: false,
 
-    pinSpacing: true,
+          anticipatePin: 1,
 
-    anticipatePin: 1,
+          invalidateOnRefresh:
+            true,
 
-    invalidateOnRefresh: true,
+          fastScrollEnd: true,
 
-    // 🔥 IMPORTANT
-    toggleActions:
-      "play reverse play reverse",
+          // ========================================
+          // NAVBAR HIDE
+          // ========================================
+
+          onEnter: () => {
+
+            gsap.to(
+              ".main-navbar",
+              {
+
+                y: -120,
+
+                opacity: 0,
+
+                duration: 0.3,
+
+                ease:
+                  "power2.out",
+
+              }
+            );
+          },
+
+          // ========================================
+          // NAVBAR SHOW
+          // ========================================
+
+          onLeave: () => {
+
+            gsap.to(
+              ".main-navbar",
+              {
+
+                y: 0,
+
+                opacity: 1,
+
+                duration: 0.3,
+
+                ease:
+                  "power2.out",
+
+              }
+            );
+          },
+
+          onLeaveBack: () => {
+
+            gsap.to(
+              ".main-navbar",
+              {
+
+                y: 0,
+
+                opacity: 1,
+
+                duration: 0.3,
+
+                ease:
+                  "power2.out",
+
+              }
+            );
+          },
+
+        },
+
+      });
 
     // ========================================
-    // NAVBAR
+    // REFRESH
     // ========================================
 
-    onEnter: () => {
+    ScrollTrigger.refresh();
 
-      gsap.to(".main-navbar", {
-
-        y: -120,
-
-        opacity: 0,
-
-        duration: 0.3,
-
-      });
-    },
-
-    onLeave: () => {
-
-      gsap.to(".main-navbar", {
-
-        y: 0,
-
-        opacity: 1,
-
-        duration: 0.3,
-
-      });
-    },
-
-    onLeaveBack: () => {
-
-      gsap.to(".main-navbar", {
-
-        y: 0,
-
-        opacity: 1,
-
-        duration: 0.3,
-
-      });
-    },
-
-  },
-
-});
+    // ========================================
+    // CLEANUP
+    // ========================================
 
     return () => {
 
       if (
-        trigger.scrollTrigger
+        animation.scrollTrigger
       ) {
 
-        trigger.scrollTrigger.kill();
+        animation.scrollTrigger.kill();
       }
 
-      trigger.kill();
+      animation.kill();
+
+      gsap.killTweensOf(path);
+
     };
 
   }, []);
@@ -151,6 +194,8 @@ const trigger = gsap.to(path, {
       ref={sectionRef}
       className="placement-main-wrapper"
     >
+
+      {/* SVG */}
 
       <svg
         className="svg-line-wrapper"
