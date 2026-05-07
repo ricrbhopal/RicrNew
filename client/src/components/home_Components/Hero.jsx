@@ -154,17 +154,7 @@ const Hero = () => {
       {/* BOTTOM GRADIENT */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
 
-      {/* CONTENT */}
-      <div className="absolute inset-0 flex items-center px-6 text-white z-10 md:mt-120 md:ml-30 sm:mt-5 ">
-        <div className="flex gap-3">
-          <button className="px-5 py-2 bg-[#125785] rounded-lg">
-            Start Your Journey
-          </button>
-          <button className="px-5 py-2 bg-[#125785] rounded-lg">
-            Explore Programs
-          </button>
-        </div>
-      </div>
+
     </section>
   );
 };

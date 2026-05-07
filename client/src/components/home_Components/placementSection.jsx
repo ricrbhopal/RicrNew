@@ -123,7 +123,7 @@ const PlacementSection = () => {
 
   return (
 
-    <section className="placement-main-wrapper">
+   <section className={`placement-main-wrapper ${isFullScreen ? "video-fullscreen" : ""}`}>
 
       <ScrollVideoSkeleton
         videoSrc={backgroundSrc}
@@ -217,66 +217,7 @@ const PlacementSection = () => {
 
           </div>
 
-          {/* RIGHT */}
 
-          <div
-            className={`
-              placement-right
-              ${
-                isFullScreen
-                  ? "hide-right"
-                  : ""
-              }
-            `}
-          >
-
-            <div className="placement-card">
-
-              <h2>
-                Our Top Placements
-              </h2>
-
-              <ul>
-
-                {placementData
-                  .slice(0, 5)
-                  .map(
-                    (
-                      p,
-                      idx
-                    ) => (
-
-                      <li
-                        key={idx}
-                      >
-
-                        <span>
-                          {p.name}
-                        </span>
-
-                        {" "}–{" "}
-
-                        {p.company}
-
-                        {" "}(
-                        {p.position}
-                        )
-
-                      </li>
-                    )
-                  )}
-
-              </ul>
-
-              <button>
-
-                View All Placements →
-
-              </button>
-
-            </div>
-
-          </div>
 
         </div>
 
