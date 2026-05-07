@@ -86,7 +86,7 @@ const ScrollVideoSkeleton = ({
 
           end: `+=${end}`,
 
-          scrub: 2,
+          scrub: 1,
 
           invalidateOnRefresh:
             true,

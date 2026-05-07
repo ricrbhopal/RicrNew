@@ -1,23 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaGraduationCap } from "react-icons/fa";
 import { adminAPI } from "../../config/api";
-import BackgroundVideo from "../../assets/Home/placement.mp4";
-
+import ScrollVideoSkeleton from "../commonComponents/ScrollTrigger";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+// ✅ LOCAL VIDEO
+import backgroundVideoFile from "../../assets/Home/placement.mp4";
+
+// ✅ WORKING ONLINE FALLBACK VIDEO
+const FALLBACK_BACKGROUND = "https://www.w3schools.com/howto/rain.mp4";
+
+// ✅ WORKING LEFT VIDEO
+const LeftVideo = "https://www.w3schools.com/html/mov_bbb.mp4";
 
 const PlacementSection = () => {
-  const topRef = useRef(null);
-  const bottomRef = useRef(null);
-  const sectionRef = useRef(null);
-  const videoRef = useRef(null);
-
   const [placementData, setPlacementData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showNextSection, setShowNextSection] = useState(false);
 
-  // FETCH DATA
+  const sectionWrapperRef = useRef(null);
+  const leftVideoRef = useRef(null);
+  const leftVideoContainerRef = useRef(null);
+
+  // 🔥 FETCH DATA
   useEffect(() => {
     fetchData();
   }, []);
@@ -36,64 +43,48 @@ const PlacementSection = () => {
       }));
       setPlacementData(formatted);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching placement data:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 🔥 SCROLL VIDEO — FIXED (3 key fixes)
+  // 🔥 MONITOR SCROLL PROGRESS FOR FULLSCREEN TRANSITION
   useEffect(() => {
-    const video = videoRef.current;
-    const section = sectionRef.current;
-    if (!video || !section) return;
+    if (!sectionWrapperRef.current) return;
 
-    let st;
-
-    const setupScrollTrigger = (duration) => {
-      // ✅ FIX 1: gsap.context() ke BAHAR ScrollTrigger.create() — reliable trigger
-      st = ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        // ✅ FIX 2: duration * 300 — video length ke hisaab se scroll distance
-        end: () => `+=${duration * 300}`,
-        pin: true,
-        pinSpacing: true,
-        scrub: 0.5,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          // ✅ FIX 3: Direct currentTime set — no GSAP tween lag
-          const newTime = self.progress * duration;
-          if (Math.abs(video.currentTime - newTime) > 0.01) {
-            video.currentTime = newTime;
-          }
-        },
-      });
-    };
-
-    const onMetadata = () => {
-      const duration = video.duration;
-      if (!duration || isNaN(duration)) return;
-      video.pause();
-      video.currentTime = 0;
-      setupScrollTrigger(duration);
-    };
-
-    // ✅ readyState 1 = HAVE_METADATA (duration available)
-    if (video.readyState >= 1 && !isNaN(video.duration)) {
-      onMetadata();
-    } else {
-      video.addEventListener("loadedmetadata", onMetadata);
-      video.load();
-    }
+    let st = ScrollTrigger.create({
+      trigger: sectionWrapperRef.current,
+      start: "top top",
+      end: "+=4000",
+      scrub: 1,
+      onUpdate: (self) => {
+        // When background video reaches ~95%, start expanding left video to full screen
+        if (self.progress >= 0.95 && !isFullScreen) {
+          setIsFullScreen(true);
+          
+          // Optional: Add GSAP animation for smoother transition
+          gsap.fromTo(leftVideoContainerRef.current,
+            { scale: 1, opacity: 1 },
+            { scale: 1.05, opacity: 1, duration: 0.5, ease: "power2.out" }
+          );
+        }
+        // When completely finished, prepare for next section
+        if (self.progress >= 0.99 && !showNextSection) {
+          setShowNextSection(true);
+        }
+      },
+    });
 
     return () => {
-      video.removeEventListener("loadedmetadata", onMetadata);
       if (st) st.kill();
     };
-  }, []);
+  }, [isFullScreen, showNextSection]);
 
+  // ✅ LOCAL VIDEO FIRST
+  const backgroundSrc = backgroundVideoFile || FALLBACK_BACKGROUND;
+
+  // 🔥 LOADER
   if (isLoading || placementData.length === 0) {
     return (
       <section className="w-full h-screen bg-black flex items-center justify-center">
@@ -102,174 +93,124 @@ const PlacementSection = () => {
     );
   }
 
-  const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
-  const half = Math.ceil(placementData.length / 2);
-  const topBase = shuffle(placementData.slice(0, half));
-  const bottomBase = shuffle(placementData.slice(half));
-  const minCards = 8;
-  const repeatCountTop = Math.ceil(minCards / (topBase.length || 1));
-  const repeatCountBottom = Math.ceil(minCards / (bottomBase.length || 1));
-  const topData = Array(repeatCountTop).fill(topBase).flat();
-  const bottomData = Array(repeatCountBottom).fill(bottomBase).flat();
-
   return (
-    // ✅ FIX 4: overflow-hidden HATA DIYA — ScrollTrigger pin ke saath conflict karta tha
-    <section
-      ref={sectionRef}
-      className="section dark-section relative w-full h-screen bg-black"
-    >
-      {/* BACKGROUND VIDEO */}
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        preload="auto"
-        webkit-playsinline="true"
-        className="absolute inset-0 w-full h-full object-cover"
+    <div ref={sectionWrapperRef} className="relative">
+      <ScrollVideoSkeleton
+        videoSrc={backgroundSrc}
+        end={4000}
+        overlay={true}
+        navbarClass=".main-navbar"
+        height="100vh"
+        object="cover"
       >
-        <source src={BackgroundVideo} type="video/mp4" />
-      </video>
-
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/45 z-10"></div>
-
-      {/* CONTENT */}
-      <div className="relative z-20 h-full flex flex-col lg:flex-row items-center justify-between gap-10 px-5 md:px-16 py-20">
-
-        {/* LEFT IMAGE */}
-        <div className="w-full lg:w-1/2">
-          <div className="relative overflow-hidden rounded-3xl h-[320px] sm:h-[420px] md:h-[600px] group">
-            <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
-              alt="placement"
+        {/* 🔥 MAIN CONTENT */}
+        <div
+          className={`
+            h-full w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-5 md:px-16 py-20
+            transition-all duration-1000 ease-in-out
+            ${isFullScreen ? "!p-0" : ""}
+          `}
+        >
+          {/* 🔥 LEFT VIDEO - EXPANDS TO FULL SCREEN AT FRONT */}
+          <div
+            ref={leftVideoContainerRef}
+            className={`
+              relative overflow-hidden rounded-3xl group shadow-2xl
+              transition-all duration-1000 ease-in-out
+              ${isFullScreen
+                ? "fixed inset-0 z-[9999] rounded-none h-screen w-screen bg-black"
+                : "w-full lg:w-1/2 h-[320px] sm:h-[420px] md:h-[600px] z-10"
+              }
+            `}
+          >
+            <video
+              ref={leftVideoRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-black/20"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-white text-4xl md:text-7xl font-bold tracking-[10px]">
+            >
+              <source src={LeftVideo} type="video/mp4" />
+            </video>
+
+            {/* 🔥 TEXT OVERLAY - Visible in both normal and fullscreen mode */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <h1 className={`
+                text-white font-bold tracking-[10px] transition-all duration-700 text-center
+                ${isFullScreen 
+                  ? "text-6xl md:text-8xl lg:text-9xl" 
+                  : "text-4xl md:text-7xl"
+                }
+              `}>
                 PLAY REEL
               </h1>
             </div>
-            <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg">
+
+            {/* 🔥 BADGE - Bottom left badge */}
+            <div className={`
+              absolute bottom-6 left-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg transition-all duration-700
+              ${isFullScreen ? "scale-110" : "scale-100"}
+            `}>
               <p className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                 <FaGraduationCap className="text-[#125785]" />
                 Real Students • Real Placements
               </p>
             </div>
-          </div>
-        </div>
 
-        {/* RIGHT CONTENT */}
-        <div className="w-full lg:w-1/2">
-          <span className="text-sm font-bold text-cyan-300 uppercase tracking-wide">
-            Placements
-          </span>
-          <h2 className="text-2xl md:text-5xl font-bold mt-4 text-white leading-tight">
-            At RICR, placements aren't about promises —
-            they're the result of what you build and practice.
-          </h2>
-          <p className="text-gray-200 mt-5 text-lg leading-relaxed">
-            We focus on making you interview-ready with
-            real projects, mentorship, and industry-level training.
-          </p>
-
-          {/* TOP ROW */}
-          <div className="mt-10 overflow-hidden">
-            <MarqueeRow ref={topRef} data={topData} direction="right" speed={0.6} />
+            {/* 🔥 CLOSE BUTTON - Only appears in fullscreen mode */}
+            {isFullScreen && (
+              <button
+                onClick={() => {
+                  setIsFullScreen(false);
+                  setShowNextSection(false);
+                  // Scroll back to top of section
+                  window.scrollTo({ top: sectionWrapperRef.current.offsetTop, behavior: "smooth" });
+                }}
+                className="absolute top-6 right-6 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all duration-300 z-[10000] backdrop-blur-md"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
 
-          {/* BOTTOM ROW */}
-          <div className="mt-5 overflow-hidden">
-            <MarqueeRow ref={bottomRef} data={bottomData} direction="left" speed={0.6} />
+          {/* 🔥 RIGHT CONTENT - FADES OUT when video expands */}
+          <div
+            className={`
+              w-full lg:w-1/2 transition-all duration-700
+              ${isFullScreen ? "opacity-0 invisible" : "opacity-100 visible"}
+            `}
+          >
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white">
+              <h2 className="text-2xl font-bold mb-4">Our Top Placements</h2>
+              <ul className="space-y-2">
+                {placementData.slice(0, 5).map((p, idx) => (
+                  <li key={idx} className="border-b border-white/20 pb-2">
+                    <span className="font-semibold">{p.name}</span> – {p.company} ({p.position})
+                  </li>
+                ))}
+              </ul>
+              
+              {/* Show more button */}
+              <button className="mt-4 text-sm text-white/80 hover:text-white transition-colors">
+                View All Placements →
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </ScrollVideoSkeleton>
 
-// MARQUEE
-const MarqueeRow = React.forwardRef(({ data, direction = "left", speed = 0.6 }, ref) => {
-  const scrollRef = useRef(null);
-  const animationRef = useRef(null);
-
-  useEffect(() => {
-    const element = scrollRef.current;
-    if (!element || !data.length) return;
-
-    let lastTimestamp = 0;
-
-    const animate = (timestamp) => {
-      if (!lastTimestamp) {
-        lastTimestamp = timestamp;
-        animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
-      const delta = Math.min(32, timestamp - lastTimestamp);
-      const moveDistance = speed * (delta / 16);
-      lastTimestamp = timestamp;
-
-      if (direction === "left") {
-        element.scrollLeft += moveDistance;
-        if (element.scrollLeft >= element.scrollWidth - element.clientWidth) {
-          element.scrollLeft = 0;
-        }
-      } else {
-        element.scrollLeft -= moveDistance;
-        if (element.scrollLeft <= 0) {
-          element.scrollLeft = element.scrollWidth - element.clientWidth;
-        }
-      }
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    if (direction === "right") {
-      element.scrollLeft = element.scrollWidth - element.clientWidth;
-    }
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [data, direction, speed]);
-
-  const setRefs = (el) => {
-    scrollRef.current = el;
-    if (typeof ref === "function") ref(el);
-    else if (ref) ref.current = el;
-  };
-
-  return (
-    <div className="overflow-hidden">
-      <div
-        ref={setRefs}
-        className="overflow-x-auto scrollbar-hide"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none", overflowX: "auto" }}
-      >
-        <div className="flex gap-6 w-max">
-          {data.map((item, index) => (
-            <Card item={item} key={`${direction}-${index}`} />
-          ))}
+      {/* 🔥 NEXT SECTION INDICATOR - Shows when video is in fullscreen */}
+      {isFullScreen && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[10000] animate-bounce">
+          <div className="bg-white/20 backdrop-blur-md rounded-full px-6 py-3 text-white text-sm font-semibold">
+            Scroll Down for Next Section ↓
+          </div>
         </div>
-      </div>
-    </div>
-  );
-});
-
-// CARD
-const Card = ({ item }) => {
-  return (
-    <div className="min-w-[320px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-5 flex items-center gap-4">
-      <img
-        src={item.image}
-        alt={item.name}
-        className="w-16 h-16 rounded-full object-cover"
-      />
-      <div>
-        <h3 className="text-white font-bold text-lg">{item.name}</h3>
-        <p className="text-gray-200 text-sm">{item.company}</p>
-        <span className="text-xs text-gray-300">{item.position}</span>
-      </div>
+      )}
     </div>
   );
 };
