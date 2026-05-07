@@ -1,0 +1,75 @@
+/* =========================================
+   SECTION
+========================================= */
+
+.placement-main-wrapper {
+
+  position: relative;
+
+  width: 100%;
+
+  height: 400vh;
+
+  background: black;
+
+  overflow: hidden;
+}
+
+/* =========================================
+   SVG
+========================================= */
+
+.svg-line-wrapper {
+
+  position: sticky;
+
+  top: 0;
+
+  width: 100%;
+
+  height: 100vh;
+
+  pointer-events: none;
+}
+
+/* =========================================
+   PATH
+========================================= */
+
+.animated-path {
+
+  fill: none;
+
+  stroke: #7b87ff;
+
+  stroke-width: 12;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+
+  filter:
+    drop-shadow(0 0 15px #7b87ff)
+    drop-shadow(0 0 35px #7b87ff);
+
+  will-change:
+    stroke-dashoffset;
+}
+
+/* =========================================
+   GLOBAL
+========================================= */
+
+html,
+body {
+
+  margin: 0;
+
+  padding: 0;
+
+  overflow-x: hidden;
+
+  background: black;
+
+  scroll-behavior: smooth;
+}

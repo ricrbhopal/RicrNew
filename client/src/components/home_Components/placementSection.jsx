@@ -1,227 +1,179 @@
-// ========================================
-// PlacementSection.jsx
-// ========================================
-
 import React, {
   useEffect,
-  useState,
+  useRef,
 } from "react";
 
+import gsap from "gsap";
+
 import {
-  FaGraduationCap,
-} from "react-icons/fa";
-
-import { adminAPI }
-from "../../config/api";
-
-import ScrollVideoSkeleton
-from "../commonComponents/ScrollVideoSkeleton";
-
-import backgroundVideoFile
-from "../../assets/Home/placement.mp4";
+  ScrollTrigger,
+} from "gsap/ScrollTrigger";
 
 import "../css/PlacementSection.css";
 
-// ✅ FALLBACK
-const FALLBACK_BACKGROUND =
-  "https://www.w3schools.com/howto/rain.mp4";
-
-// ✅ LEFT VIDEO
-const LeftVideo =
-  "https://www.w3schools.com/html/mov_bbb.mp4";
+gsap.registerPlugin(
+  ScrollTrigger
+);
 
 const PlacementSection = () => {
 
-  const [
-    placementData,
-    setPlacementData,
-  ] = useState([]);
+  const sectionRef =
+    useRef(null);
 
-  const [
-    isLoading,
-    setIsLoading,
-  ] = useState(true);
-
-  const [
-    isFullScreen,
-    setIsFullScreen,
-  ] = useState(false);
-
-  // ========================================
-  // FETCH
-  // ========================================
+  const pathRef =
+    useRef(null);
 
   useEffect(() => {
 
-    fetchData();
+    const section =
+      sectionRef.current;
+
+    const path =
+      pathRef.current;
+
+    if (!section || !path)
+      return;
+
+    // ========================================
+    // PATH LENGTH
+    // ========================================
+
+    const pathLength =
+      path.getTotalLength();
+
+    // initial hidden
+    gsap.set(path, {
+
+      strokeDasharray:
+        pathLength,
+
+      strokeDashoffset:
+        pathLength,
+
+    });
+
+    // ========================================
+    // SCROLL TRIGGER
+    // ========================================
+
+const trigger = gsap.to(path, {
+
+  strokeDashoffset: 0,
+
+  ease: "none",
+
+  scrollTrigger: {
+
+    trigger: section,
+
+    start: "top top",
+
+    end: "+=2000",
+
+    scrub: true,
+
+    pin: true,
+
+    pinSpacing: true,
+
+    anticipatePin: 1,
+
+    invalidateOnRefresh: true,
+
+    // 🔥 IMPORTANT
+    toggleActions:
+      "play reverse play reverse",
+
+    // ========================================
+    // NAVBAR
+    // ========================================
+
+    onEnter: () => {
+
+      gsap.to(".main-navbar", {
+
+        y: -120,
+
+        opacity: 0,
+
+        duration: 0.3,
+
+      });
+    },
+
+    onLeave: () => {
+
+      gsap.to(".main-navbar", {
+
+        y: 0,
+
+        opacity: 1,
+
+        duration: 0.3,
+
+      });
+    },
+
+    onLeaveBack: () => {
+
+      gsap.to(".main-navbar", {
+
+        y: 0,
+
+        opacity: 1,
+
+        duration: 0.3,
+
+      });
+    },
+
+  },
+
+});
+
+    return () => {
+
+      if (
+        trigger.scrollTrigger
+      ) {
+
+        trigger.scrollTrigger.kill();
+      }
+
+      trigger.kill();
+    };
 
   }, []);
 
-  const fetchData =
-    async () => {
-
-      try {
-
-        const res =
-          await adminAPI.getCelebrates();
-
-        const filtered =
-          res.data.filter(
-            (s) =>
-              s.status ===
-              "active"
-          );
-
-        const formatted =
-          filtered.map(
-            (s) => ({
-              name: s.name,
-              company:
-                s.company,
-              position:
-                s.position,
-            })
-          );
-
-        setPlacementData(
-          formatted
-        );
-
-      } catch (err) {
-
-        console.error(err);
-
-      } finally {
-
-        setIsLoading(false);
-
-      }
-    };
-
-  const backgroundSrc =
-    backgroundVideoFile ||
-    FALLBACK_BACKGROUND;
-
-  // ========================================
-  // LOADER
-  // ========================================
-
-  if (
-    isLoading ||
-    placementData.length === 0
-  ) {
-
-    return (
-
-      <section className="placement-loader">
-
-        <div className="placement-spinner" />
-
-      </section>
-    );
-  }
-
   return (
 
-   <section className={`placement-main-wrapper ${isFullScreen ? "video-fullscreen" : ""}`}>
+    <section
+      ref={sectionRef}
+      className="placement-main-wrapper"
+    >
 
-      <ScrollVideoSkeleton
-        videoSrc={backgroundSrc}
-        end={1200}
-        overlay={true}
-        navbarClass=".main-navbar"
-        height="100vh"
-        object="cover"
-        scrubSpeed={0.2}
-        onComplete={(progress) => {
-          // ✅ VIDEO END
-          if (progress > 0.90) {
-            setIsFullScreen(true);
-          } else {
-            setIsFullScreen(false);
-          }
-        }}
+      <svg
+        className="svg-line-wrapper"
+        viewBox="0 0 1920 1080"
+        preserveAspectRatio="none"
       >
 
-        {/* CONTENT */}
+        <path
 
-        <div className="placement-content">
+          ref={pathRef}
 
-          {/* LEFT */}
+          d="
+          M0,300
+          C250,250 250,500 500,450
+          C650,420 700,700 900,620
+          C1100,520 1200,450 1350,500
+          C1500,550 1600,850 1920,700
+          "
 
-          <div
+          className="animated-path"
+        />
 
-            className={`
-              placement-left-video
-              ${
-                isFullScreen
-                  ? "fullscreen"
-                  : ""
-              }
-            `}
-          >
-
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="
-                placement-reel-video
-              "
-            >
-
-              <source
-                src={LeftVideo}
-                type="video/mp4"
-              />
-
-            </video>
-
-            {/* CENTER TEXT */}
-
-            <div className="placement-center-text">
-
-              <h1
-                className={`
-                  placement-title
-                  ${
-                    isFullScreen
-                      ? "fullscreen-title"
-                      : ""
-                  }
-                `}
-              >
-
-                PLAY REEL
-
-              </h1>
-
-            </div>
-
-            {/* BADGE */}
-
-            <div className="placement-badge">
-
-              <p>
-
-                <FaGraduationCap />
-
-                Real Students •
-                Real Placements
-
-              </p>
-
-            </div>
-
-          </div>
-
-
-
-        </div>
-
-      </ScrollVideoSkeleton>
+      </svg>
 
     </section>
   );

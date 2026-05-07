@@ -1,196 +1,63 @@
-
-/* =========================================
-   BASE WRAPPER
-========================================= */
-
 .placement-main-wrapper {
+
   position: relative;
+
   width: 100%;
-  min-height: 100vh;
-  overflow: hidden;
-  background: black;
-}
 
-/* =========================================
-   CONTENT LAYER
-========================================= */
-
-.placement-content {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 40px;
-  padding: 80px 60px;
-
-  z-index: 20;
-  pointer-events: none;
-}
-
-/* =========================================
-   LEFT VIDEO BOX
-========================================= */
-
-.placement-left-video {
-  position: relative;
-  width: 50%;
-  height: 600px;
-
-  border-radius: 30px;
-  overflow: hidden;
-
-  transform: translateZ(0);
-  will-change: transform;
-
-  transition: all 0.3s ease;
-}
-
-/* =========================================
-   🔥 FULLSCREEN (IMPORTANT FIX)
-========================================= */
-
-.video-fullscreen .placement-left-video {
-  position: fixed;
-  inset: 0;
-
-  width: 100vw;
   height: 100vh;
-
-  border-radius: 0;
-  z-index: 9999;
-
-  transform: translateZ(0);
-}
-
-/* =========================================
-   VIDEO
-========================================= */
-
-.placement-reel-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  transform: translateZ(0);
-}
-
-/* =========================================
-   CENTER TEXT
-========================================= */
-
-.placement-center-text {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  pointer-events: none;
-}
-
-.placement-title {
-  color: white;
-  font-size: 90px;
-  font-weight: 800;
-  letter-spacing: 12px;
-
-  transition: all 0.3s ease;
-}
-
-/* FULLSCREEN TEXT */
-
-.video-fullscreen .placement-title {
-  transform: scale(1.1);
-}
-
-/* =========================================
-   BADGE
-========================================= */
-
-.placement-badge {
-  position: absolute;
-  left: 24px;
-  bottom: 24px;
 
   background: white;
-  padding: 12px 20px;
-  border-radius: 14px;
+
+  overflow: hidden;
 }
 
-/* =========================================
-   RIGHT SIDE
-========================================= */
+.svg-line-wrapper {
 
-.placement-right {
-  width: 50%;
-  transition: all 0.3s ease;
-}
+  position: absolute;
 
-/* HIDE RIGHT CLEANLY */
+  inset: 0;
 
-.video-fullscreen .placement-right {
-  opacity: 0;
-  transform: translateY(20px);
+  width: 100%;
+
+  height: 100%;
+
+  overflow: hidden;
+
   pointer-events: none;
 }
 
-/* =========================================
-   CARD
-========================================= */
+.animated-path {
 
-.placement-card {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
+  fill: none;
 
-  border-radius: 24px;
-  padding: 30px;
-  color: white;
+  stroke: #7b87ff;
+
+  stroke-width: 12;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+
+  vector-effect:
+    non-scaling-stroke;
+
+  transform:
+    translateZ(0);
+
+  backface-visibility:
+    hidden;
+
+
 }
 
-/* =========================================
-   LOADER
-========================================= */
+html,
+body {
 
-.placement-loader {
-  width: 100%;
-  height: 100vh;
-  background: black;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.placement-spinner {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 4px solid white;
-  border-top-color: transparent;
-
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* =========================================
-   GLOBAL FIX
-========================================= */
-
-html, body {
   margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background: black;
-}
 
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+
+  overflow-x: hidden;
+
+  background: black;
 }

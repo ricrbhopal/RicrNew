@@ -21,9 +21,9 @@ const Home = () => {
 
         <Hero />
       
-  <div clasName="mb-20">
+
           <PlacementSection />
-  </div>
+
 
 
 
