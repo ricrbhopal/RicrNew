@@ -251,95 +251,259 @@ export const updateHeroOrder = async (req, res) => {
 
 
 
-
 // Placement Controller
-// Get all celebrate entries
+
 export const getAllCelebrates = async (req, res) => {
-    try {
-        const celebrates = await Celebrate.find().sort({ createdAt: -1 });
-        res.status(200).json(celebrates);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const celebrates = await Celebrate.find().sort({ createdAt: -1 });
+    res.status(200).json(celebrates);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
+
 // Create a new celebrate entry
 export const createCelebrate = async (req, res) => {
   try {
-    let imageUrl = '';
-    let companyLogoUrl = '';
-    // Robustly extract files from req.files (array or object)
-    let imageFile = null, companyLogoFile = null;
+    const { title, mediaType } = req.body;
+
+    let mediaUrl = "";
+    let backgroundVideoUrl = null;
+
+    // Extract files (support both array & object)
+    let mediaFile = null,
+      bgVideoFile = null;
+
     if (Array.isArray(req.files)) {
-      imageFile = req.files.find(f => f.fieldname === 'image');
-      companyLogoFile = req.files.find(f => f.fieldname === 'companyLogo');
+      mediaFile = req.files.find((f) => f.fieldname === "media");
+      bgVideoFile = req.files.find(
+        (f) => f.fieldname === "backgroundVideo"
+      );
     } else if (req.files) {
-      imageFile = req.files.image && req.files.image[0];
-      companyLogoFile = req.files.companyLogo && req.files.companyLogo[0];
+      mediaFile = req.files.media && req.files.media[0];
+      bgVideoFile =
+        req.files.backgroundVideo && req.files.backgroundVideo[0];
     }
-    // Helper to upload a file buffer to Cloudinary
-    const uploadToCloudinary = (file, folder) => {
+
+    // Upload helper (image + video support)
+    const uploadToCloudinary = (file, folder, resourceType) => {
       return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream({
-          folder,
-          resource_type: 'image',
-        }, (error, result) => {
-          if (error) reject(error);
-          else resolve(result.secure_url);
-        });
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder,
+            resource_type: resourceType, // "image" | "video"
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        );
         stream.end(file.buffer);
       });
     };
 
-    if (imageFile) {
-      imageUrl = await uploadToCloudinary(imageFile, 'celebrate');
-    } else if (req.body.image) {
-      imageUrl = req.body.image;
-    }
-    if (companyLogoFile) {
-      companyLogoUrl = await uploadToCloudinary(companyLogoFile, 'celebrate');
-    } else if (req.body.companyLogo) {
-      companyLogoUrl = req.body.companyLogo;
+    // Upload main media
+    if (mediaFile) {
+      const resourceType =
+        mediaType === "video" ? "video" : "image";
+
+      mediaUrl = await uploadToCloudinary(
+        mediaFile,
+        "celebrate",
+        resourceType
+      );
+    } else if (req.body.mediaUrl) {
+      mediaUrl = req.body.mediaUrl;
+    } else {
+      return res.status(400).json({ error: "Media file is required" });
     }
 
-    // Save celebrate with Cloudinary image URLs
+    // Upload background video (only if mediaType = video)
+    if (mediaType === "video" && bgVideoFile) {
+      backgroundVideoUrl = await uploadToCloudinary(
+        bgVideoFile,
+        "celebrate/bg",
+        "video"
+      );
+    }
+
+    // Create document
     const celebrate = new Celebrate({
-      ...req.body,
-      image: imageUrl,
-      companyLogo: companyLogoUrl,
+      title,
+      mediaType,
+      mediaUrl,
+      backgroundVideoUrl,
     });
+
     await celebrate.save();
-    res.status(201).json(celebrate);
+
+    res.status(201).json({
+      message: "Created successfully",
+      data: celebrate,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
-// Update a celebrate entry
+
+// Update status only
 export const updateCelebrate = async (req, res) => {
-    try {
-        const { status } = req.body;
-        if (!['active', 'inactive'].includes(status)) {
-            return res.status(400).json({ error: 'Invalid status value' });
-        }
-        const celebrate = await Celebrate.findByIdAndUpdate(
-            req.params.id,
-            { status },
-            { new: true, runValidators: true }
-        );
-        if (!celebrate) return res.status(404).json({ error: 'Not found' });
-        res.status(200).json(celebrate);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+  try {
+    const { status } = req.body;
+
+    if (!["active", "inactive"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status value" });
     }
+
+    const celebrate = await Celebrate.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!celebrate)
+      return res.status(404).json({ error: "Not found" });
+
+    res.status(200).json(celebrate);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 };
+
 // Delete a celebrate entry
 export const deleteCelebrate = async (req, res) => {
-    try {
-        const celebrate = await Celebrate.findByIdAndDelete(req.params.id);
-        if (!celebrate) return res.status(404).json({ error: 'Not found' });
-        res.status(200).json({ message: 'Deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+  try {
+    const celebrate = await Celebrate.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!celebrate)
+      return res.status(404).json({ error: "Not found" });
+
+    res.status(200).json({
+      message: "Deleted successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// EDIT CELEBRATE
+export const editCelebrate = async (req, res) => {
+  try {
+    const { title, mediaType } = req.body;
+
+    const celebrate = await Celebrate.findById(req.params.id);
+
+    if (!celebrate) {
+      return res.status(404).json({
+        error: "Celebrate not found",
+      });
     }
+
+    // FILES
+    let mediaFile = null;
+    let bgVideoFile = null;
+
+    if (Array.isArray(req.files)) {
+      mediaFile = req.files.find(
+        (f) => f.fieldname === "media"
+      );
+
+      bgVideoFile = req.files.find(
+        (f) => f.fieldname === "backgroundVideo"
+      );
+    } else if (req.files) {
+      mediaFile =
+        req.files.media && req.files.media[0];
+
+      bgVideoFile =
+        req.files.backgroundVideo &&
+        req.files.backgroundVideo[0];
+    }
+
+    // CLOUDINARY HELPER
+    const uploadToCloudinary = (
+      file,
+      folder,
+      resourceType
+    ) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder,
+            resource_type: resourceType,
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        );
+
+        stream.end(file.buffer);
+      });
+    };
+
+    // UPDATE TITLE
+    if (title) {
+      celebrate.title = title;
+    }
+
+    // UPDATE MEDIA TYPE
+    if (mediaType) {
+      celebrate.mediaType = mediaType;
+    }
+
+    // UPDATE MAIN MEDIA
+    if (mediaFile) {
+      const resourceType =
+        mediaType === "video"
+          ? "video"
+          : "image";
+
+      const mediaUrl = await uploadToCloudinary(
+        mediaFile,
+        "celebrate",
+        resourceType
+      );
+
+      celebrate.mediaUrl = mediaUrl;
+    }
+
+    // UPDATE MAIN MEDIA URL
+    if (req.body.mediaUrl) {
+      celebrate.mediaUrl = req.body.mediaUrl;
+    }
+
+    // UPDATE BACKGROUND VIDEO
+    if (bgVideoFile) {
+      const bgUrl = await uploadToCloudinary(
+        bgVideoFile,
+        "celebrate/bg",
+        "video"
+      );
+
+      celebrate.backgroundVideoUrl = bgUrl;
+    }
+
+    // UPDATE BACKGROUND VIDEO URL
+    if (req.body.backgroundVideoUrl) {
+      celebrate.backgroundVideoUrl =
+        req.body.backgroundVideoUrl;
+    }
+
+    await celebrate.save();
+
+    res.status(200).json({
+      message: "Celebrate updated successfully",
+      data: celebrate,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 };
 
 

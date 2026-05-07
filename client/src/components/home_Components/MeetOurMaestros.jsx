@@ -91,7 +91,7 @@ const MentorsPage = () => {
     <section className="
     w-[100%] sm:w-[100%] md:w-[100%] 
     mx-auto 
-    mt-20 overflow-hidden 
+   overflow-hidden 
     py-10 sm:py-14 md:py-16 
     px-4 sm:px-6 md:px-10 
     rounded-xl sm:rounded-2xl">

@@ -1,52 +1,59 @@
 import React from "react";
+
 import Hero from "../components/home_Components/Hero";
 import PlacementSection from "../components/home_Components/placementSection";
-import ProgramSection from "../components/home_Components/programSection";
+
+// ✅ FIX NAME
+import ProgramsSection from "../components/home_Components/programSection";
+
 import MeetOurMaestros from "../components/home_Components/MeetOurMaestros";
+
 import HowItWorks from "../components/home_Components/howItsWorks";
+
 import AdverstandingSection from "../components/home_Components/adverstandingSection";
+
 import Why from "../components/home_Components/Why";
 
 const Home = () => {
   return (
-    <div>
-
-      {/* DARK SECTION */}
-      <div className="section dark-section">
+    <main className="relative w-full overflow-x-hidden">
+      
+      {/* HERO */}
+      <section className="relative z-10">
         <Hero />
-      </div>
+      </section>
 
-      {/* LIGHT SECTION */}
-      <div className="section light-section">
+      {/* PLACEMENT */}
+      <section className="relative z-10 bg-white">
         <PlacementSection />
-      </div>
+      </section>
 
-      {/* DARK SECTION */}
-      <div className="section dark-section">
-        <ProgramSection />
-      </div>
+      {/* VIDEO SECTION */}
+      <section className="relative z-20 bg-black">
+        <ProgramsSection />
+      </section>
 
-      {/* LIGHT SECTION */}
-      <div className="section light-section">
+      {/* NEXT SECTION */}
+      <section className="relative z-30 bg-white">
         <MeetOurMaestros />
-      </div>
+      </section>
 
-      {/* LIGHT SECTION */}
-      <div className="section light-section">
+      {/* HOW IT WORKS */}
+      <section className="relative z-10">
         <HowItWorks />
-      </div>
+      </section>
 
-      {/* LIGHT SECTION */}
-      <div className="section light-section">
+      {/* ADV */}
+      <section className="relative z-10 bg-white">
         <AdverstandingSection />
-      </div>
+      </section>
 
-      {/* LIGHT SECTION */}
-      <div className="section light-section">
+      {/* WHY */}
+      <section className="relative z-10 bg-white">
         <Why />
-      </div>
+      </section>
 
-    </div>
+    </main>
   );
 };
 

@@ -86,7 +86,7 @@ const ScrollVideoSkeleton = ({
 
           end: `+=${end}`,
 
-          scrub: 1,
+          scrub: 2,
 
           invalidateOnRefresh:
             true,
@@ -313,3 +313,5 @@ const ScrollVideoSkeleton = ({
 };
 
 export default ScrollVideoSkeleton;
+
+
