@@ -1,0 +1,262 @@
+/* =========================================
+   MAIN WRAPPER
+========================================= */
+
+.placement-main-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: black;
+}
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.placement-content {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+  padding: 80px 60px;
+
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* =========================================
+   LEFT VIDEO
+========================================= */
+
+.placement-left-video {
+  position: relative;
+  width: 50%;
+  height: 600px;
+
+  border-radius: 30px;
+  overflow: hidden;
+
+  will-change: transform;
+  transform: translateZ(0);
+
+  transition:
+    border-radius 0.5s ease,
+    width 0.5s ease,
+    height 0.5s ease;
+}
+
+/* =========================================
+   FULLSCREEN
+========================================= */
+
+.scroll-video-section.video-fullscreen .placement-left-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  border-radius: 0;
+  z-index: 9999;
+
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* =========================================
+   VIDEO
+========================================= */
+
+.placement-reel-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  transform: translateZ(0);
+  backface-visibility: hidden;
+
+  will-change: transform;
+}
+
+/* =========================================
+   CENTER TEXT
+========================================= */
+
+.placement-center-text {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.placement-title {
+  color: white;
+  font-size: 90px;
+  font-weight: 800;
+  letter-spacing: 12px;
+
+  will-change: transform, opacity;
+
+  transition:
+    transform 0.5s ease,
+    opacity 0.5s ease;
+}
+
+/* FULLSCREEN TITLE */
+
+.scroll-video-section.video-fullscreen .placement-title {
+  transform: scale(1.08);
+}
+
+/* =========================================
+   BADGE
+========================================= */
+
+.placement-badge {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+
+  background: white;
+  padding: 12px 20px;
+  border-radius: 14px;
+
+  z-index: 30;
+}
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
+
+.placement-right {
+  width: 50%;
+
+  will-change: transform, opacity;
+
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+/* HIDE RIGHT IN FULLSCREEN */
+
+.scroll-video-section.video-fullscreen .placement-right {
+  opacity: 0;
+  transform: translateY(30px);
+  pointer-events: none;
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+.placement-card {
+  background: rgba(255,255,255,0.08);
+
+  /* BLINK FIX */
+  backdrop-filter: blur(6px);
+
+  border-radius: 24px;
+  padding: 30px;
+  color: white;
+
+  transform: translateZ(0);
+}
+
+/* =========================================
+   LOADER
+========================================= */
+
+.placement-loader {
+  width: 100%;
+  height: 100vh;
+  background: black;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placement-spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid white;
+  border-top-color: transparent;
+
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 992px) {
+
+  .placement-content {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+
+  .placement-left-video,
+  .placement-right {
+    width: 100%;
+  }
+
+  .placement-left-video {
+    height: 420px;
+  }
+
+  .placement-title {
+    font-size: 54px;
+    letter-spacing: 4px;
+  }
+}
+
+/* =========================================
+   GLOBAL FIX
+========================================= */
+
+.scroll-video-section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.scroll-video-element {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  scroll-behavior: auto;
+
+  /* BLINK FIX */
+  background: black;
+}
+
+/* GPU FIX */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

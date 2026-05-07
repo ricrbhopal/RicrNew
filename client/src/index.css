@@ -1,37 +1,44 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-/* Chrome, Safari */
-::-webkit-scrollbar {
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   HTML BODY
+========================================= */
+
+html,
+body{
+  width: 100%;
+  overflow-x: hidden;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  background: #fff;
+
+  scroll-behavior: auto;
+}
+
+/* Chrome / Safari / Edge */
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar{
   display: none;
 }
 
-/* Firefox */
-html {
-  scrollbar-width: none;
-}
+/* =========================================
+   ROOT
+========================================= */
 
-/* IE / Edge */
-body {
-  -ms-overflow-style: none;
-}
-
-
-/* Wrapper */
-.scroll-wrapper {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 6px;
-  height: 50%;
-  background: transparent;
-  z-index: 9999;
-}
-
-/* Progress */
-.scroll-progress {
+#root{
   width: 100%;
-  background: linear-gradient(to bottom, #125785, #0e456b);
-  height: 0%;
-  transition: height 0.1s ease-out;
-  border-radius: 10px;
+  overflow-x: hidden;
 }

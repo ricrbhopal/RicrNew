@@ -16,42 +16,17 @@ import Why from "../components/home_Components/Why";
 
 const Home = () => {
   return (
-    <main className="relative w-full overflow-x-hidden">
+    <main >
       
-      {/* HERO */}
-      <section className="relative z-10">
+
         <Hero />
-      </section>
-
-      {/* PLACEMENT */}
-      <section className="relative z-10 bg-white">
+      
         <PlacementSection />
-      </section>
 
-      {/* VIDEO SECTION */}
-      <section className="relative z-20 bg-black">
-        <ProgramsSection />
-      </section>
-
-      {/* NEXT SECTION */}
-      <section className="relative z-30 bg-white">
         <MeetOurMaestros />
-      </section>
 
-      {/* HOW IT WORKS */}
-      <section className="relative z-10">
-        <HowItWorks />
-      </section>
 
-      {/* ADV */}
-      <section className="relative z-10 bg-white">
-        <AdverstandingSection />
-      </section>
 
-      {/* WHY */}
-      <section className="relative z-10 bg-white">
-        <Why />
-      </section>
 
     </main>
   );

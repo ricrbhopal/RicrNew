@@ -349,7 +349,7 @@
 
 import React, { useEffect, useState } from "react";
 import { adminAPI } from "../../config/api";
-import ScrollVideoSkeleton from "../commonComponents/ScrollTrigger";
+import ScrollVideoSkeleton from "../commonComponents/ScrollVideoSkeleton";
 
 const HowItWorks = () => {
   const [steps, setSteps] = useState([]);
