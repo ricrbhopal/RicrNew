@@ -21,7 +21,7 @@ const MainLayout = ({ children }) => {
     <>
       <Navbar />
       {children}
-      <SubFooter />
+
       <Footer />
     </>
   );

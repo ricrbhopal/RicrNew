@@ -21,9 +21,11 @@ const Home = () => {
 
         <Hero />
       
-        <PlacementSection />
+  <div clasName="mb-20">
+          <PlacementSection />
+  </div>
 
-        <MeetOurMaestros />
+
 
 
 
