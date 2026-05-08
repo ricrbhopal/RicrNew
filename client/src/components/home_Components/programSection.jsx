@@ -123,7 +123,7 @@ const Program = () => {
   height="100vh"
   scrubSpeed={0.2}
   overlay={true}
-  className=" mt-30 "
+  className=" "
 >
 
   <div
