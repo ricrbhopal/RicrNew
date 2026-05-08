@@ -4,7 +4,7 @@ import Image from "../../assets/Mentor/image.jpg";
 const MentorsPage = () => {
   return (
     <section
-    style={{ paddingTop: "100vh" }}
+
     
     className="
       w-full
