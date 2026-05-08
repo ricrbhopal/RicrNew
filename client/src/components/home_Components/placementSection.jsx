@@ -61,11 +61,63 @@ scrollTrigger: {
 
   start: "top top",
 
-  end: "+=800",
+  end: "+=500",
 
   scrub: 1,
 
   pin: false,
+
+  onEnter: () => {
+
+    gsap.to(navbar, {
+      y: -120,
+
+      opacity: 0,
+
+      duration: 0.4,
+
+      ease: "power2.out",
+    });
+  },
+
+  onEnterBack: () => {
+
+    gsap.to(navbar, {
+      y: -120,
+
+      opacity: 0,
+
+      duration: 0.4,
+
+      ease: "power2.out",
+    });
+  },
+
+  onLeave: () => {
+
+    gsap.to(navbar, {
+      y: 0,
+
+      opacity: 1,
+
+      duration: 0.4,
+
+      ease: "power2.out",
+    });
+  },
+
+  onLeaveBack: () => {
+
+    gsap.to(navbar, {
+      y: 0,
+
+      opacity: 1,
+
+      duration: 0.4,
+
+      ease: "power2.out",
+    });
+  },
 }
     });
 
@@ -167,14 +219,16 @@ scrollTrigger: {
         ref={videoCardRef}
         className="placement-video-card"
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="placement-video"
-        >
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="auto"
+  disablePictureInPicture
+  webkit-playsinline="true"
+  className="placement-video"
+>
           <source src={Videos} type="video/mp4" />
         </video>
       </div>

@@ -112,7 +112,7 @@
 
   left: 8%;
 
-  bottom: 15%;
+  bottom: 2%;
 
   width: 900px;
 
@@ -185,4 +185,11 @@
   .animated-path {
     stroke-width: 7;
   }
+}
+
+
+.main-navbar {
+  will-change: transform;
+
+  transition: opacity 0.3s;
 }
