@@ -9,7 +9,7 @@ const MentorsPage = () => {
     className="
       w-full
       mt-20
-      bg-white
+    
       overflow-hidden
       py-10 sm:py-14 md:py-16
       px-4 sm:px-6 md:px-10

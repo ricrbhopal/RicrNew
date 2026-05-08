@@ -1,18 +1,7 @@
-// ========================================
-// PlacementSection.jsx
-// ========================================
-
 import React, {
   useEffect,
   useState,
-  useRef,
 } from "react";
-
-import {
-  FaGraduationCap,
-} from "react-icons/fa";
-
-import gsap from "gsap";
 
 import { adminAPI }
 from "../../config/api";
@@ -20,38 +9,17 @@ from "../../config/api";
 import ScrollVideoSkeleton
 from "../commonComponents/ScrollVideoSkeleton";
 
-import backgroundVideoFile
-from "../../assets/Home/placement.mp4";
-
-import "../css/PlacementSection.css";
-
-// ✅ FALLBACK
-const FALLBACK_BACKGROUND =
-  "https://www.w3schools.com/howto/rain.mp4";
-
-// ✅ LEFT VIDEO
-const LeftVideo =
-  "https://www.w3schools.com/html/mov_bbb.mp4";
-
-const PlacementSection = () => {
+const Program = () => {
 
   const [
-    placementData,
-    setPlacementData,
+    steps,
+    setSteps,
   ] = useState([]);
 
   const [
-    isLoading,
-    setIsLoading,
+    loading,
+    setLoading,
   ] = useState(true);
-
-  const [
-    isFullScreen,
-    setIsFullScreen,
-  ] = useState(false);
-
-  const leftVideoContainerRef =
-    useRef(null);
 
   // ========================================
   // FETCH
@@ -59,279 +27,144 @@ const PlacementSection = () => {
 
   useEffect(() => {
 
-    fetchData();
+    const fetchSteps =
+      async () => {
+
+        try {
+
+          const res =
+            await adminAPI.getProgram();
+
+          console.log(
+            "Program Data:",
+            res.data
+          );
+
+          const data =
+            Array.isArray(
+              res.data
+            )
+              ? res.data
+              : res.data
+              ? [res.data]
+              : [];
+
+          setSteps(data);
+
+        } catch (err) {
+
+          console.error(
+            "Error fetching Program:",
+            err
+          );
+
+          setSteps([]);
+
+        } finally {
+
+          setLoading(false);
+        }
+      };
+
+    fetchSteps();
 
   }, []);
 
-  const fetchData =
-    async () => {
-
-      try {
-
-        const res =
-          await adminAPI.getCelebrates();
-
-        const filtered =
-          res.data.filter(
-            (s) =>
-              s.status ===
-              "active"
-          );
-
-        const formatted =
-          filtered.map(
-            (s) => ({
-              name: s.name,
-              company:
-                s.company,
-              position:
-                s.position,
-            })
-          );
-
-        setPlacementData(
-          formatted
-        );
-
-      } catch (err) {
-
-        console.error(err);
-
-      } finally {
-
-        setIsLoading(false);
-
-      }
-    };
-
-  const backgroundSrc =
-    backgroundVideoFile ||
-    FALLBACK_BACKGROUND;
-
   // ========================================
-  // LOADER
+  // LOADING
   // ========================================
 
-  if (
-    isLoading ||
-    placementData.length === 0
-  ) {
-
+  if (loading)
     return (
-
-      <section className="placement-loader">
-
-        <div className="placement-spinner" />
-
-      </section>
+      <div
+        className="
+          text-center
+          py-10
+        "
+      >
+        Loading...
+      </div>
     );
-  }
+
+  // ========================================
+  // NO DATA
+  // ========================================
+
+  if (!steps.length)
+    return (
+      <div
+        className="
+          text-center
+          py-10
+        "
+      >
+        No Data
+      </div>
+    );
+
+  // ========================================
+  // FIRST ITEM
+  // ========================================
+
+  const first =
+    steps[0];
 
   return (
+<>
 
-    <div className="placement-main-wrapper">
 
-      <ScrollVideoSkeleton
 
-        videoSrc={
-          backgroundSrc
-        }
+<div className="">
 
-        // ✅ EXTRA SCROLL
-        // video end hone ke baad
-        // fullscreen 10 sec tak
-        // hold karega
+  <ScrollVideoSkeleton
+  videoSrc={first.video}
+  end={5000}
+  navbarClass=".main-navbar"
+  height="100vh"
+  scrubSpeed={0.2}
+  overlay={true}
+  className=" mt-30 "
+>
 
-        end={9000}
+  <div
+    className="
+      relative
+      z-10
+      w-full
+      h-full
+      flex
+      flex-col
+    mt-20
+    "
+  >
 
-        overlay={true}
 
-        navbarClass="
-          .main-navbar
-        "
 
-        height="100vh"
+    {/* SUBTEXT */}
 
-        object="cover"
+    <p
+      className="
+        mt-5
+        text-black
+        text-lg
+        md:text-2xl
+        max-w-2xl
 
-        scrubSpeed={0.2}
+        md:ml-3
+      
+        leading-relaxed
+      "
+    >
+      {first.subtext}
+    </p>
 
-        onComplete={(progress) => {
+  </div>
 
-          // ✅ LAST PART FULLSCREEN
+</ScrollVideoSkeleton>
+</div>
 
-          if (
-            progress > 0.72
-          ) {
-
-            setIsFullScreen(
-              true
-            );
-
-            gsap.to(
-              leftVideoContainerRef.current,
-              {
-                scale: 1.05,
-                duration: 0.6,
-                ease:
-                  "power3.out",
-              }
-            );
-
-          } else {
-
-            setIsFullScreen(
-              false
-            );
-          }
-        }}
-      >
-
-        {/* CONTENT */}
-
-        <div className="placement-content">
-
-          {/* LEFT */}
-
-          <div
-
-            ref={
-              leftVideoContainerRef
-            }
-
-            className={`
-              placement-left-video
-              ${
-                isFullScreen
-                  ? "fullscreen"
-                  : ""
-              }
-            `}
-          >
-
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="
-                placement-reel-video
-              "
-            >
-
-              <source
-                src={LeftVideo}
-                type="video/mp4"
-              />
-
-            </video>
-
-            {/* CENTER TEXT */}
-
-            <div className="placement-center-text">
-
-              <h1
-                className={`
-                  placement-title
-                  ${
-                    isFullScreen
-                      ? "fullscreen-title"
-                      : ""
-                  }
-                `}
-              >
-
-                PLAY REEL
-
-              </h1>
-
-            </div>
-
-            {/* BADGE */}
-
-            <div className="placement-badge">
-
-              <p>
-
-                <FaGraduationCap />
-
-                Real Students •
-                Real Placements
-
-              </p>
-
-            </div>
-
-          </div>
-
-          {/* RIGHT */}
-
-          <div
-            className={`
-              placement-right
-              ${
-                isFullScreen
-                  ? "hide-right"
-                  : ""
-              }
-            `}
-          >
-
-            <div className="placement-card">
-
-              <h2>
-                Our Top Placements
-              </h2>
-
-              <ul>
-
-                {placementData
-                  .slice(0, 5)
-                  .map(
-                    (
-                      p,
-                      idx
-                    ) => (
-
-                      <li
-                        key={idx}
-                      >
-
-                        <span>
-                          {p.name}
-                        </span>
-
-                        {" "}–{" "}
-
-                        {p.company}
-
-                        {" "}(
-                        {p.position}
-                        )
-
-                      </li>
-                    )
-                  )}
-
-              </ul>
-
-              <button>
-
-                View All Placements →
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </ScrollVideoSkeleton>
-
-    </div>
+    </>
   );
 };
 
-export default PlacementSection;
+export default Program;

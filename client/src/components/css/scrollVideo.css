@@ -1,86 +1,42 @@
-
-/* ===============================
-   BASE
-=============================== */
-
 .scroll-video-section {
   position: relative;
+
   width: 100%;
+
   overflow: hidden;
+
   background: black;
 }
 
-/* VIDEO */
 .scroll-video-element {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  inset: 0;
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
 }
 
-/* CONTENT */
+.scroll-video-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,0.3);
+
+  z-index: 2;
+}
+
 .scroll-video-content {
   position: relative;
-  z-index: 10;
-  height: 100%;
-}
 
-/* ===============================
-   FULLSCREEN STATE (NO FLICKER)
-=============================== */
-
-.scroll-video-section.video-fullscreen .placement-left-video {
-
-  position: absolute;
-
-  inset: 0;
+  z-index: 3;
 
   width: 100%;
 
   height: 100%;
-
-  z-index: 20;
-
-  border-radius: 0;
-
-  transition: all 0.5s ease;
-}
-
-/* RIGHT SIDE SMOOTH HIDE */
-.scroll-video-section.video-fullscreen .placement-right {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition: all 0.4s ease;
-}
-
-/* TITLE SMOOTH */
-.scroll-video-section.video-fullscreen .placement-title {
-  transform: scale(1.12);
-  transition: all 0.4s ease;
-}
-
-/* ===============================
-   ANTI FLICKER FIX
-=============================== */
-
-html, body {
-  overflow-x: hidden;
-  background: white;
-  scroll-behavior: auto;
-}
-
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* GPU BOOST */
-.placement-left-video,
-.scroll-video-element {
-  will-change: transform;
 }
