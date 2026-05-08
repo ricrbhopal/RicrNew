@@ -1,261 +1,9 @@
-// // ========================================
-// // PlacementSection.jsx (FINAL FIXED)
-// // ========================================
-
-// import React, {
-//   useEffect,
-//   useRef,
-// } from "react";
-
-// import gsap from "gsap";
-// import Videos from "../../assets/Home/placement.mp4";
-
-// import {
-//   ScrollTrigger,
-// } from "gsap/ScrollTrigger";
-
-// import "../css/PlacementSection.css";
-
-// gsap.registerPlugin(
-//   ScrollTrigger
-// );
-
-// const PlacementSection = () => {
-
-//   const sectionRef =
-//     useRef(null);
-
-//   const pathRef =
-//     useRef(null);
-
-//   useEffect(() => {
-
-//     const section =
-//       sectionRef.current;
-
-//     const path =
-//       pathRef.current;
-
-//     if (!section || !path)
-//       return;
-
-//     // ========================================
-//     // PATH LENGTH
-//     // ========================================
-
-//     const pathLength =
-//       path.getTotalLength();
-
-//     // ========================================
-//     // INITIAL STATE
-//     // ========================================
-
-//     gsap.set(path, {
-
-//       strokeDasharray:
-//         pathLength,
-
-//       strokeDashoffset:
-//         pathLength,
-
-//     });
-
-//     // ========================================
-//     // ANIMATION
-//     // ========================================
-
-//     const animation =
-//       gsap.to(path, {
-
-//         strokeDashoffset: 0,
-
-//         ease: "none",
-
-//         scrollTrigger: {
-
-//           trigger: section,
-
-//           start: "top top",
-
-//         end: "bottom top",
-//           scrub: 1,
-
-//           pin: true,
-
-//           // 🔥 IMPORTANT FIX
-//           pinSpacing: false,
-
-//           anticipatePin: 1,
-
-//           invalidateOnRefresh:
-//             true,
-
-//           fastScrollEnd: true,
-
-//           // ========================================
-//           // NAVBAR HIDE
-//           // ========================================
-
-//           onEnter: () => {
-
-//             gsap.to(
-//               ".main-navbar",
-//               {
-
-//                 y: -120,
-
-//                 opacity: 0,
-
-//                 duration: 0.3,
-
-//                 ease:
-//                   "power2.out",
-
-//               }
-//             );
-//           },
-
-//           // ========================================
-//           // NAVBAR SHOW
-//           // ========================================
-
-//           onLeave: () => {
-
-//             gsap.to(
-//               ".main-navbar",
-//               {
-
-//                 y: 0,
-
-//                 opacity: 1,
-
-//                 duration: 0.3,
-
-//                 ease:
-//                   "power2.out",
-
-//               }
-//             );
-//           },
-
-//           onLeaveBack: () => {
-
-//             gsap.to(
-//               ".main-navbar",
-//               {
-
-//                 y: 0,
-
-//                 opacity: 1,
-
-//                 duration: 0.3,
-
-//                 ease:
-//                   "power2.out",
-
-//               }
-//             );
-//           },
-
-//         },
-
-//       });
-
-//     // ========================================
-//     // REFRESH
-//     // ========================================
-
-//     ScrollTrigger.refresh();
-
-//     // ========================================
-//     // CLEANUP
-//     // ========================================
-
-//     return () => {
-
-//       if (
-//         animation.scrollTrigger
-//       ) {
-
-//         animation.scrollTrigger.kill();
-//       }
-
-//       animation.kill();
-
-//       gsap.killTweensOf(path);
-
-//     };
-
-//   }, []);
-
-//   return (
-
-//     <section
-//       ref={sectionRef}
-//       className="placement-main-wrapper relative w-full h-screen overflow-hidden"
-//     >
-
-//               <video
-//               autoPlay
-//               muted
-//               loop
-//               playsInline
-//               preload="metadata"
-//               className="
-//                 placement-reel-video
-//                 absolute
-//                 z-[-1]
-//               "
-//             >
-
-//               <source
-//                 src={Videos}
-//                 type="video/mp4"
-//               />
-
-//             </video>
-
-//       {/* SVG */}
-
-//       <svg
-//         className="svg-line-wrapper"
-//         viewBox="0 0 1920 1080"
-//         preserveAspectRatio="none"
-//       >
-
-//         <path
-
-//           ref={pathRef}
-
-//           d="
-//           M0,300
-//           C250,250 250,500 500,450
-//           C650,420 700,700 900,620
-//           C1100,520 1200,450 1350,500
-//           C1500,550 1600,850 1920,700
-//           "
-
-//           className="animated-path"
-//         />
-
-//       </svg>
-
-//     </section>
-//   );
-// };
-
-// export default PlacementSection;
-
-// ========================================
-// PlacementSection.jsx (FINAL FIXED)
-// ========================================
-
 import React, { useEffect, useRef } from "react";
 
 import gsap from "gsap";
-import Videos from "../../assets/Home/placement.mp4";
-
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import Videos from "../../assets/Home/placement.mp4";
 
 import "../css/PlacementSection.css";
 
@@ -266,10 +14,6 @@ const PlacementSection = () => {
 
   const pathRef = useRef(null);
 
-  // ========================================
-  // REFS
-  // ========================================
-
   const videoCardRef = useRef(null);
 
   useEffect(() => {
@@ -277,17 +21,21 @@ const PlacementSection = () => {
 
     const path = pathRef.current;
 
-    if (!section || !path) return;
+    const video = videoCardRef.current;
 
-    // ========================================
+    if (!section || !path || !video) return;
+
+
+    
+    // =========================
     // PATH LENGTH
-    // ========================================
+    // =========================
 
     const pathLength = path.getTotalLength();
 
-    // ========================================
+    // =========================
     // INITIAL STATE
-    // ========================================
+    // =========================
 
     gsap.set(path, {
       strokeDasharray: pathLength,
@@ -295,63 +43,135 @@ const PlacementSection = () => {
       strokeDashoffset: pathLength,
     });
 
+    gsap.set(video, {
+      opacity: 0,
 
+      scale: 0.7,
 
-    
-    // ========================================
-    // ANIMATION
-    // ========================================
+      y: 200,
+    });
 
-    const animation = gsap.to(path, {
-      strokeDashoffset: 0,
+    // =========================
+    // TIMELINE
+    // =========================
 
-      ease: "none",
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
 
-        start: "top 80%",
+        start: "top top",
 
-        end: "bottom top",
+        end: "+=1500",
 
         scrub: 1.2,
 
-        pin: false,
+        pin: true,
+
+        pinSpacing: true,
+
+        anticipatePin: 1,
 
         invalidateOnRefresh: true,
       },
     });
 
-    // ========================================
-    // REFRESH
-    // ========================================
+    // =========================
+    // PATH DRAW
+    // =========================
 
-    ScrollTrigger.refresh();
+    tl.to(
+      path,
+      {
+        strokeDashoffset: 0,
 
-    // ========================================
-    // CLEANUP
-    // ========================================
+        ease: "none",
+      },
+      0
+    );
+
+    // =========================
+    // VIDEO FADE + SCALE
+    // =========================
+
+    tl.to(
+      video,
+      {
+        opacity: 1,
+
+        scale: 1,
+
+        y: 0,
+
+        ease: "power3.out",
+      },
+      0.2
+    );
+
+    ScrollTrigger.normalizeScroll(true);
 
     return () => {
-      if (animation.scrollTrigger) {
-        animation.scrollTrigger.kill();
-      }
+      tl.scrollTrigger?.kill();
 
-      animation.kill();
+      tl.kill();
 
       gsap.killTweensOf(path);
+
+      gsap.killTweensOf(video);
     };
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="placement-main-wrapper relative w-full h-screen overflow-hidden"
+      className="placement-main-wrapper main-section"
     >
+      {/* ========================= */}
+      {/* TEXT LEFT */}
+      {/* ========================= */}
+
+      <div
+        className="
+          placement-text-wrapper
+          placement-text-left
+        "
+        style={{
+          fontFamily: "Manrope, sans-serif",
+          fontWeight: "700",
+          color: "#111",
+        }}
+      >
+        At RICR, placements aren’t about promises.
+        <br />
+        They’re the result of what you build,
+        practice, and understand.
+      </div>
+
+      {/* ========================= */}
+      {/* TEXT RIGHT */}
+      {/* ========================= */}
+
+      <div
+        className="
+          placement-text-wrapper
+          placement-text-right
+          placement-text-small
+        "
+        style={{
+          fontFamily: "Manrope, sans-serif",
+        }}
+      >
+        We focus on making you interview-ready,
+        <br />
+        not just course-complete.
+      </div>
+
+      {/* ========================= */}
+      {/* VIDEO */}
+      {/* ========================= */}
+
       <div
         ref={videoCardRef}
-        className="
-    placement-video-card
-  "
+        className="placement-video-card"
       >
         <video
           autoPlay
@@ -359,15 +179,15 @@ const PlacementSection = () => {
           loop
           playsInline
           preload="metadata"
-          className="
-      placement-video
-    "
+          className="placement-video"
         >
           <source src={Videos} type="video/mp4" />
         </video>
       </div>
 
+      {/* ========================= */}
       {/* SVG */}
+      {/* ========================= */}
 
       <svg
         className="svg-line-wrapper"
@@ -377,11 +197,19 @@ const PlacementSection = () => {
         <path
           ref={pathRef}
           d="
-          M0,300
-          C250,250 250,500 500,450
-          C650,420 700,700 900,620
-          C1100,520 1200,450 1350,500
-          C1500,550 1600,850 1920,700
+            M0,90
+
+            C120,80 180,160 240,260
+
+            C300,360 300,520 230,620
+
+            C180,700 60,680 40,560
+
+            C10,430 40,250 160,220
+
+            C320,170 520,260 700,420
+
+            C900,650 1200,780 1920,980
           "
           className="animated-path"
         />
