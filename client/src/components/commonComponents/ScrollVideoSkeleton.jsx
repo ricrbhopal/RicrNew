@@ -96,7 +96,7 @@ const ScrollVideoSkeleton = ({
   return (
     <section
       ref={sectionRef}
-      className={`scroll-video-section ${className}`}
+      className={`scroll-video-section  ${className}`}
       style={{ height }}
     >
       <video

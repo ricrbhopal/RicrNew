@@ -10,22 +10,6 @@ body{
     background:white;
 }
 
-/* =========================================
-   HTML BODY
-========================================= */
-
-html,
-body{
-  width: 100%;
-  overflow-x: hidden;
-
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  background: #fff;
-
-  scroll-behavior: auto;
-}
 
 /* Chrome / Safari / Edge */
 
@@ -34,11 +18,6 @@ body::-webkit-scrollbar{
   display: none;
 }
 
-/* =========================================
-   ROOT
-========================================= */
-
-#root{
-  width: 100%;
-  overflow-x: hidden;
+.gsap-pin-spacer {
+  overflow: hidden !important;
 }

@@ -1,0 +1,5 @@
+#main-navbar {
+  will-change: transform;
+
+  z-index: 9999;
+}

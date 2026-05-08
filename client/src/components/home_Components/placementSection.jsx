@@ -18,7 +18,7 @@ const PlacementSection = () => {
 
   useEffect(() => {
     const section = sectionRef.current;
-
+const navbar = document.querySelector(".main-navbar");
     const path = pathRef.current;
 
     const video = videoCardRef.current;
@@ -56,23 +56,17 @@ const PlacementSection = () => {
     // =========================
 
     const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
+scrollTrigger: {
+  trigger: section,
 
-        start: "top top",
+  start: "top top",
 
-        end: "+=1500",
+  end: "+=800",
 
-        scrub: 1.2,
+  scrub: 1,
 
-        pin: true,
-
-        pinSpacing: true,
-
-        anticipatePin: 1,
-
-        invalidateOnRefresh: true,
-      },
+  pin: false,
+}
     });
 
     // =========================
@@ -123,7 +117,7 @@ const PlacementSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="placement-main-wrapper main-section"
+      className="placement-main-wrapper main-section "
     >
       {/* ========================= */}
       {/* TEXT LEFT */}
