@@ -1,5 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
-
 /* =========================================
    MAIN SECTION
 ========================================= */
@@ -8,9 +8,11 @@
 
   width: 100%;
 
-  height:140vh;
+  height:180vh;
 
   overflow: hidden;
+
+  
 
 
 }
@@ -18,274 +20,205 @@
 /* =========================================
    SVG
 ========================================= */
-
 .svg-line-wrapper {
   position: absolute;
-
   inset: 0;
-
   width: 100%;
-
   height: 100%;
-
   overflow: visible;
-
   pointer-events: none;
-
   z-index: 10;
 }
 
 /* =========================================
    PATH
 ========================================= */
-
 .animated-path {
   fill: none;
-
   stroke: url(#lineGradient);
-
   stroke-width: 25;
-
   stroke-linecap: round;
-
   stroke-linejoin: round;
-
-
-
 }
+
 /* =========================================
-   TEXT
+   TEXT WRAPPER
 ========================================= */
-
-.placement-heading {
-  font-size: 56px;
-
-  font-weight: 800;
-
-  line-height: 1.05;
-
-  letter-spacing: -2px;
-
-  margin: 0;
-}
-
-.placement-subtitle {
-  margin-top: 18px;
-
-  font-size: 22px;
-
-  font-weight: 500;
-
-  line-height: 1.6;
-
-  color:
-    rgba(0,0,0,0.72);
-}
-
 .placement-text-wrapper {
   position: absolute;
-
   z-index: 20;
-
-  font-size: 48px;
-
-  font-weight: 700;
-
-  line-height: 1.35;
-
-  letter-spacing: -1px;
-
   color: #111;
-
-
 }
 
-/* LEFT TEXT */
-.placement-text-left {
-  top:30%;
+/* =========================================
+   IMAGE STYLE FONT
+   (same bold outlined look as screenshot)
+========================================= */
+.placement-heading,
+.placement-right-heading {
+  font-family: "League Spartan", sans-serif;
+  font-size: 2.5rem;              /* 96px */
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  margin: 0;
 
-  left: 28%;
+  /* Outline effect */
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(17, 17, 17, 0.9);
 
-  font-size: 35px;
-    margin-left: 100px;
-
- 
-
-  max-width: 1200px;
-
-  transform:
-    translateX(-50%);
+  /* Soft glow */
+  text-shadow:
+    0 0 10px rgba(0, 0, 0, 0.06),
+    0 0 20px rgba(0, 0, 0, 0.03);
 }
 
-.placement-text-subtitle-left {
-  top:40%;
 
-  left: 28%;
-
-  font-size: 20px;
-
-  transform:
-    translateX(-50%);
-}
-
-/* RIGHT TEXT */
-.placement-text-right {
-  top: 60%;
-
-  left: 72%;
-
-
-  transform:
-    translateX(-50%);
-}
 
 
 .placement-right-heading {
-  font-size: 48px;
-
-  font-weight: 800;
-
-  line-height: 1.05;
-
-  letter-spacing: -2px;
-
+  font-family: "League Spartan", sans-serif;
+  font-size: 2.5rem;              /* 96px */
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
   margin: 0;
 
-  color: #111;
+  /* Outline effect */
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(17, 17, 17, 0.9);
+
+  /* Soft glow */
+  text-shadow:
+    0 0 10px rgba(0, 0, 0, 0.06),
+    0 0 20px rgba(0, 0, 0, 0.03);
 }
 
+/* Optional: filled version if you want solid text instead of outline */
+/*
+.placement-heading,
+.placement-right-heading {
+  color: #111;
+  -webkit-text-stroke: 0;
+}
+*/
+
+/* =========================================
+   SUBTEXT
+========================================= */
+.placement-subtitle,
 .placement-right-subtitle {
-  margin-top: 16px;
+  margin-top: 2px;
+  font-family: "Manrope", sans-serif;
+  font-size: 1.90rem;   /* 20px */
+  font-weight: 1000;     /* Bold */
+  line-height: 1.2;
+  color: rgba(17, 17, 17, 0.72);
+  max-width: 520px;
+}
 
-  font-size: 22px;
+/* =========================================
+   LEFT TEXT
+========================================= */
+.placement-text-left {
+  top: 35%;
+  left: 7%;
+  max-width: 1000px;
+  font-style: semi-bold;
+}
 
-  font-weight: 500;
-
-  line-height: 1.6;
-
-  color:
-    rgba(0,0,0,0.72);
-
-  max-width: 420px;
+/* =========================================
+   RIGHT TEXT
+========================================= */
+.placement-text-right {
+  top: 58%;
+  right: 1%;
+  max-width: 760px;
+  text-align: left;
 }
 
 /* =========================================
    VIDEO CARD
 ========================================= */
-
 .placement-video-card {
   position: absolute;
-
-  left: 8%;
-
-  bottom: 1%;
-
-  width: 900px;
-
+  left: 1%;
+  bottom: 7%;
+  width: 700px;
   height: 500px;
-
-  border-radius: 32px;
-
+border-radius: 10px;
   overflow: hidden;
-
   z-index: 12;
-
-
-
-
-
   isolation: isolate;
-
   opacity: 0;
 }
 
-/* =========================================
-   VIDEO
-========================================= */
-
 .placement-video {
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
   display: block;
 }
 
+/* =========================================
+   PERFORMANCE
+========================================= */
+.main-navbar {
+  will-change: transform;
+  transition: opacity 0.3s;
+}
 
-
+.left-text,
+.right-text {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
 
 /* =========================================
    MOBILE
 ========================================= */
-
 @media (max-width: 768px) {
-
-  .placement-video-card {
-    width: 92vw;
-
-    height: 32vh;
-
-    bottom: 8%;
+  .placement-main-wrapper {
+    height: 120vh;
   }
 
+  .placement-heading,
+  .placement-right-heading {
+    font-size: 3rem;            /* 48px */
+    -webkit-text-stroke: 1px rgba(17, 17, 17, 0.9);
+  }
 
+  .placement-subtitle,
+  .placement-right-subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
 
   .placement-text-left {
-    left: 50%;
-
-    top: 14%;
+    top: 10%;
+    left: 6%;
+    right: 6%;
+    max-width: none;
   }
 
   .placement-text-right {
-    left: 50%;
+    top: 38%;
 
-    top: 42%;
+    right: 6%;
+    max-width: none;
+  }
+
+  .placement-video-card {
+    width:80vw;
+    height: 32vh;
+    left: 4%;
+    bottom: 6%;
   }
 
   .animated-path {
     stroke-width: 7;
   }
-}
-
-
-.main-navbar {
-  will-change: transform;
-
-  transition: opacity 0.3s;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-.left-text {
-  will-change:
-    transform,
-    opacity;
-}
-
-.right-text {
-  will-change:
-    transform,
-    opacity;
-}
-
-
-
-.left-text,
-.right-text {
-  backface-visibility: hidden;
-
-  transform-style:
-    preserve-3d;
 }

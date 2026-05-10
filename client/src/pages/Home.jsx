@@ -24,6 +24,7 @@ const Home = () => {
 
           <PlacementSection />
           <ProgramsSection />
+          <MeetOurMaestros />
 
 
 

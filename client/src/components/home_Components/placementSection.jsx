@@ -219,7 +219,7 @@ const PlacementSection = () => {
     aren’t about promises.
   </h2>
 
-  <p className="placement-subtitle">
+  <p className="placement-subtitle font-bold text-2xl font-size-90xl">
     They’re the result of what you
     <br />
     build,

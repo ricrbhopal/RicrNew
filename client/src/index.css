@@ -6,17 +6,22 @@
 
 
 
-html, body {
+/* =========================================
+   PREMIUM LIGHT BACKGROUND
+   (cleaner than the current muddy beige)
+========================================= */
+html,
+body {
+background: white;
+  color: #111111;
   overflow-x: hidden;
-  background: white;
-background: linear-gradient(
-  135deg,
-  #e4e4e4 0%,
- ,
-  #c8c8c8 100%
-);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
+/*
 
 /* Chrome / Safari / Edge */
 

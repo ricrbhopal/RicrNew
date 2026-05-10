@@ -8,7 +8,7 @@ const MentorsPage = () => {
     
     className="
       w-full
-      mt-20
+      mt-5
     
       overflow-hidden
       py-10 sm:py-14 md:py-16
@@ -24,7 +24,7 @@ const MentorsPage = () => {
     ">
 
       {/* HEADING */}
-      <div className="max-w-6xl mx-auto mb-10 md:mb-14 mt-10 md:mt-20">
+      <div className="max-w-6xl mx-auto mb-10 md:mb-14 mt-10 md:mt-5">
 
         <h2 className="
           text-2xl sm:text-3xl md:text-4xl lg:text-5xl
@@ -38,7 +38,7 @@ const MentorsPage = () => {
           mt-3
           text-black font-medium
           text-sm sm:text-base md:text-lg
-          max-w-2xl
+          max-w-8xl
           leading-relaxed
         ">
           Our mentors bring real-world experience, not just textbook knowledge.
@@ -47,7 +47,7 @@ const MentorsPage = () => {
       </div>
 
       {/* IMAGE CONTAINER */}
-      <div className="max-w-6xl mx-auto">
+      <div className="">
 
         <div className="
           relative
@@ -61,7 +61,7 @@ const MentorsPage = () => {
             src={Image}
             alt="Mentors"
             className="
-              w-full
+              w-[1300px]
               h-[220px] sm:h-[300px] md:h-[420px] lg:h-[520px] xl:h-[560px]
               object-cover
               transition-transform duration-500 ease-out

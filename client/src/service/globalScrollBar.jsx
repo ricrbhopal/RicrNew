@@ -1,6 +1,6 @@
 import {
   useEffect,
-  useState,
+  useRef,
 } from "react";
 
 import gsap from "gsap";
@@ -17,15 +17,11 @@ gsap.registerPlugin(
 
 const GlobalScrollBar = () => {
 
-  const [
-    scroll,
-    setScroll,
-  ] = useState(0);
+  const progressRef =
+    useRef(null);
 
-  const [
-    isDark,
-    setIsDark,
-  ] = useState(false);
+  const glowRef =
+    useRef(null);
 
   useEffect(() => {
 
@@ -35,150 +31,94 @@ const GlobalScrollBar = () => {
 
     const lenis =
       new Lenis({
-        duration: 1.2,
+        duration: 0.45,
 
         smoothWheel: true,
 
         smoothTouch: false,
 
-        wheelMultiplier: 1,
+        wheelMultiplier: 1.3,
 
-        touchMultiplier: 1,
+        lerp: 0.18,
       });
 
     // =====================================
     // RAF
     // =====================================
 
-    function raf(time) {
+    const raf = (
+      time
+    ) => {
 
       lenis.raf(time);
 
       requestAnimationFrame(
         raf
       );
-    }
+    };
 
     requestAnimationFrame(
       raf
     );
 
     // =====================================
-    // GSAP + LENIS SYNC
+    // UPDATE
     // =====================================
 
     lenis.on(
       "scroll",
-      ScrollTrigger.update
-    );
-
-    gsap.ticker.add(
-      (time) => {
-
-        lenis.raf(
-          time * 1000
-        );
-      }
-    );
-
-    gsap.ticker.lagSmoothing(
-      0
-    );
-
-    // =====================================
-    // UPDATE
-    // =====================================
-
-    const updateScroll =
-      () => {
+      ({ scroll }) => {
 
         const maxScroll =
-          ScrollTrigger.maxScroll(
-            window
-          );
-
-        const currentScroll =
-          window.scrollY;
+          document.documentElement
+            .scrollHeight -
+          window.innerHeight;
 
         const progress =
           maxScroll > 0
             ? (
-                currentScroll /
+                scroll /
                 maxScroll
               ) * 100
             : 0;
 
-        setScroll(progress);
-
-        // ACTIVE SECTION
-
-        const sections =
-          document.querySelectorAll(
-            ".section"
-          );
-
-        let activeSection =
-          null;
-
-        sections.forEach(
-          (section) => {
-
-            const rect =
-              section.getBoundingClientRect();
-
-            if (
-              rect.top <=
-                window.innerHeight /
-                  2 &&
-              rect.bottom >=
-                window.innerHeight /
-                  2
-            ) {
-
-              activeSection =
-                section;
-            }
-          }
-        );
+        // =====================================
+        // PROGRESS
+        // =====================================
 
         if (
-          activeSection
+          progressRef.current
         ) {
 
-          setIsDark(
-            activeSection.classList.contains(
-              "dark-section"
-            )
-          );
+          progressRef.current.style.height =
+            `${progress}%`;
         }
-      };
 
-    // =====================================
-    // EVENTS
-    // =====================================
+        // =====================================
+        // GLOW
+        // =====================================
 
-    ScrollTrigger.addEventListener(
-      "refresh",
-      updateScroll
+        if (
+          glowRef.current
+        ) {
+
+          glowRef.current.style.transform =
+            `translateY(${progress}%)`;
+        }
+
+        // =====================================
+        // GSAP UPDATE
+        // =====================================
+
+        ScrollTrigger.update();
+      }
     );
-
-    lenis.on(
-      "scroll",
-      updateScroll
-    );
-
-    updateScroll();
 
     // =====================================
     // CLEANUP
     // =====================================
 
     return () => {
-
-      ScrollTrigger.removeEventListener(
-        "refresh",
-        updateScroll
-      );
 
       lenis.destroy();
     };
@@ -209,39 +149,35 @@ const GlobalScrollBar = () => {
       {/* PROGRESS */}
 
       <div
-        className={`
+        ref={progressRef}
+        className="
+          absolute
+          top-0
+          left-0
           w-full
+          h-0
           rounded-full
-          transition-all
-          duration-300
-          ${
-            isDark
-              ? "bg-gradient-to-b from-cyan-400 via-[#125785] to-[#0e456b]"
-              : "bg-gradient-to-b from-cyan-400 via-[#125785] to-[#0e456b]"
-          }
-        `}
-        style={{
-          height:
-            `${scroll}%`,
-        }}
+          bg-gradient-to-b
+          from-cyan-400
+          via-[#125785]
+          to-[#0e456b]
+        "
       />
 
       {/* GLOW */}
 
       <div
+        ref={glowRef}
         className="
           absolute
-          bottom-0
+          top-0
           left-0
           w-full
           h-10
           blur-md
           bg-cyan-400/50
+          pointer-events-none
         "
-        style={{
-          transform:
-            `translateY(${100 - scroll}%)`,
-        }}
       />
 
     </div>
