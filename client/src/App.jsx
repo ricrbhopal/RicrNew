@@ -1,26 +1,141 @@
-import React, { useContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import React, { useContext } from "react";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Navbar from "./components/Navbar.jsx";
+// import Footer from "./components/Footer.jsx";
+// import SubFooter from "./components/subFooter.jsx";
+// import Loader from "./service/commonLoader.jsx";
+// import Home from "./pages/Home";
+// import OurStory from "./pages/About";
+// import OurProgram from "./pages/ourProgram";
+// import OurPeople from "./pages/ourPeople";
+// import YourFuture from "./pages/yourFuture";
+// import AdminDashboard from "./pages/adminDashboard/adminDashboard";
+// import { LoaderProvider, LoaderContext } from "./context/loaderContext.jsx";
+// import Login from "./pages/login.jsx";
+// import GlobalScrollBar from "./service/globalScrollBar.jsx";
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+
+// const MainLayout = ({ children }) => {
+//   return (
+//     <>
+//       <Navbar />
+//       {children}
+
+//       <Footer />
+//     </>
+//   );
+// };
+
+// const AppContent = () => {
+//   const { loading } = useContext(LoaderContext);
+
+//   return (
+//     <>
+//       {loading && <Loader />}
+
+//       <Routes>
+//         <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+//         <Route path="/ourStory" element={<MainLayout><OurStory /></MainLayout>} />
+//         <Route path="/ourProgram" element={<MainLayout><OurProgram /></MainLayout>} />
+//         <Route path="/ourPeople" element={<MainLayout><OurPeople /></MainLayout>} />
+//         <Route path="/yourFuture" element={<MainLayout><YourFuture /></MainLayout>} />
+
+//         <Route path="/adminDashboard" element={<AdminDashboard />} />
+//         <Route path="/adminLogin" element={<Login />} />
+//       </Routes>
+//     </>
+//   );
+// };
+
+// function App() {
+//   return (
+// <LoaderProvider>
+
+//   <BrowserRouter>
+
+//     <ToastContainer
+//       position="top-right"
+//       autoClose={3000}
+//       hideProgressBar={false}
+//       newestOnTop
+//       closeOnClick
+//       pauseOnHover
+//       theme="dark"
+//     />
+
+//     <GlobalScrollBar />
+
+//     <AppContent />
+
+//   </BrowserRouter>
+
+// </LoaderProvider>
+//   );
+// }
+
+// export default App;
+
+
+
+import React, {
+  useContext,
+  useEffect,
+} from "react";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+
 import Navbar from "./components/Navbar.jsx";
+
 import Footer from "./components/Footer.jsx";
+
 import SubFooter from "./components/subFooter.jsx";
+
 import Loader from "./service/commonLoader.jsx";
+
 import Home from "./pages/Home";
+
 import OurStory from "./pages/About";
+
 import OurProgram from "./pages/ourProgram";
+
 import OurPeople from "./pages/ourPeople";
+
 import YourFuture from "./pages/yourFuture";
+
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
-import { LoaderProvider, LoaderContext } from "./context/loaderContext.jsx";
+
+
+import {
+  LoaderProvider,
+  LoaderContext,
+} from "./context/loaderContext.jsx";
+
 import Login from "./pages/login.jsx";
+
 import GlobalScrollBar from "./service/globalScrollBar.jsx";
-import { ToastContainer } from "react-toastify";
+
+import {
+  ToastContainer,
+} from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({
+  children,
+}) => {
+
   return (
     <>
       <Navbar />
+
       {children}
+
+      <SubFooter />
 
       <Footer />
     </>
@@ -28,49 +143,149 @@ const MainLayout = ({ children }) => {
 };
 
 const AppContent = () => {
-  const { loading } = useContext(LoaderContext);
+
+  const { loading } =
+    useContext(
+      LoaderContext
+    );
 
   return (
     <>
-      {loading && <Loader />}
+      {loading &&
+        <Loader />
+      }
 
       <Routes>
-        <Route path="/" element={<MainLayout><Home /></MainLayout>} />
-        <Route path="/ourStory" element={<MainLayout><OurStory /></MainLayout>} />
-        <Route path="/ourProgram" element={<MainLayout><OurProgram /></MainLayout>} />
-        <Route path="/ourPeople" element={<MainLayout><OurPeople /></MainLayout>} />
-        <Route path="/yourFuture" element={<MainLayout><YourFuture /></MainLayout>} />
 
-        <Route path="/adminDashboard" element={<AdminDashboard />} />
-        <Route path="/adminLogin" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/ourStory"
+          element={
+            <MainLayout>
+              <OurStory />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/ourProgram"
+          element={
+            <MainLayout>
+              <OurProgram />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/ourPeople"
+          element={
+            <MainLayout>
+              <OurPeople />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/yourFuture"
+          element={
+            <MainLayout>
+              <YourFuture />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/adminDashboard"
+          element={
+            <AdminDashboard />
+          }
+        />
+
+        <Route
+          path="/adminLogin"
+          element={
+            <Login />
+          }
+        />
+
       </Routes>
     </>
   );
 };
 
 function App() {
+
+  // =====================================
+  // DISABLE SCROLL RESTORATION
+  // =====================================
+
+useEffect(() => {
+
+  const resetScroll =
+    () => {
+
+      window.scrollTo(
+        0,
+        0
+      );
+    };
+
+  if (
+    "scrollRestoration" in
+    window.history
+  ) {
+
+    window.history.scrollRestoration =
+      "manual";
+  }
+
+  resetScroll();
+
+  window.addEventListener(
+    "load",
+    resetScroll
+  );
+
+  return () => {
+
+    window.removeEventListener(
+      "load",
+      resetScroll
+    );
+  };
+
+}, []);
   return (
-<LoaderProvider>
 
-  <BrowserRouter>
+    <LoaderProvider>
 
-    <ToastContainer
-      position="top-right"
-      autoClose={3000}
-      hideProgressBar={false}
-      newestOnTop
-      closeOnClick
-      pauseOnHover
-      theme="dark"
-    />
+      <BrowserRouter>
 
-    <GlobalScrollBar />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          theme="dark"
+        />
 
-    <AppContent />
+        <GlobalScrollBar />
 
-  </BrowserRouter>
+        <AppContent />
 
-</LoaderProvider>
+      </BrowserRouter>
+
+    </LoaderProvider>
   );
 }
 

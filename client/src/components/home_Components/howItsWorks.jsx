@@ -396,20 +396,20 @@ const HowItWorks = () => {
   }
 
   return (
-    <section className="w-full mt-25">
-      <div className="w-full space-y-0">
+    <section className="w-full pt-25">
+      <div className="w-full ">
         {steps.map((step, idx) => {
           // ================= VIDEO SECTION =================
           if (step.mediaType === "video" && step.mediaUrl) {
             return (
-              <div key={step._id || idx} className="relative bg-black w-full">
+              <div key={step._id || idx} className=" w-full">
                 <ScrollVideoSkeleton
                   videoSrc={step.mediaUrl}
                   end={4000}
-                  overlay={true}
-                  navbarClass=".main-navbar"
-                  height="100vh"
-                  object="cover"
+                  overlay={false}
+                  
+            
+                  object="contain"
                 >
                   {/* 🔥 TOP RIGHT TITLE */}
                   <div className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-10 md:right-10 z-50">

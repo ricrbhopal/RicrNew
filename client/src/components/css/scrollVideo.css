@@ -14,16 +14,12 @@
 
   isolation: isolate;
 
-  contain:
-    layout
-    style
-    paint;
+
 }
 
 /* =========================================
    VIDEO
 ========================================= */
-
 .scroll-video-element {
 
   position: absolute;
@@ -38,23 +34,13 @@
 
   z-index: 1;
 
-  transform:
-    translateZ(0);
+  transform: translateZ(0);
 
-  backface-visibility:
-    hidden;
+  backface-visibility: hidden;
 
-  will-change:
-    transform,
-    opacity;
+  will-change: transform, opacity;
 
-  contain:
-    layout
-    style
-    paint;
-
-  image-rendering:
-    auto;
+  image-rendering: auto;
 
   filter:
     contrast(1.05)

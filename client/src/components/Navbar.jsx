@@ -23,9 +23,7 @@ useEffect(() => {
       window.scrollY > 10
     );
 
-    setShowNavbar(
-      window.scrollY > 100
-    );
+ setShowNavbar(true);
   };
 
   window.addEventListener(
@@ -72,8 +70,9 @@ useEffect(() => {
   ];
 
   return (
-    <header
-      className={`main-navbar  fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+<header
+  id="main-navbar"
+  className={`main-navbar fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         showNavbar
           ? 'bg-white/98 backdrop-blur-md shadow-xl '
           : ''

@@ -30,6 +30,27 @@ body::-webkit-scrollbar{
   display: none;
 }
 
-.gsap-pin-spacer {
-  overflow: hidden !important;
+html {
+  scroll-behavior: auto !important;
+}
+
+
+
+
+
+
+
+html,
+body {
+
+  scroll-behavior: auto;
+
+  overscroll-behavior: none;
+
+}
+
+body {
+
+  -webkit-overflow-scrolling: touch;
+
 }

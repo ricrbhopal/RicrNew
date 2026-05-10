@@ -25,7 +25,10 @@ const Home = () => {
           <PlacementSection />
           <ProgramsSection />
           <MeetOurMaestros />
-
+          <HowItWorks />
+       
+            <Why />
+    
 
 
 
