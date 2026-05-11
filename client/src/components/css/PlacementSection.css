@@ -1,227 +1,344 @@
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
 /* =========================================
    MAIN SECTION
 ========================================= */
+
 .placement-main-wrapper {
   position: relative;
 
   width: 100%;
 
-  height:180vh;
+  height: 180vh;
 
   overflow: hidden;
 
-  
-
-
+  background: #fff;
 }
 
 /* =========================================
    SVG
 ========================================= */
+
 .svg-line-wrapper {
   position: absolute;
+
   inset: 0;
+
   width: 100%;
+
   height: 100%;
+
   overflow: visible;
+
   pointer-events: none;
+
   z-index: 10;
 }
 
 /* =========================================
    PATH
 ========================================= */
+
 .animated-path {
   fill: none;
+
   stroke: url(#lineGradient);
-  stroke-width: 25;
+
+  stroke-width: clamp(8px, 1.5vw, 25px);
+
   stroke-linecap: round;
+
   stroke-linejoin: round;
 }
 
 /* =========================================
    TEXT WRAPPER
 ========================================= */
+
 .placement-text-wrapper {
   position: absolute;
+
   z-index: 20;
+
   color: #111;
 }
 
 /* =========================================
-   IMAGE STYLE FONT
-   (same bold outlined look as screenshot)
+   HEADINGS
 ========================================= */
+
 .placement-heading,
 .placement-right-heading {
   font-family: "League Spartan", sans-serif;
-  font-size: 2.5rem;              /* 96px */
+
+  font-size: clamp(2.2rem, 5vw, 6rem);
+
   font-weight: 900;
+
   line-height: 0.9;
+
   letter-spacing: -0.06em;
+
   text-transform: uppercase;
+
   margin: 0;
 
-  /* Outline effect */
   color: transparent;
+
   -webkit-text-stroke: 2px rgba(17, 17, 17, 0.9);
 
-  /* Soft glow */
   text-shadow:
     0 0 10px rgba(0, 0, 0, 0.06),
     0 0 20px rgba(0, 0, 0, 0.03);
 }
-
-
-
-
-.placement-right-heading {
-  font-family: "League Spartan", sans-serif;
-  font-size: 2.5rem;              /* 96px */
-  font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
-  text-transform: uppercase;
-  margin: 0;
-
-  /* Outline effect */
-  color: transparent;
-  -webkit-text-stroke: 2px rgba(17, 17, 17, 0.9);
-
-  /* Soft glow */
-  text-shadow:
-    0 0 10px rgba(0, 0, 0, 0.06),
-    0 0 20px rgba(0, 0, 0, 0.03);
-}
-
-/* Optional: filled version if you want solid text instead of outline */
-/*
-.placement-heading,
-.placement-right-heading {
-  color: #111;
-  -webkit-text-stroke: 0;
-}
-*/
 
 /* =========================================
    SUBTEXT
 ========================================= */
+
 .placement-subtitle,
 .placement-right-subtitle {
-  margin-top: 2px;
+  margin-top: 12px;
+
   font-family: "Manrope", sans-serif;
-  font-size: 1.90rem;   /* 20px */
-  font-weight: 1000;     /* Bold */
-  line-height: 1.2;
+
+  font-size: clamp(1rem, 2vw, 2rem);
+
+  font-weight: 800;
+
+  line-height: 1.3;
+
   color: rgba(17, 17, 17, 0.72);
+
   max-width: 520px;
 }
 
 /* =========================================
    LEFT TEXT
 ========================================= */
+
 .placement-text-left {
-  top: 35%;
+  top: 20%;
+
   left: 7%;
+
   max-width: 1000px;
-  font-style: semi-bold;
 }
 
 /* =========================================
    RIGHT TEXT
 ========================================= */
+
 .placement-text-right {
   top: 58%;
-  right: 1%;
+
+  right: 4%;
+
   max-width: 760px;
+
   text-align: left;
 }
 
 /* =========================================
    VIDEO CARD
 ========================================= */
+
 .placement-video-card {
   position: absolute;
-  left: 4%;
+
+  left: 2%;
+
   bottom: 7%;
-  width: 900px;
-  height: 500px;
-border: none;
+
+  width: min(90vw, 900px);
+
+  height: clamp(240px, 42vw, 500px);
+
+  border: none;
 
   overflow: hidden;
+
   z-index: 12;
+
   isolation: isolate;
+
   opacity: 0;
+
+  border-radius: 24px;
+
+  transform: translateZ(0);
+
+  will-change: transform, opacity;
 }
 
 .placement-video {
   width: 100%;
+
   height: 100%;
+
   object-fit: cover;
-  border-radius: 20px;
+
+  border-radius: 24px;
+
   border: none;
+
   display: block;
 }
 
 /* =========================================
    PERFORMANCE
 ========================================= */
+
 .main-navbar {
-  will-change: transform;
   transition: opacity 0.3s;
 }
 
 .left-text,
 .right-text {
   will-change: transform, opacity;
+
   backface-visibility: hidden;
+
   transform-style: preserve-3d;
+}
+
+/* =========================================
+   LARGE LAPTOP
+========================================= */
+
+@media (min-width: 1441px) {
+
+  .placement-video-card {
+    width: 1000px;
+
+    height: 560px;
+  }
+
+  .placement-heading,
+  .placement-right-heading {
+    font-size: 7rem;
+  }
+}
+
+/* =========================================
+   LAPTOP / TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+
+  .placement-main-wrapper {
+    height: 160vh;
+  }
+
+  .placement-text-left {
+    top: 15%;
+  }
+
+  .placement-text-right {
+    top: 52%;
+    right: 6%;
+  }
+
+  .placement-video-card {
+    width: 85vw;
+
+    height: 40vh;
+  }
+
+  .placement-heading,
+  .placement-right-heading {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+  }
 }
 
 /* =========================================
    MOBILE
 ========================================= */
+
 @media (max-width: 768px) {
+
   .placement-main-wrapper {
-    height: 120vh;
-  }
-
-  .placement-heading,
-  .placement-right-heading {
-    font-size: 3rem;            /* 48px */
-    -webkit-text-stroke: 1px rgba(17, 17, 17, 0.9);
-  }
-
-  .placement-subtitle,
-  .placement-right-subtitle {
-    font-size: 1rem;
-    line-height: 1.6;
+    height: 140vh;
   }
 
   .placement-text-left {
-    top: 10%;
+    top: 8%;
+
     left: 6%;
+
     right: 6%;
-    max-width: none;
+
+    max-width: 100%;
   }
 
   .placement-text-right {
     top: 38%;
 
+    left: 6%;
+
     right: 6%;
-    max-width: none;
+
+    max-width: 100%;
+  }
+
+  .placement-heading,
+  .placement-right-heading {
+    font-size: clamp(2rem, 10vw, 4rem);
+
+    line-height: 0.95;
+
+    -webkit-text-stroke: 1px rgba(17, 17, 17, 0.9);
+  }
+
+  .placement-subtitle,
+  .placement-right-subtitle {
+    font-size: clamp(1rem, 4vw, 1.3rem);
+
+    line-height: 1.5;
   }
 
   .placement-video-card {
-    width:80vw;
-    height: 32vh;
+    width: 92vw;
+
+    height: 30vh;
+
     left: 4%;
-    bottom: 6%;
+
+    bottom: 5%;
   }
 
   .animated-path {
-    stroke-width: 7;
+    stroke-width: 8;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .placement-main-wrapper {
+    height: 125vh;
+  }
+
+  .placement-heading,
+  .placement-right-heading {
+    font-size: 2.2rem;
+  }
+
+  .placement-subtitle,
+  .placement-right-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .placement-video-card {
+    height: 26vh;
+  }
+
+  .placement-text-right {
+    top: 34%;
   }
 }
