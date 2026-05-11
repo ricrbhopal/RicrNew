@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-
+import { Link} from 'react-router-dom';
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -197,7 +197,7 @@ const PlacementSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="placement-main-wrapper main-section ">
+    <section ref={sectionRef} className="  placement-main-wrapper main-section ">
       {/* ========================= */}
       {/* TEXT LEFT */}
       {/* ========================= */}
@@ -254,13 +254,37 @@ const PlacementSection = () => {
   <p className="placement-right-subtitle">
    not just course-complete.
   </p>
+<div className="mt-6">
 
+  <Link
+    to="/ourStory"
+    className="
+      btn
+      bg-[#4A5CFF]
+      hover:bg-[#4052f5]
+      text-white
+      border-none
+      shadow-lg
+      shadow-[#4A5CFF]/30
+      items-center
+      gap-2
+      font-bold
+      text-lg
+      transition-all
+      duration-300
+      hover:scale-105
+    "
+  >
+  Explore Our Story
+  </Link>
+
+</div>
 </div>
       {/* ========================= */}
       {/* VIDEO */}
       {/* ========================= */}
 
-      <div ref={videoCardRef} className="placement-video-card">
+      <div ref={videoCardRef} className="main-navbar placement-video-card">
         <video
           autoPlay
           muted

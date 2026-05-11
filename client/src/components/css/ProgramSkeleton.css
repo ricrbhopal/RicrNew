@@ -1,0 +1,57 @@
+/* SPLIT LAYOUT: text left, video right, both pinned together */
+.scroll-video-section.split-layout {
+  display: flex;
+  align-items: stretch;
+  background: white;
+}
+
+.split-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.split-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem;
+  background: linear-gradient(to bottom, #ffffff, #f9fafb);
+}
+
+.split-right {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.split-right .scroll-video-element.split-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.split-right .scroll-video-overlay.split-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+  z-index: 2;
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 768px) {
+  .scroll-video-section.split-layout {
+    flex-direction: column;
+  }
+  .split-container {
+    flex-direction: column;
+  }
+  .split-left, .split-right {
+    min-height: 50vh;
+  }
+}

@@ -23,7 +23,6 @@ useEffect(() => {
       window.scrollY > 10
     );
 
- setShowNavbar(true);
   };
 
   window.addEventListener(

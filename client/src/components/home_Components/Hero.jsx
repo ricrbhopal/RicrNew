@@ -145,7 +145,7 @@ const Hero = () => {
         loop
         playsInline
       >
-        <source src={current.url} type="video/mp4" />
+        <source src={current.url} type="video/mp4" />z
       </video>
 
       {/* SIDE GRADIENT (hide gap smartly) */}

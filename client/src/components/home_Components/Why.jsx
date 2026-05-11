@@ -601,7 +601,7 @@ const WhyRICR = () => {
           "
         >
 
-          <div
+          {/* <div
             className="
               max-w-3xl
             "
@@ -641,7 +641,7 @@ const WhyRICR = () => {
               </p>
             )}
 
-          </div>
+          </div> */}
 
         </div>
 
