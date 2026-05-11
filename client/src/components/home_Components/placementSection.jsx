@@ -223,11 +223,11 @@ const PlacementSection = () => {
   <p className="placement-subtitle font-bold text-2xl font-size-90xl">
     They’re the result of what you
     <br />
-    build,
+    Build,
     <br />
-    practice,
+    Practice,
     <br />
-     and understand.
+     and Understand.
   </p>
 
 </div>
@@ -253,7 +253,7 @@ const PlacementSection = () => {
   </h3>
 
   <p className="placement-right-subtitle">
-   not just course-complete.
+   Not just course-complete.
   </p>
 <div className="mt-6">
 

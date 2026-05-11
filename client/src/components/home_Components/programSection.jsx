@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { adminAPI } from "../../config/api";
 import ScrollVideoSkeleton from "../commonComponents/ProgramSkeleton";
-import { Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Program = () => {
   const [steps, setSteps] = useState([]);
@@ -15,8 +15,8 @@ const Program = () => {
         const data = Array.isArray(res.data)
           ? res.data
           : res.data
-          ? [res.data]
-          : [];
+            ? [res.data]
+            : [];
         setSteps(data);
         setError(null);
       } catch (err) {
@@ -36,7 +36,9 @@ const Program = () => {
       <div className="min-h-[70vh] flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-gray-800"></div>
-          <p className="mt-4 text-sm text-gray-500 font-normal tracking-wide">Loading</p>
+          <p className="mt-4 text-sm text-gray-500 font-normal tracking-wide">
+            Loading
+          </p>
         </div>
       </div>
     );
@@ -50,7 +52,7 @@ const Program = () => {
           <p className="text-sm text-gray-500 font-normal mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-5 py-2 bg-gray-900 text-white text-xs font-medium tracking-wide hover:bg-gray-800 transition-colors"
+            className="px-5 py-2  text-white text-xs font-medium tracking-wide transition-colors"
           >
             Retry
           </button>
@@ -62,7 +64,9 @@ const Program = () => {
   if (!steps.length) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center bg-white">
-        <p className="text-sm text-gray-400 font-normal">No program data available</p>
+        <p className="text-sm text-gray-400 font-normal">
+          No program data available
+        </p>
       </div>
     );
   }
@@ -76,14 +80,12 @@ const Program = () => {
       end={4000}
       overlay={false}
       layout="split"
-   
     >
       {/* Professional content container - clean, refined, enterprise ready */}
       <div className="max-w-xl px-6 md:px-0">
-        
         {/* Subtle label */}
         <div className="mb-5">
-          <span className="text-[11px] font-normal tracking-[0.2em] font-semibold text-gray-400 uppercase">
+          <span className="text-[11px]  tracking-[0.2em] font-bold text-gray-400 uppercase">
             Our Program
           </span>
         </div>
@@ -97,11 +99,10 @@ const Program = () => {
         <div className="mt-8 w-12 h-px bg-gray-300"></div>
 
         {/* Refined CTA */}
- <div className="">
-
-  <Link
-    to="/ourStory"
-    className="
+        <div className="">
+          <Link
+            to="/ourStory"
+            className="
       btn
       bg-[#4A5CFF]
       hover:bg-[#4052f5]
@@ -117,11 +118,10 @@ const Program = () => {
       duration-300
       hover:scale-105
     "
-  >
-    Explore Our Program
-  </Link>
-
-</div>
+          >
+            Explore Our Program
+          </Link>
+        </div>
       </div>
     </ScrollVideoSkeleton>
   );

@@ -9,7 +9,6 @@ const Hero = () => {
 
   const [mediaList, setMediaList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [mediaError, setMediaError] = useState(false);
 
   useEffect(() => {
     const fetchMedia = async () => {
