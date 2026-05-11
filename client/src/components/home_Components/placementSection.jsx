@@ -197,7 +197,7 @@ const PlacementSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="  placement-main-wrapper main-section ">
+    <section ref={sectionRef} className="  placement-main-wrapper main-navbar     border ">
       {/* ========================= */}
       {/* TEXT LEFT */}
       {/* ========================= */}
@@ -206,6 +206,7 @@ const PlacementSection = () => {
   className="
     placement-text-wrapper
     placement-text-left
+
     left-text
   "
   style={{
@@ -284,7 +285,7 @@ const PlacementSection = () => {
       {/* VIDEO */}
       {/* ========================= */}
 
-      <div ref={videoCardRef} className="main-navbar placement-video-card">
+      <div ref={videoCardRef} className="  placement-video-card">
         <video
           autoPlay
           muted

@@ -362,7 +362,7 @@ const WhyRICR = () => {
         className="
           w-full
           h-screen
-          bg-black
+       
           flex
           items-center
           justify-center
@@ -373,9 +373,7 @@ const WhyRICR = () => {
           className="
             w-14
             h-14
-            border-4
-            border-white
-            border-t-transparent
+        
             rounded-full
             animate-spin
           "
