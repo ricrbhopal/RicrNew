@@ -222,6 +222,64 @@
   }
 }
 
+
+/* =========================================
+   LAPTOP RESPONSIVE FIX
+========================================= */
+
+@media (min-width: 1025px) and (max-width: 1440px) {
+
+  .placement-main-wrapper {
+    height: 170vh;
+  }
+
+  .placement-heading,
+  .placement-right-heading {
+    font-size: clamp(3rem, 4vw, 5rem);
+
+    line-height: 0.95;
+  }
+
+  .placement-subtitle,
+  .placement-right-subtitle {
+    font-size: 1.2rem;
+
+    max-width: 420px;
+  }
+
+  .placement-text-left {
+    top: 18%;
+
+    left: 5%;
+
+    max-width: 700px;
+  }
+
+  .placement-text-right {
+    top: 50%;
+
+    right: 4%;
+
+    max-width: 500px;
+  }
+
+  .placement-video-card {
+    width: 72vw;
+
+    max-width: 760px;
+
+    height: 42vh;
+
+    left: 3%;
+
+    bottom: 6%;
+  }
+
+  .animated-path {
+    stroke-width: 18;
+  }
+}
+
 /* =========================================
    LAPTOP / TABLET
 ========================================= */
