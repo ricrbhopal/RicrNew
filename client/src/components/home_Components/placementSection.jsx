@@ -59,7 +59,7 @@ const PlacementSection = () => {
 
         start: "top top",
 
-        end: "+=500",
+        end: "+=1000",
 
         scrub: 1,
 
@@ -197,7 +197,7 @@ const PlacementSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="  placement-main-wrapper main-navbar     border ">
+   <section ref={sectionRef} className="placement-main-wrapper ">
       {/* ========================= */}
       {/* TEXT LEFT */}
       {/* ========================= */}
