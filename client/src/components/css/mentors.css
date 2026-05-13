@@ -1,0 +1,188 @@
+/* =========================================
+   MAIN SECTION
+========================================= */
+
+.mentor-section {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 100vh;
+
+  overflow: hidden;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: #ffffff;
+
+  padding:
+    4rem
+    1.5rem;
+}
+
+/* =========================================
+   SVG
+========================================= */
+
+.mentor-svg {
+  position: absolute;
+
+  top: 0;
+  left: -10%;
+
+  width: 140%;
+  height: 100%;
+
+  pointer-events: none;
+
+  overflow: visible;
+
+  z-index: 1;
+
+  will-change: transform;
+}
+
+/* =========================================
+   SVG PATH
+========================================= */
+
+.mentor-path {
+  fill: none;
+
+  stroke: url(#mentorGradient);
+
+  stroke-width: 18;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+
+  opacity: 0.95;
+
+  filter:
+    drop-shadow(
+      0 0 18px rgba(74,92,255,0.35)
+    );
+}
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.mentor-content {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+
+  max-width: 1400px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4rem;
+
+  align-items: center;
+}
+
+/* =========================================
+   HEADING
+========================================= */
+
+.mentor-heading-wrapper {
+  width: 100%;
+
+  max-width: 1200px;
+}
+
+.mentor-heading {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  color: #125785;
+}
+
+.mentor-paragraph {
+  margin-top: 1rem;
+
+  font-size: clamp(1rem, 2vw, 1.25rem);
+
+  font-weight: 500;
+
+  line-height: 1.7;
+
+  color: #000000;
+}
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.mentor-image-wrapper {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.mentor-image {
+  width: 100%;
+
+  max-width: 1300px;
+
+  height: 560px;
+
+  object-fit: cover;
+
+  border-radius: 32px;
+
+  transition:
+    transform 0.5s ease;
+}
+
+.mentor-image:hover {
+  transform: scale(1.03);
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .mentor-section {
+    padding:
+      3rem
+      1rem;
+  }
+
+  .mentor-svg {
+    width: 180%;
+
+    left: -40%;
+  }
+
+  .mentor-path {
+    stroke-width: 10;
+  }
+
+  .mentor-content {
+    gap: 2rem;
+  }
+
+  .mentor-image {
+    height: 260px;
+
+    border-radius: 22px;
+  }
+}

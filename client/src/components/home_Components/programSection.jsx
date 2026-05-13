@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { adminAPI } from "../../config/api";
-import ScrollVideoSkeleton from "../commonComponents/ProgramSkeleton";
+import ScrollVideoSkeleton from "../commonComponents/ProgramSectionScroll";
 import { Link } from "react-router-dom";
 
 const Program = () => {
@@ -75,34 +75,33 @@ const Program = () => {
   const headingText = first.subtext || "Learn more about our program";
 
   return (
-    <ScrollVideoSkeleton
-      videoSrc={first.video}
-      end={4000}
-      overlay={false}
-      layout="split"
-    >
-      {/* Professional content container - clean, refined, enterprise ready */}
-      <div className="max-w-xl px-6 md:px-0">
-        {/* Subtle label */}
-        <div className="mb-5">
-          <span className="text-[11px]  tracking-[0.2em] font-bold text-gray-400 uppercase">
-            Our Program
-          </span>
-        </div>
-
-        {/* Main heading - professional, clean, no gradients */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-light leading-[1.2] tracking-tight text-gray-900">
-          {headingText}
-        </h1>
-
-        {/* Simple accent line */}
-        <div className="mt-8 w-12 h-px bg-gray-300"></div>
-
-        {/* Refined CTA */}
-        <div className="">
-          <Link
-            to="/ourStory"
-            className="
+    <>
+      <ScrollVideoSkeleton
+        videoSrc={first.video}
+        end={4000}
+        overlay={false}
+        layout="split"
+      >
+        {/* Professional content container - clean, refined, enterprise ready */}
+        <div className="relative z-[100] px-6 md:px-0">
+          {" "}
+          {/* Subtle label */}
+          <div className="mb-5">
+            <span className="text-[11px]  tracking-[0.2em] font-bold text-gray-400 uppercase">
+              Our Program
+            </span>
+          </div>
+          {/* Main heading - professional, clean, no gradients */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-light leading-[1.2] tracking-tight text-gray-900">
+            {headingText}
+          </h1>
+          {/* Simple accent line */}
+          <div className="mt-8 w-12 h-px bg-gray-300"></div>
+          {/* Refined CTA */}
+          <div className="">
+            <Link
+              to="/ourStory"
+              className="
       btn
       bg-[#4A5CFF]
       hover:bg-[#4052f5]
@@ -118,12 +117,13 @@ const Program = () => {
       duration-300
       hover:scale-105
     "
-          >
-            Explore Our Program
-          </Link>
+            >
+              Explore Our Program
+            </Link>
+          </div>
         </div>
-      </div>
-    </ScrollVideoSkeleton>
+      </ScrollVideoSkeleton>
+    </>
   );
 };
 

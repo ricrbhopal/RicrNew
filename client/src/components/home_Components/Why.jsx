@@ -362,7 +362,7 @@ const WhyRICR = () => {
         className="
           w-full
           h-screen
-       
+
           flex
           items-center
           justify-center
@@ -373,7 +373,7 @@ const WhyRICR = () => {
           className="
             w-14
             h-14
-        
+
             rounded-full
             animate-spin
           "
@@ -581,7 +581,7 @@ const WhyRICR = () => {
           className="
             absolute
             inset-0
-        
+
           "
         />
 
@@ -651,3 +651,616 @@ const WhyRICR = () => {
 
 export default
   WhyRICR;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+// import React, {
+//   useEffect,
+//   useRef,
+// } from "react";
+
+// import gsap from "gsap";
+
+// import {
+//   ScrollTrigger,
+// } from "gsap/ScrollTrigger";
+
+// import "../css/whyRicr.css";
+
+// gsap.registerPlugin(
+//   ScrollTrigger
+// );
+
+// const cardsData = [
+//   {
+//     title:
+//       "WHY DO STUDENTS\nCHOOSE RICR?",
+//     bg: "#001f53",
+//   },
+
+//   {
+//     title:
+//       "INTERVIEW AND\nCAREER SUPPORT",
+//     bg: "#1d7df2",
+//   },
+
+//   {
+//     title:
+//       "PLACEMENT-FOCUSED\nTRAINING",
+//     bg: "#7c5cff",
+//   },
+
+//   {
+//     title:
+//       "REAL WORLD\nPROJECTS",
+//     bg: "#0ea76b",
+//   },
+
+//   {
+//     title:
+//       "DAILY CODING\nPRACTICE",
+//     bg: "#ff4f7b",
+//   },
+// ];
+
+// const WhyRICRStackCards =
+//   () => {
+
+//     const sectionRef =
+//       useRef(null);
+
+//     const cardsRef =
+//       useRef([]);
+
+//     const pathRef =
+//       useRef(null);
+
+//     useEffect(() => {
+
+//       const cards =
+//         cardsRef.current;
+
+//       const path =
+//         pathRef.current;
+
+//       if (
+//         !cards.length ||
+//         !path
+//       )
+//         return;
+
+//       const ctx =
+//         gsap.context(() => {
+
+//           // =========================================
+//           // SVG LINE
+//           // =========================================
+
+//           const pathLength =
+//             path.getTotalLength();
+
+//           gsap.set(path, {
+
+//             strokeDasharray:
+//               pathLength,
+
+//             strokeDashoffset:
+//               pathLength,
+//           });
+
+//           // =========================================
+//           // INITIAL CARD STACK
+//           // =========================================
+
+//           cards.forEach(
+//             (
+//               card,
+//               index
+//             ) => {
+
+//               let y = 0;
+
+//               let scale = 1;
+
+//               if (
+//                 index === 0
+//               ) {
+
+//                 y = 0;
+//                 scale = 1;
+//               }
+
+//               if (
+//                 index === 1
+//               ) {
+
+//                 y = 260;
+//                 scale = 0.92;
+//               }
+
+//               if (
+//                 index === 2
+//               ) {
+
+//                 y = 460;
+//                 scale = 0.84;
+//               }
+
+//               if (
+//                 index === 3
+//               ) {
+
+//                 y = 660;
+//                 scale = 0.76;
+//               }
+
+//               if (
+//                 index === 4
+//               ) {
+
+//                 y = 860;
+//                 scale = 0.68;
+//               }
+
+//               gsap.set(card, {
+
+//                 y,
+
+//                 scale,
+
+//                 zIndex:
+//                   100 -
+//                   index,
+
+//                 opacity: 1,
+//               });
+//             }
+//           );
+
+//           // =========================================
+//           // MAIN TIMELINE
+//           // =========================================
+
+//           const tl =
+//             gsap.timeline({
+
+//               scrollTrigger: {
+
+//                 trigger:
+//                   sectionRef.current,
+
+//                 start:
+//                   "top top",
+
+//  end: "+=2500",
+
+//                 scrub: 1.2,
+
+//                 pin: true,
+
+//                 pinSpacing: true,
+
+//                 anticipatePin: 1,
+
+//                 invalidateOnRefresh:
+//                   true,
+
+//                 fastScrollEnd: true,
+//               },
+//             });
+
+//           // =========================================
+//           // CARD ANIMATION
+//           // =========================================
+
+//           cards.forEach(
+//             (
+//               card,
+//               idx
+//             ) => {
+
+//               if (
+//                 idx >=
+//                 cards.length - 1
+//               )
+//                 return;
+
+//               // SVG DRAW
+
+//               tl.to(
+//                 path,
+
+//                 {
+
+//                   strokeDashoffset:
+//                     pathLength -
+//                     (
+//                       pathLength *
+//                       (idx + 1)
+//                     ) /
+//                       cards.length,
+
+//                   duration: 1,
+
+//                   ease:
+//                     "none",
+//                 },
+
+//                 idx
+//               );
+
+//               // CURRENT CARD EXIT
+
+//               tl.to(
+//                 cards[idx],
+
+//                 {
+
+//                   y: -500,
+
+//                   opacity: 0,
+
+//                   scale: 0.7,
+
+//                   duration: 1.2,
+
+//                   ease:
+//                     "power3.inOut",
+//                 },
+
+//                 idx
+//               );
+
+//               // NEXT CARD CENTER
+
+//               tl.to(
+//                 cards[
+//                   idx + 1
+//                 ],
+
+//                 {
+
+//                   y: 0,
+
+//                   scale: 1,
+
+//                   duration: 1.2,
+
+//                   ease:
+//                     "power3.inOut",
+//                 },
+
+//                 idx
+//               );
+
+//               // THIRD CARD
+
+//               if (
+//                 cards[
+//                   idx + 2
+//                 ]
+//               ) {
+
+//                 tl.to(
+//                   cards[
+//                     idx + 2
+//                   ],
+
+//                   {
+
+//                     y: 260,
+
+//                     scale:
+//                       0.92,
+
+//                     duration: 1.2,
+
+//                     ease:
+//                       "power3.inOut",
+//                   },
+
+//                   idx
+//                 );
+//               }
+
+//               // FOURTH CARD
+
+//               if (
+//                 cards[
+//                   idx + 3
+//                 ]
+//               ) {
+
+//                 tl.to(
+//                   cards[
+//                     idx + 3
+//                   ],
+
+//                   {
+
+//                     y: 460,
+
+//                     scale:
+//                       0.84,
+
+//                     duration: 1.2,
+
+//                     ease:
+//                       "power3.inOut",
+//                   },
+
+//                   idx
+//                 );
+//               }
+
+//               // FIFTH CARD
+
+//               if (
+//                 cards[
+//                   idx + 4
+//                 ]
+//               ) {
+
+//                 tl.to(
+//                   cards[
+//                     idx + 4
+//                   ],
+
+//                   {
+
+//                     y: 660,
+
+//                     scale:
+//                       0.76,
+
+//                     duration: 1.2,
+
+//                     ease:
+//                       "power3.inOut",
+//                   },
+
+//                   idx
+//                 );
+//               }
+
+//             }
+//           );
+
+//           // =========================================
+//           // COMPLETE SVG
+//           // =========================================
+
+//           tl.to(
+//             path,
+
+//             {
+
+//               strokeDashoffset: 0,
+
+//               duration: 1,
+
+//               ease: "none",
+//             },
+
+//             cards.length - 1
+//           );
+
+//         }, sectionRef);
+
+//       ScrollTrigger.refresh();
+
+//       return () => {
+
+//         ctx.revert();
+
+//         ScrollTrigger
+//           .getAll()
+//           .forEach(
+//             (
+//               trigger
+//             ) =>
+//               trigger.kill()
+//           );
+//       };
+
+//     }, []);
+
+//     const setCardRef =
+//       (
+//         el,
+//         index
+//       ) => {
+
+//         cardsRef.current[
+//           index
+//         ] = el;
+//       };
+
+//     return (
+
+//       <section
+//         ref={sectionRef}
+
+//         className="
+//           gsap-stack-section
+//         "
+//       >
+
+//         {/* SVG */}
+
+//         <svg
+//           className="
+//             gsap-stack-svg
+      
+  
+//           "
+//           viewBox="0 0 1920 1080"
+//           preserveAspectRatio="none"
+//         >
+
+//           <defs>
+
+//             <linearGradient
+//               id="lineGradient"
+//               x1="100%"
+//               y1="0%"
+//               x2="0%"
+//               y2="0%"
+//             >
+
+//               <stop
+//                 offset="0%"
+//                 stopColor="#4254ff"
+//               />
+
+//               <stop
+//                 offset="100%"
+//                 stopColor="#8ea0ff"
+//               />
+
+//             </linearGradient>
+
+//             <filter id="glow">
+
+//               <feGaussianBlur
+//                 stdDeviation="10"
+                
+//                 result="blur"
+//               />
+
+//               <feMerge>
+
+//                 <feMergeNode in="blur" />
+
+//                 <feMergeNode in="SourceGraphic" />
+
+//               </feMerge>
+
+//             </filter>
+
+//           </defs>
+
+//           <path
+//             ref={pathRef}
+//             className="      .animation"
+
+//             d="
+//               M 1880 0
+//               C 1890 180, 1800 280, 1650 360
+//               C 1500 440, 1320 340, 1360 180
+//               C 1400 20, 1650 40, 1720 220
+//               C 1790 420, 1540 640, 1220 660
+//               C 980 670, 860 620, 720 720
+//               C 580 820, 560 980, 340 1040
+//               C 180 1080, 80 1040, -100 920
+//             "
+
+//             fill="none"
+
+//             stroke="url(#lineGradient)"
+
+//             strokeWidth="30"
+
+//             strokeLinecap="round"
+
+//             strokeLinejoin="round"
+
+//             filter="url(#glow)"
+//           />
+
+//         </svg>
+
+//         {/* CARDS */}
+
+//         <div
+//           className="
+//             gsap-card-wrapper
+//           "
+//         >
+
+//           {cardsData.map(
+//             (
+//               card,
+//               index
+//             ) => (
+
+//               <div
+//                 key={index}
+
+//                 ref={(el) =>
+//                   setCardRef(
+//                     el,
+//                     index
+//                   )
+//                 }
+
+//                 className="
+//                   gsap-card
+//                 "
+
+//                 style={{
+//                   background:
+//                     card.bg,
+//                 }}
+//               >
+
+//                 {/* OVERLAY */}
+
+//                 <div
+//                   className="
+//                     gsap-card-overlay
+//                   "
+//                 />
+
+//                 {/* CENTER LINE */}
+
+//                 <div
+//                   className="
+//                     gsap-card-line
+//                   "
+//                 />
+
+//                 {/* TEXT */}
+
+//                 <h2
+//                   className="
+//                     gsap-card-title
+//                   "
+//                 >
+//                   {card.title}
+//                 </h2>
+
+//               </div>
+//             )
+//           )}
+
+//         </div>
+
+//       </section>
+//     );
+//   };
+
+// export default
+//   WhyRICRStackCards;

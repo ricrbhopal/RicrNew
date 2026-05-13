@@ -1,44 +1,17 @@
 @import "tailwindcss";
-@import "tailwindcss";
+
 
 @plugin "flyonui";
 
-@import "flyonui/variants.css";
 
-@source "../node_modules/flyonui/dist/index.js";
 
-/* =========================================
-   GLOBAL RESET
-========================================= */
+/* Global scrollbar hide */
 
-html,
-body {
-  background: white;
-  color: #111111;
-
-  overflow-x: hidden;
-
-  /* Scrollbar Hide */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE & Edge */
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-
-  scroll-behavior: auto !important;
-
-  overscroll-behavior: none;
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Chrome / Safari / Edge */
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+*::-webkit-scrollbar {
   display: none;
-}
-
-body {
-  -webkit-overflow-scrolling: touch;
 }

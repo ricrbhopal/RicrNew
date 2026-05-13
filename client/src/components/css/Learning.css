@@ -1,0 +1,41 @@
+
+
+.heading {
+
+  font-family:
+    'League Spartan',
+    sans-serif;
+
+  font-weight: 900;
+
+  font-size: clamp(
+    2.8rem,
+    7vw,
+    2rem
+  );
+
+  line-height: 0.95;
+
+  text-transform: uppercase;
+
+  color: transparent;
+
+  -webkit-text-stroke:
+    2px #125785;
+
+  letter-spacing: -2px;
+}
+
+
+
+.paragraph {
+
+  font-family:
+    'Manrope',
+    sans-serif;
+
+  font-size: 1.2rem;
+  font-weight: 500;
+
+  color: #222;
+}

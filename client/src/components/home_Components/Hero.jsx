@@ -111,7 +111,7 @@ const Hero = () => {
 
     intervalRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % mediaList.length);
-    }, 5000);
+    }, 9000);
 
     return () => clearInterval(intervalRef.current);
   }, [mediaList]);
