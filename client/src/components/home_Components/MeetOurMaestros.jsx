@@ -192,6 +192,8 @@ const MentorsPage = () => {
         flex-col
         items-center
         justify-center
+
+        
       "
     >
 
@@ -290,7 +292,8 @@ const MentorsPage = () => {
         <div
           className="
             mb-10
-            md:mb-14
+            md:mb-10
+           md:mt-45
           "
         >
 

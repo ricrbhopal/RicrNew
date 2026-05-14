@@ -123,7 +123,7 @@
    LEFT TEXT
 ========================================= */
 .placement-text-left {
-  top: 35%;
+  top: 40%;
   left: 7%;
   max-width: 1000px;
   font-style: semi-bold;
@@ -134,7 +134,7 @@
 ========================================= */
 .placement-text-right {
   top: 58%;
-  right: 1%;
+  right: 5%;
   max-width: 760px;
   text-align: left;
 }
@@ -145,7 +145,7 @@
 .placement-video-card {
   position: absolute;
   left: 4%;
-  bottom: 15%;
+  bottom: 10%;
   width: 900px;
   height: 500px;
 border: none;
