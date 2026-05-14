@@ -76,8 +76,6 @@
 
 // export default App;
 
-
-
 import React, {
   useContext,
   useEffect,
@@ -88,6 +86,8 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+
+import Lenis from "lenis";
 
 import Navbar from "./components/Navbar.jsx";
 
@@ -109,7 +109,6 @@ import YourFuture from "./pages/yourFuture";
 
 import AdminDashboard from "./pages/adminDashboard/adminDashboard";
 
-
 import {
   LoaderProvider,
   LoaderContext,
@@ -124,6 +123,10 @@ import {
 } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+
+/* =========================================
+   MAIN LAYOUT
+========================================= */
 
 const MainLayout = ({
   children,
@@ -141,6 +144,10 @@ const MainLayout = ({
     </>
   );
 };
+
+/* =========================================
+   ROUTES
+========================================= */
 
 const AppContent = () => {
 
@@ -221,53 +228,125 @@ const AppContent = () => {
   );
 };
 
+/* =========================================
+   APP
+========================================= */
+
 function App() {
 
-  // =====================================
-  // DISABLE SCROLL RESTORATION
-  // =====================================
+  /* =====================================
+     LENIS SMOOTH SCROLL
+  ===================================== */
 
-useEffect(() => {
+  useEffect(() => {
 
-  const resetScroll =
-    () => {
+    const lenis =
+      new Lenis({
 
-      window.scrollTo(
-        0,
-        0
-      );
+        /* =========================
+           SMOOTHNESS
+        ========================= */
+
+        duration: 1.2,
+
+        /* =========================
+           SCROLL SPEED
+           Increase = Faster
+        ========================= */
+
+        wheelMultiplier: 1.4,
+
+        /* =========================
+           TOUCH SPEED
+        ========================= */
+
+        touchMultiplier: 1,
+
+        smoothWheel: true,
+
+        infinite: false,
+
+        gestureOrientation:
+          "vertical",
+
+        syncTouch: false,
+      });
+
+    /* =============================
+       RAF LOOP
+    ============================= */
+
+    const raf =
+      (time) => {
+
+        lenis.raf(time);
+
+        requestAnimationFrame(
+          raf
+        );
+      };
+
+    requestAnimationFrame(
+      raf
+    );
+
+    return () => {
+
+      lenis.destroy();
     };
 
-  if (
-    "scrollRestoration" in
-    window.history
-  ) {
+  }, []);
 
-    window.history.scrollRestoration =
-      "manual";
-  }
+  /* =====================================
+     DISABLE SCROLL RESTORATION
+  ===================================== */
 
-  resetScroll();
+  useEffect(() => {
 
-  window.addEventListener(
-    "load",
-    resetScroll
-  );
+    const resetScroll =
+      () => {
 
-  return () => {
+        window.scrollTo(
+          0,
+          0
+        );
+      };
 
-    window.removeEventListener(
+    if (
+      "scrollRestoration" in
+      window.history
+    ) {
+
+      window.history.scrollRestoration =
+        "manual";
+    }
+
+    resetScroll();
+
+    window.addEventListener(
       "load",
       resetScroll
     );
-  };
 
-}, []);
+    return () => {
+
+      window.removeEventListener(
+        "load",
+        resetScroll
+      );
+    };
+
+  }, []);
+
   return (
 
     <LoaderProvider>
 
       <BrowserRouter>
+
+        {/* =========================
+            TOAST
+        ========================= */}
 
         <ToastContainer
           position="top-right"
@@ -279,7 +358,15 @@ useEffect(() => {
           theme="dark"
         />
 
+        {/* =========================
+            CUSTOM SCROLLBAR
+        ========================= */}
+
         <GlobalScrollBar />
+
+        {/* =========================
+            ROUTES
+        ========================= */}
 
         <AppContent />
 

@@ -3,8 +3,6 @@ import {
   useRef,
 } from "react";
 
-import gsap from "gsap";
-
 import "../css/globalScrollBar.css";
 
 const GlobalScrollBar = () => {
@@ -38,6 +36,23 @@ const GlobalScrollBar = () => {
     let target =
       0;
 
+    /* =====================================
+       MAIN SMOOTHNESS CONTROL
+       LOWER = SMOOTHER
+       HIGHER = FASTER
+    ===================================== */
+
+    const lerpFactor =
+      0.015;
+
+    /* =====================================
+       CUSTOM SPEED MULTIPLIER
+       INCREASE FOR FASTER
+    ===================================== */
+
+    const speedMultiplier =
+      2.5;
+
     const lerp =
       (
         start,
@@ -55,7 +70,7 @@ const GlobalScrollBar = () => {
           lerp(
             current,
             target,
-            0.015
+            lerpFactor
           );
 
         const moveY =
@@ -67,39 +82,44 @@ const GlobalScrollBar = () => {
             24
           );
 
-        gsap.to(
-          progressRef.current,
-          {
-            y: moveY,
-            height:
-              fillHeight,
-            duration: 0.6,
-            ease:
-              "power3.out",
-          }
-        );
+        /* =========================
+           PROGRESS
+        ========================= */
 
-        gsap.to(
-          glowRef.current,
-          {
-            y:
-              moveY - 12,
-            duration: 1,
-            ease:
-              "power4.out",
-          }
-        );
+        if (
+          progressRef.current
+        ) {
 
-        gsap.to(
-          liquidRef.current,
-          {
-            y:
-              moveY * 0.22,
-            duration: 1.4,
-            ease:
-              "sine.out",
-          }
-        );
+          progressRef.current.style.transform =
+            `translateY(${moveY}px)`;
+
+          progressRef.current.style.height =
+            `${fillHeight}px`;
+        }
+
+        /* =========================
+           GLOW
+        ========================= */
+
+        if (
+          glowRef.current
+        ) {
+
+          glowRef.current.style.transform =
+            `translate(-50%, ${moveY - 12}px)`;
+        }
+
+        /* =========================
+           LIQUID
+        ========================= */
+
+        if (
+          liquidRef.current
+        ) {
+
+          liquidRef.current.style.transform =
+            `translateY(${moveY * 0.22}px)`;
+        }
 
         rafRef.current =
           requestAnimationFrame(
@@ -118,13 +138,24 @@ const GlobalScrollBar = () => {
             .scrollHeight -
           window.innerHeight;
 
-        target =
+        const rawProgress =
           maxScroll > 0
             ? (
                 scroll /
                 maxScroll
               ) * 100
             : 0;
+
+        /* =========================
+           CUSTOM SPEED
+        ========================= */
+
+        target =
+          Math.min(
+            rawProgress *
+              speedMultiplier,
+            100
+          );
       };
 
     updateScroll();

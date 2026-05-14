@@ -7,12 +7,13 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
 
-  scroll-behavior: auto;
+  
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
+
   width: 0;
   height: 0;
 }
@@ -28,7 +29,8 @@ body::-webkit-scrollbar {
   top: 50%;
   right: 22px;
 
-  transform: translateY(-50%);
+  transform:
+    translateY(-50%);
 
   width: 14px;
 
@@ -44,7 +46,8 @@ body::-webkit-scrollbar {
 
   align-items: center;
 
-  will-change: transform;
+  will-change:
+    transform;
 }
 
 /* =========================================
@@ -114,11 +117,14 @@ body::-webkit-scrollbar {
       #5564ff
     );
 
+  animation:
+    liquidFlow 10s ease-in-out infinite alternate;
+
+  transition:
+    transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+
   will-change:
     transform;
-
-  animation:
-    liquidFlow 8s ease-in-out infinite alternate;
 }
 
 /* =========================================
@@ -126,7 +132,8 @@ body::-webkit-scrollbar {
 ========================================= */
 
 .liquid-scrollbar-progress {
-
+backface-visibility: hidden;
+perspective: 1000px;
   position: absolute;
 
   top: 0;
@@ -155,8 +162,9 @@ body::-webkit-scrollbar {
     0 0 55px rgba(117,132,255,0.95),
     0 0 120px rgba(117,132,255,0.5);
 
-  transform:
-    translateZ(0);
+  transition:
+    transform 0.35s ease,
+    height 0.35s ease;
 
   will-change:
     transform,
@@ -257,11 +265,12 @@ body::-webkit-scrollbar {
 
   mix-blend-mode: screen;
 
+  transition:
+    transform 0.45s ease,
+    opacity 1.2s ease;
+
   will-change:
     transform;
-
-  animation:
-    glowPulse 4s ease-in-out infinite;
 }
 
 /* =========================================
@@ -282,39 +291,5 @@ body::-webkit-scrollbar {
     transform:
       scale(1.75)
       translateY(8px);
-  }
-}
-
-/* =========================================
-   GLOW PULSE
-========================================= */
-
-@keyframes glowPulse {
-
-  0% {
-
-    opacity: 0.75;
-
-    transform:
-      translateX(-50%)
-      scale(0.95);
-  }
-
-  50% {
-
-    opacity: 1;
-
-    transform:
-      translateX(-50%)
-      scale(1.08);
-  }
-
-  100% {
-
-    opacity: 0.75;
-
-    transform:
-      translateX(-50%)
-      scale(0.95);
   }
 }
