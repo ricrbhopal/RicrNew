@@ -1,207 +1,9 @@
-// import {
-//   useEffect,
-//   useRef,
-// } from "react";
-
-// import gsap from "gsap";
-
-// import {
-//   ScrollTrigger,
-// } from "gsap/ScrollTrigger";
-
-// import Lenis from "@studio-freight/lenis";
-
-// gsap.registerPlugin(
-//   ScrollTrigger
-// );
-
-// const GlobalScrollBar = () => {
-
-//   const progressRef =
-//     useRef(null);
-
-//   const glowRef =
-//     useRef(null);
-
-//   useEffect(() => {
-
-//     // =====================================
-//     // LENIS
-//     // =====================================
-
-//     const lenis =
-//       new Lenis({
-//         duration: 0.45,
-
-//         smoothWheel: true,
-
-//         smoothTouch: false,
-
-//         wheelMultiplier: 1.3,
-
-//         lerp: 0.18,
-//       });
-
-//     // =====================================
-//     // RAF
-//     // =====================================
-
-//     const raf = (
-//       time
-//     ) => {
-
-//       lenis.raf(time);
-
-//       requestAnimationFrame(
-//         raf
-//       );
-//     };
-
-//     requestAnimationFrame(
-//       raf
-//     );
-
-//     // =====================================
-//     // UPDATE
-//     // =====================================
-
-//     lenis.on(
-//       "scroll",
-//       ({ scroll }) => {
-
-//         const maxScroll =
-//           document.documentElement
-//             .scrollHeight -
-//           window.innerHeight;
-
-//         const progress =
-//           maxScroll > 0
-//             ? (
-//                 scroll /
-//                 maxScroll
-//               ) * 100
-//             : 0;
-
-//         // =====================================
-//         // PROGRESS
-//         // =====================================
-
-//         if (
-//           progressRef.current
-//         ) {
-
-//           progressRef.current.style.height =
-//             `${progress}%`;
-//         }
-
-//         // =====================================
-//         // GLOW
-//         // =====================================
-
-//         if (
-//           glowRef.current
-//         ) {
-
-//           glowRef.current.style.transform =
-//             `translateY(${progress}%)`;
-//         }
-
-//         // =====================================
-//         // GSAP UPDATE
-//         // =====================================
-
-//         ScrollTrigger.update();
-//       }
-//     );
-
-//     // =====================================
-//     // CLEANUP
-//     // =====================================
-
-//     return () => {
-
-//       lenis.destroy();
-//     };
-
-//   }, []);
-
-//   return (
-
-//     <div
-//       className="
-//         fixed
-//         right-6
-//         md:right-8
-//         top-1/2
-//         -translate-y-1/2
-//         h-[22%]
-//         w-[6px]
-//         z-[99999]
-//         bg-white/10
-//         backdrop-blur-md
-//         rounded-full
-//         overflow-hidden
-//         border
-//         border-white/10
-//       "
-//     >
-
-//       {/* PROGRESS */}
-
-//       <div
-//         ref={progressRef}
-//         className="
-//           absolute
-//           top-0
-//           left-0
-//           w-full
-//           h-0
-//           rounded-full
-//           bg-gradient-to-b
-//           from-cyan-400
-//           via-[#125785]
-//           to-[#0e456b]
-//         "
-//       />
-
-//       {/* GLOW */}
-
-//       <div
-//         ref={glowRef}
-//         className="
-//           absolute
-//           top-0
-//           left-0
-//           w-full
-//           h-10
-//           blur-md
-//           bg-cyan-400/50
-//           pointer-events-none
-//         "
-//       />
-
-//     </div>
-//   );
-// };
-
-// export default
-//   GlobalScrollBar;
-
-
 import {
   useEffect,
   useRef,
 } from "react";
 
 import gsap from "gsap";
-
-import {
-  ScrollTrigger,
-} from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(
-  ScrollTrigger
-);
 
 const GlobalScrollBar = () => {
 
@@ -211,11 +13,10 @@ const GlobalScrollBar = () => {
   const glowRef =
     useRef(null);
 
-  useEffect(() => {
+  const liquidRef =
+    useRef(null);
 
-    // =====================================
-    // DISABLE SCROLL RESTORATION
-    // =====================================
+  useEffect(() => {
 
     if (
       "scrollRestoration" in
@@ -226,11 +27,65 @@ const GlobalScrollBar = () => {
         "manual";
     }
 
-    // =====================================
-    // UPDATE FUNCTION
-    // =====================================
+    let current =
+      0;
 
-    const updateScrollBar =
+    let target =
+      0;
+
+    const lerp =
+      (start, end, factor) =>
+        start + (end - start) * factor;
+
+    const animate =
+      () => {
+
+        current =
+          lerp(
+            current,
+            target,
+            0.045
+          );
+
+        const moveY =
+          current * 1.9;
+
+        const fillHeight =
+          Math.max(
+            current * 2.2,
+            18
+          );
+
+        gsap.set(
+          progressRef.current,
+          {
+            y: moveY,
+            height:
+              fillHeight,
+          }
+        );
+
+        gsap.set(
+          glowRef.current,
+          {
+            y: moveY - 10,
+          }
+        );
+
+        gsap.set(
+          liquidRef.current,
+          {
+            y:
+              moveY * 0.18,
+          }
+        );
+
+        requestAnimationFrame(
+          animate
+        );
+      };
+
+    const updateScroll =
       () => {
 
         const scroll =
@@ -241,79 +96,40 @@ const GlobalScrollBar = () => {
             .scrollHeight -
           window.innerHeight;
 
-        const progress =
+        target =
           maxScroll > 0
             ? (
                 scroll /
                 maxScroll
               ) * 100
             : 0;
-
-        // =====================================
-        // PROGRESS HEIGHT
-        // =====================================
-
-        if (
-          progressRef.current
-        ) {
-
-          progressRef.current.style.height =
-            `${progress}%`;
-        }
-
-        // =====================================
-        // GLOW POSITION
-        // =====================================
-
-        if (
-          glowRef.current
-        ) {
-
-          glowRef.current.style.transform =
-            `translateY(${progress}%)`;
-        }
-
-        // =====================================
-        // GSAP UPDATE
-        // =====================================
-
-        ScrollTrigger.update();
       };
 
-    // =====================================
-    // INITIAL UPDATE
-    // =====================================
+    updateScroll();
 
-    updateScrollBar();
-
-    // =====================================
-    // EVENTS
-    // =====================================
+    animate();
 
     window.addEventListener(
       "scroll",
-      updateScrollBar
+      updateScroll,
+      { passive: true }
     );
 
     window.addEventListener(
       "resize",
-      updateScrollBar
+      updateScroll
     );
-
-    // =====================================
-    // CLEANUP
-    // =====================================
 
     return () => {
 
       window.removeEventListener(
         "scroll",
-        updateScrollBar
+        updateScroll
       );
 
       window.removeEventListener(
         "resize",
-        updateScrollBar
+        updateScroll
       );
     };
 
@@ -324,59 +140,126 @@ const GlobalScrollBar = () => {
     <div
       className="
         fixed
-        right-6
-        md:right-8
         top-1/2
         -translate-y-1/2
-        h-[22%]
-        w-[6px]
-        z-[99999]
-        bg-white/10
-        backdrop-blur-md
-        rounded-full
-        overflow-hidden
-        border
-        border-white/10
+        right-5
+
+        h-[240px]
+        w-[12px]
+
+        z-[999999]
+
+        pointer-events-none
       "
     >
 
-      {/* PROGRESS */}
+      {/* TRACK */}
 
       <div
-        ref={progressRef}
         className="
-          absolute
-          top-0
-          left-0
+          relative
+
+          h-full
           w-full
-          h-0
+
           rounded-full
-          bg-gradient-to-b
-          from-cyan-400
-          via-[#125785]
-          to-[#0e456b]
-        "
-      />
 
-      {/* GLOW */}
+          overflow-hidden
 
-      <div
-        ref={glowRef}
-        className="
-          absolute
-          top-0
-          left-0
-          w-full
-          h-10
-          blur-md
-          bg-cyan-400/50
-          pointer-events-none
+          bg-white/[0.04]
+
+          backdrop-blur-3xl
+
+          border
+          border-white/10
+
+          shadow-[0_0_45px_rgba(255,255,255,0.04)]
+
+          before:absolute
+          before:inset-0
+          before:bg-white/[0.02]
         "
-      />
+      >
+
+        {/* LIQUID */}
+
+        <div
+          ref={liquidRef}
+          className="
+            absolute
+            inset-0
+
+            scale-150
+
+            bg-gradient-to-b
+            from-[#ffffff]
+            via-[#aab4ff]
+            to-[#5f6dff]
+
+            opacity-40
+
+            blur-xl
+          "
+        />
+
+        {/* PROGRESS */}
+
+        <div
+          ref={progressRef}
+          className="
+            absolute
+            top-0
+            left-0
+
+            w-full
+            h-[20px]
+
+            rounded-full
+
+            bg-gradient-to-b
+            from-[#ffffff]
+            via-[#d9deff]
+            to-[#7584ff]
+
+            shadow-[0_0_50px_rgba(117,132,255,1)]
+
+            before:absolute
+            before:inset-0
+            before:bg-white/30
+            before:blur-sm
+          "
+        />
+
+        {/* LENS GLOW */}
+
+        <div
+          ref={glowRef}
+          className="
+            absolute
+            left-1/2
+            top-0
+
+            -translate-x-1/2
+
+            w-12
+            h-12
+
+            rounded-full
+
+            bg-[#dbe0ff]/80
+
+            blur-3xl
+
+            opacity-90
+
+            mix-blend-screen
+          "
+        />
+
+      </div>
 
     </div>
   );
 };
 
-export default
-  GlobalScrollBar;
+export default GlobalScrollBar;

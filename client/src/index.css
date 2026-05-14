@@ -1,17 +1,25 @@
 @import "tailwindcss";
 
 
+
 @plugin "flyonui";
 
 
+@import "flyonui/variants.css";
 
-/* Global scrollbar hide */
 
-* {
+@source "../node_modules/flyonui/dist/index.js";
+/* HIDE DEFAULT SCROLLBAR */
+
+html,
+body {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-*::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none;
+  width: 0;
+  height: 0;
 }

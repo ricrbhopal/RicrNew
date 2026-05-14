@@ -25,9 +25,9 @@ const Home = () => {
            <PlacementSection />
            <ProgramsSection />
           <MeetOurMaestros />
-          {/* <HowItWorks />  */}
+          <HowItWorks /> 
        
-            <Why />
+            {/* <Why /> */}
     
 
 

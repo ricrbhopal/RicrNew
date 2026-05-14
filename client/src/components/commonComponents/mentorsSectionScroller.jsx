@@ -1,5 +1,6 @@
-import React, {
-  useEffect,
+import React,
+{
+useLayoutEffect,
   useRef,
 } from "react";
 
@@ -14,89 +15,65 @@ const ScrollImageSkeleton = ({
   end = 1400,
 }) => {
 
-  // =====================================
-  // REFS
-  // =====================================
-
   const wrapperRef =
     useRef(null);
 
   const pathRef =
     useRef(null);
 
-  // =====================================
-  // EFFECT
-  // =====================================
+useLayoutEffect(() => {
 
-  useEffect(() => {
+  const ctx = gsap.context(() => {
 
-    if (
-      !wrapperRef.current ||
-      !pathRef.current
-    ) return;
+    const path =
+      pathRef.current;
 
-    const ctx =
-      gsap.context(() => {
+    if (!path) return;
 
-        const path =
-          pathRef.current;
+    const length =
+      path.getTotalLength();
 
-        const pathLength =
-          path.getTotalLength();
+    gsap.set(path, {
 
-        // =====================================
-        // INITIAL STATE
-        // =====================================
+      strokeDasharray:
+        length,
 
-        gsap.set(path, {
+      strokeDashoffset:
+        length,
+    });
 
-          strokeDasharray:
-            pathLength,
+    gsap.to(path, {
 
-          strokeDashoffset:
-            pathLength,
-        });
+      strokeDashoffset: 0,
 
-        // =====================================
-        // DRAW EFFECT
-        // =====================================
+      ease: "none",
 
-        gsap.to(path, {
+      scrollTrigger: {
 
-          strokeDashoffset: 0,
+        trigger:
+          wrapperRef.current,
 
-          ease: "none",
+        start:
+          "top top",
 
-          scrollTrigger: {
+        end:
+          `+=${end}`,
 
-            trigger:
-              wrapperRef.current,
+        scrub: 1,
 
-            start:
-              "top top",
+        pin: true,
 
-            end:
-              `+=${end}`,
+        pinSpacing: true,
+      },
+    });
 
-            scrub: 1,
+  }, wrapperRef);
 
-            pin: false,
+  return () => {
+    ctx.revert();
+  };
 
-            pinSpacing: true,
-
-            anticipatePin: 1,
-
-            invalidateOnRefresh: true,
-          },
-        });
-
-      }, wrapperRef);
-
-    return () => {
-      ctx.revert();
-    };
-
-  }, [end]);
+}, []);
 
   return (
 
@@ -112,14 +89,13 @@ const ScrollImageSkeleton = ({
       `}
     >
 
-      {/* =====================================
-          SVG LINE
-      ===================================== */}
+      {/* SVG */}
 
       <svg
         className="
           absolute
-          inset-0
+          top-0
+          left-0
           w-full
           h-full
           pointer-events-none
@@ -165,17 +141,13 @@ const ScrollImageSkeleton = ({
           ref={pathRef}
           d="
             M 1850 40
-
             C 1650 250,
               1500 700,
               1250 500
-
             S 900 120,
               700 420
-
             S 380 760,
               180 520
-
             S -80 180,
               -180 1000
           "

@@ -316,10 +316,7 @@ const ScrollVideoSkeleton = ({
         scroll-video-section
         ${className}
       `}
-      style={{
-        height,
-        minHeight: "100vh",
-      }}
+
     >
 
       {/* VIDEO */}
@@ -332,10 +329,9 @@ const ScrollVideoSkeleton = ({
         preload="auto"
         crossOrigin="anonymous"
         disablePictureInPicture
-        className="
-          scroll-video-element
-          object-cover
-        "
+  
+
+              
       >
 
         <source

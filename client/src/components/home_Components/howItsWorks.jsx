@@ -48,8 +48,8 @@ const HowItWorks = () => {
   }
 
   return (
-    <section className="w-full pt-25">
-      <div className="w-full ">
+    <section className="w-full ">
+      <div>
         {steps.map((step, idx) => {
           // ================= VIDEO SECTION =================
           if (step.mediaType === "video" && step.mediaUrl) {
@@ -57,7 +57,7 @@ const HowItWorks = () => {
               <div key={step._id || idx} className=" w-full">
                 <ScrollVideoSkeleton
                   videoSrc={step.mediaUrl}
-                  end={4000}
+                  end={6000}
                   overlay={false}
                   
             

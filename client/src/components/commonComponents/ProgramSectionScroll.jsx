@@ -199,7 +199,7 @@ const ProgramSectionScroll = ({
       x1="100%"
       y1="0%"
       x2="0%"
-      y2="0%"
+      y2="100%"
     >
       <stop offset="0%" stopColor="#4254ff" stopOpacity="1" />
       <stop offset="50%" stopColor="#6d7cff" stopOpacity="1" />
@@ -223,7 +223,7 @@ const ProgramSectionScroll = ({
         360 520
 
       S 80 180,
-        -150 1150
+        -10 1150
     "
     className="program-animated-path"
   />
@@ -241,7 +241,7 @@ const ProgramSectionScroll = ({
               preload="auto"
               crossOrigin="anonymous"
               disablePictureInPicture
-              className="scroll-video-element "
+              className="scroll-video-element  "
             >
               <source src={videoSrc} type="video/mp4" />
             </video>
