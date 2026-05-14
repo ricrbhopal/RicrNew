@@ -11,7 +11,7 @@ import {
   ScrollTrigger,
 } from "gsap/ScrollTrigger";
 
-import "../css/scrollVideo.css";
+import "../css/ScrollVideoSkeleton.css";
 
 gsap.registerPlugin(
   ScrollTrigger

@@ -55,21 +55,15 @@
    SVG PATH
 ========================================= */
 
-.program-animated-path {
+.program-animated-path{
   fill: none;
 
   stroke: url(#programLineGradient);
-
-  stroke-width: 18;
+  stroke-width: 30;
 
   stroke-linecap: round;
+
   stroke-linejoin: round;
-
-  opacity: 0.95;
-
-  filter: drop-shadow(
-    0 0 18px rgba(74, 92, 255, 0.45)
-  );
 }
 
 /* =========================================
@@ -120,7 +114,7 @@
 
   position: relative;
 
-  z-index: 10;
+  z-index: 20;
 
   display: flex;
 

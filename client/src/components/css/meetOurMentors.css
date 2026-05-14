@@ -1,5 +1,3 @@
-
-
 .heading {
 
   font-family:
@@ -11,7 +9,7 @@
   font-size: clamp(
     2.8rem,
     7vw,
-    2rem
+    3rem
   );
 
   line-height: 0.95;
@@ -34,8 +32,13 @@
     'Manrope',
     sans-serif;
 
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: 1.3rem;
+  font-weight: 600;
 
   color: #222;
 }
+
+
+
+
+

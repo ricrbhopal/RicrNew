@@ -5,6 +5,8 @@ import Image from "../../assets/Mentor/image.jpg";
 import ScrollImageSkeleton
 from "../commonComponents/mentorsSectionScroller";
 
+import "../css/meetOurMentors.css"
+
 const MentorsPage = () => {
 
   return (
@@ -38,7 +40,7 @@ const MentorsPage = () => {
             relative
             z-10
             w-full
-            max-w-6xl
+            max-w-7xl
           "
         >
 
@@ -53,13 +55,8 @@ const MentorsPage = () => {
 
             <h2
               className="
-                text-2xl
-                sm:text-3xl
-                md:text-4xl
-                lg:text-5xl
-                font-semibold
-                text-[#125785]
-                leading-tight
+              
+         heading
               "
             >
               Learn from people who’ve worked in the industry
@@ -67,13 +64,8 @@ const MentorsPage = () => {
 
             <p
               className="
-                mt-3
-                text-black
-                font-medium
-                text-sm
-                sm:text-base
-                md:text-lg
-                leading-relaxed
+                paragraph 
+         
               "
             >
               Our mentors bring real-world experience,
