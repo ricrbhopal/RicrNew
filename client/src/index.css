@@ -1,25 +1,138 @@
 @import "tailwindcss";
 
-
-
 @plugin "flyonui";
-
 
 @import "flyonui/variants.css";
 
-
 @source "../node_modules/flyonui/dist/index.js";
-/* HIDE DEFAULT SCROLLBAR */
+
+
+/* =========================================
+   BLOCK CHROME AUTO DARK MODE
+========================================= */
+
+:root {
+
+  color-scheme: light;
+}
+
+/* =========================================
+   HTML / BODY
+========================================= */
 
 html,
 body {
+
+  width: 100%;
+
+  min-height: 100%;
+
+  background: #ffffff !important;
+
+  color: #000000 !important;
+
+  color-scheme: light !important;
+
+  forced-color-adjust: none !important;
+
+  -webkit-font-smoothing: antialiased;
+
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+
   scrollbar-width: none;
+
   -ms-overflow-style: none;
 }
 
+/* =========================================
+   ROOT
+========================================= */
+
+#root {
+
+  width: 100%;
+
+  min-height: 100vh;
+
+  background: #ffffff !important;
+
+  color: #000000 !important;
+
+  isolation: isolate;
+}
+
+/* =========================================
+   HIDE SCROLLBAR
+========================================= */
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
+
   display: none;
+
   width: 0;
+
   height: 0;
+}
+
+/* =========================================
+   PREVENT CHROME AUTO DARK FILTER
+========================================= */
+
+html,
+body,
+#root,
+main,
+section,
+div,
+video,
+img {
+
+  filter: none !important;
+}
+
+/* =========================================
+   FORM ELEMENT FIX
+========================================= */
+
+input,
+textarea,
+select,
+button {
+
+  color-scheme: light !important;
+
+  forced-color-adjust: none !important;
+}
+
+/* =========================================
+   MEDIA FIX
+========================================= */
+
+img,
+video,
+canvas,
+svg {
+
+  color-scheme: light !important;
+}
+
+/* =========================================
+   GSAP PIN FIX
+========================================= */
+
+.pin-spacer {
+
+  overflow: visible !important;
+}
+
+/* =========================================
+   PREVENT OVERFLOW BUG
+========================================= */
+
+body {
+
+  overflow-x: hidden;
 }
