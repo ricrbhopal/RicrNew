@@ -237,7 +237,7 @@ const WhyRICRStackCards =
 
 
                 pin:
-                  true,
+                  false,
 
 
                 pinSpacing:
